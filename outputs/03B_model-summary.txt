@@ -1,0 +1,42 @@
+Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+cbind(hunting_success, 4 - hunting_success) ~ Zspeed + Zprox_mid_guard +  
+    Zspace_covered_rate + Zsurv_speed + Zsurv_space_covered_rate +  
+    (1 | map_name) + (1 | mirrors_id) + (1 | obs)
+   Data: data
+Control: glmerControl(optimizer = "bobyqa")
+
+     AIC      BIC   logLik deviance df.resid 
+199941.1 200023.6 -99961.6 199923.1    70822 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.6078 -0.6162 -0.0359  0.5625  4.4859 
+
+Random effects:
+ Groups     Name        Variance Std.Dev.
+ obs        (Intercept) 0.7712   0.8782  
+ mirrors_id (Intercept) 0.4608   0.6788  
+ map_name   (Intercept) 0.1047   0.3236  
+Number of obs: 70831, groups:  obs, 70831; mirrors_id, 2171; map_name, 27
+
+Fixed effects:
+                          Estimate Std. Error z value Pr(>|z|)    
+(Intercept)              -0.410983   0.065484  -6.276 3.47e-10 ***
+Zspeed                    0.225601   0.007310  30.861  < 2e-16 ***
+Zprox_mid_guard           0.456763   0.007179  63.621  < 2e-16 ***
+Zspace_covered_rate      -0.160305   0.009013 -17.786  < 2e-16 ***
+Zsurv_speed              -0.185109   0.007548 -24.525  < 2e-16 ***
+Zsurv_space_covered_rate -0.773812   0.010286 -75.229  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+            (Intr) Zspeed Zprx__ Zspc__ Zsrv_s
+Zspeed       0.009                            
+Zprx_md_grd -0.019  0.359                     
+Zspc_cvrd_r  0.001 -0.205 -0.066              
+Zsurv_speed  0.021 -0.217 -0.037  0.386       
+Zsrv_spc_c_ -0.006  0.079 -0.042 -0.628 -0.563
