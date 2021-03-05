@@ -1,18 +1,16 @@
 
 ############################################################################
 
-#     A. Chapter 1. Base hunting success analysis on scaled variables      #
+#                     Base hunting success analysis                        #
 
 ############################################################################
 
-# Calculate hunting success
-# for behavioral variables expressed during matches.
-# Hunting success = number of surv captured
+# Here, we calculate the relationship between hunting traits expressed during matches and hunting success. Hunting success = number of prey captured.
 
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -------------------------------------------------------------------
 
-# original scale from the model is LOG ODDS
-# exp() is the ODDS RATIOS -> exp(fixef(mod))
-# plogis() to obtain the probability scale from log odds (for plots)
 
 
 
@@ -30,11 +28,10 @@ library(MuMIn)
 library(DHARMa)
 
 data <- fread("02_merged-data.csv",
-                        select = c("cohort", "mirrors_id", "match_id", 
-                                   "map_name", "hunting_success", "Zspeed", 
-                                   "Zprox_mid_guard", "Zspace_covered_rate",
-                                   "Zsurv_speed", "Zsurv_space_covered_rate",
-                                   "sqrtspeed", "sqrtprox_mid_guard", "sqrtspace_covered_rate"))
+              select = c("cohort", "mirrors_id", "match_id", 
+                         "map_name", "hunting_success", "Zspeed", 
+                         "Zprox_mid_guard", "Zspace_covered_rate",
+                         "Zsurv_speed", "Zsurv_space_covered_rate"))
 
 
 # Add an observation-level random effect (OLRE) (in case of overdispersion)
@@ -56,10 +53,10 @@ overdisp_fun <- function(model) {
 }
 
 # To load the model and its components once it has been computed
-load("05B_base-model.rda")
-load("05B_r2-table.rda")
-load("05B_BIC-table.rda")
-load("05B_ICC-table.rda")
+#load("03B_base-model.rda")
+#load("03B_r2-table.rda")
+#load("03B_BIC-table.rda")
+#load("03B_ICC-table.rda")
 # =======================================================================
 # =======================================================================
 
@@ -160,7 +157,7 @@ save(base_model, file = "05B_base-model.rda")
 # 5. model diagnostics
 # =======================================================================
 overdisp_fun(base_model)
-# the model is now underdispersed = OK
+# ratio is lower than 1 = OK
 
 
 # Residuals have somewhat an odd shape
