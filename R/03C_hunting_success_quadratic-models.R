@@ -101,11 +101,20 @@ system.time(quadratic_model <- glmer(cbind(hunting_success, 4 - hunting_success)
                                         (1 | mirrors_id) +
                                         (1 | obs),
                                      control = glmerControl(optimizer = "nloptwrap", 
-                                                            nAGQ0initStep = FALSE),
+                                                            nAGQ0initStep = TRUE),
                                      family = binomial,
                                      data = data))
 
+# Save model output
 save(quadratic_model, file = "03C_quadratic-model.rda")
+
+# Model did not converge so we augment iterations
+ss <- getME(quadratic_model, c("theta", "fixef"))
+quadratic_model_updt <- update(quadratic_model, start = ss,
+                             control = glmerControl(optCtrl = list(maxfun = 2e4)))  
+
+save(quadratic_model_updt, file = "03C_quadratic_model_updt.rda")
+
 # =======================================================================
 # =======================================================================
 
@@ -297,12 +306,8 @@ system.time(no_speed2 <- glmer(cbind(hunting_success, 4 - hunting_success) ~
                                   Zsurv_speed +
                                   Zsurv_space_covered_rate +
                                   # Predator trait covariances
-                                  Zspeed : Zspace_covered_rate +
-                                  Zspeed : Zprox_mid_guard +
                                   Zspace_covered_rate : Zprox_mid_guard +
                                   # Predator-prey trait covariances
-                                  Zspeed : Zsurv_speed +
-                                  Zspeed : Zsurv_space_covered_rate +
                                   Zspace_covered_rate : Zsurv_speed +
                                   Zspace_covered_rate : Zsurv_space_covered_rate +
                                   Zprox_mid_guard : Zsurv_speed +
@@ -310,129 +315,137 @@ system.time(no_speed2 <- glmer(cbind(hunting_success, 4 - hunting_success) ~
                                   (1 | map_name) +
                                   (1 | mirrors_id) +
                                   (1 | obs),
+                               control = glmerControl(optimizer = "nloptwrap", 
+                                                      nAGQ0initStep = TRUE),
                                family = binomial,
                                data = data))
 
 # no space^2
 system.time(no_space2 <- glmer(cbind(hunting_success, 4 - hunting_success) ~
-                                       I(Zspeed^2) +
-                                       I(Zprox_mid_guard^2) +
-                                       Zspeed +
-                                       Zspace_covered_rate +
-                                       Zprox_mid_guard +
-                                       Zspeed : Zspace_covered_rate +
-                                       Zspeed : Zprox_mid_guard +
-                                       Zspace_covered_rate : Zprox_mid_guard +
-                                       (1 | map_name) +
-                                       (1 | mirrors_id) +
-                                       (1 | obs),
+                                  # Quadratic terms
+                                  I(Zspeed^2) +
+                                  I(Zprox_mid_guard^2) +
+                                  I(Zsurv_speed^2) +
+                                  I(Zsurv_space_covered_rate^2) +
+                                  # Linear terms
+                                  Zspeed +
+                                  Zspace_covered_rate +
+                                  Zprox_mid_guard +
+                                  Zsurv_speed +
+                                  Zsurv_space_covered_rate +
+                                  # Predator trait covariances
+                                  Zspeed : Zprox_mid_guard +
+                                  # Predator-prey trait covariances
+                                  Zspeed : Zsurv_speed +
+                                  Zspeed : Zsurv_space_covered_rate +
+                                  Zprox_mid_guard : Zsurv_speed +
+                                  Zprox_mid_guard : Zsurv_space_covered_rate +
+                                  (1 | map_name) +
+                                  (1 | mirrors_id) +
+                                  (1 | obs),
+                               control = glmerControl(optimizer = "nloptwrap", 
+                                                      nAGQ0initStep = TRUE),
                                family = binomial,
                                data = data))
 
 # no guard^2
 system.time(no_guard2 <- glmer(cbind(hunting_success, 4 - hunting_success) ~
-                                       I(Zspeed^2) +
-                                       I(Zspace_covered_rate^2) +
-                                       Zspeed +
-                                       Zspace_covered_rate +
-                                       Zprox_mid_guard +
-                                       Zspeed : Zspace_covered_rate +
-                                       Zspeed : Zprox_mid_guard +
-                                       Zspace_covered_rate : Zprox_mid_guard +
-                                       (1 | map_name) +
-                                       (1 | mirrors_id) +
-                                       (1 | obs),
-                               family = binomial,
-                               data = data))
-
-# no interaction speed*space^2
-system.time(no_inter1 <- glmer(cbind(sum_bloodpoints, 32000 - sum_bloodpoints) ~
-                                       I(Zspeed^2) +
-                                       I(Zspace_covered_rate^2) +
-                                       I(Zprox_mid_guard^2) +
-                                       Zspeed +
-                                       Zspace_covered_rate +
-                                       Zprox_mid_guard +
-                                       Zspeed : Zprox_mid_guard +
-                                       Zspace_covered_rate : Zprox_mid_guard +
-                                       (1 | map_name) +
-                                       (1 | mirrors_id) +
-                                       (1 | obs),
-                               family = binomial,
-                               data = data))
-
-#  no interaction speed*guard^2
-system.time(no_inter2 <- glmer(cbind(sum_bloodpoints, 32000 - sum_bloodpoints) ~
-                                       I(Zspeed^2) +
-                                       I(Zspace_covered_rate^2) +
-                                       I(Zprox_mid_guard^2) +
-                                       Zspeed +
-                                       Zspace_covered_rate +
-                                       Zprox_mid_guard +
-                                       Zspeed : Zspace_covered_rate +
-                                       Zspace_covered_rate : Zprox_mid_guard +
-                                       (1 | map_name) +
-                                       (1 | mirrors_id) +
-                                       (1 | obs),
-                               family = binomial,
-                               data = data))
-
-#  no interaction space*guard^2
-system.time(no_inter3 <- glmer(cbind(sum_bloodpoints, 32000 - sum_bloodpoints) ~
-                                       I(Zspeed^2) +
-                                       I(Zspace_covered_rate^2) +
-                                       I(Zprox_mid_guard^2) +
-                                       Zspeed +
-                                       Zspace_covered_rate +
-                                       Zprox_mid_guard +
-                                       Zspeed : Zspace_covered_rate +
-                                       Zspeed : Zprox_mid_guard +
-                                       (1 | map_name) +
-                                       (1 | mirrors_id) +
-                                       (1 | obs),
+                                  # Quadratic terms
+                                  I(Zspeed^2) +
+                                  I(Zspace_covered_rate^2) +
+                                  I(Zsurv_speed^2) +
+                                  I(Zsurv_space_covered_rate^2) +
+                                  # Linear terms
+                                  Zspeed +
+                                  Zspace_covered_rate +
+                                  Zprox_mid_guard +
+                                  Zsurv_speed +
+                                  Zsurv_space_covered_rate +
+                                  # Predator trait covariances
+                                  Zspeed : Zspace_covered_rate +
+                                  # Predator-prey trait covariances
+                                  Zspeed : Zsurv_speed +
+                                  Zspeed : Zsurv_space_covered_rate +
+                                  Zspace_covered_rate : Zsurv_speed +
+                                  Zspace_covered_rate : Zsurv_space_covered_rate +
+                                  (1 | map_name) +
+                                  (1 | mirrors_id) +
+                                  (1 | obs),
+                               control = glmerControl(optimizer = "nloptwrap", 
+                                                      nAGQ0initStep = TRUE),
                                family = binomial,
                                data = data))
 
 # no map_name
-system.time(no_map <- glmer(cbind(sum_bloodpoints, 32000 - sum_bloodpoints) ~
-                                    I(Zspeed^2) +
-                                    I(Zspace_covered_rate^2) +
-                                    I(Zprox_mid_guard^2) +
-                                    Zspeed +
-                                    Zspace_covered_rate +
-                                    Zprox_mid_guard +
-                                    Zspeed : Zspace_covered_rate +
-                                    Zspeed : Zprox_mid_guard +
-                                    Zspace_covered_rate : Zprox_mid_guard +
-                                    (1 | mirrors_id) +
-                                    (1 | obs),
+system.time(no_map <- glmer(cbind(hunting_success, 4 - hunting_success) ~
+                               # Quadratic terms
+                               I(Zspeed^2) +
+                               I(Zspace_covered_rate^2) +
+                               I(Zprox_mid_guard^2) +
+                               I(Zsurv_speed^2) +
+                               I(Zsurv_space_covered_rate^2) +
+                               # Linear terms
+                               Zspeed +
+                               Zspace_covered_rate +
+                               Zprox_mid_guard +
+                               Zsurv_speed +
+                               Zsurv_space_covered_rate +
+                               # Predator trait covariances
+                               Zspeed : Zspace_covered_rate +
+                               Zspeed : Zprox_mid_guard +
+                               Zspace_covered_rate : Zprox_mid_guard +
+                               # Predator-prey trait covariances
+                               Zspeed : Zsurv_speed +
+                               Zspeed : Zsurv_space_covered_rate +
+                               Zspace_covered_rate : Zsurv_speed +
+                               Zspace_covered_rate : Zsurv_space_covered_rate +
+                               Zprox_mid_guard : Zsurv_speed +
+                               Zprox_mid_guard : Zsurv_space_covered_rate +
+                               (1 | mirrors_id) +
+                               (1 | obs),
+                            control = glmerControl(optimizer = "nloptwrap", 
+                                                   nAGQ0initStep = TRUE),
                             family = binomial,
                             data = data))
 
 # no mirrors_id
-system.time(no_id <- glmer(cbind(sum_bloodpoints, 32000 - sum_bloodpoints) ~
-                                   I(Zspeed^2) +
-                                   I(Zspace_covered_rate^2) +
-                                   I(Zprox_mid_guard^2) +
-                                   Zspeed +
-                                   Zspace_covered_rate +
-                                   Zprox_mid_guard +
-                                   Zspeed : Zspace_covered_rate +
-                                   Zspeed : Zprox_mid_guard +
-                                   Zspace_covered_rate : Zprox_mid_guard +
-                                   (1 | map_name) +
-                                   (1 | obs),
+system.time(no_id <- glmer(cbind(hunting_success, 4 - hunting_success) ~
+                              # Quadratic terms
+                              I(Zspeed^2) +
+                              I(Zspace_covered_rate^2) +
+                              I(Zprox_mid_guard^2) +
+                              I(Zsurv_speed^2) +
+                              I(Zsurv_space_covered_rate^2) +
+                              # Linear terms
+                              Zspeed +
+                              Zspace_covered_rate +
+                              Zprox_mid_guard +
+                              Zsurv_speed +
+                              Zsurv_space_covered_rate +
+                              # Predator trait covariances
+                              Zspeed : Zspace_covered_rate +
+                              Zspeed : Zprox_mid_guard +
+                              Zspace_covered_rate : Zprox_mid_guard +
+                              # Predator-prey trait covariances
+                              Zspeed : Zsurv_speed +
+                              Zspeed : Zsurv_space_covered_rate +
+                              Zspace_covered_rate : Zsurv_speed +
+                              Zspace_covered_rate : Zsurv_space_covered_rate +
+                              Zprox_mid_guard : Zsurv_speed +
+                              Zprox_mid_guard : Zsurv_space_covered_rate +
+                              (1 | map_name) +
+                              (1 | obs),
+                           control = glmerControl(optimizer = "nloptwrap", 
+                                                  nAGQ0initStep = TRUE),
                            family = binomial,
                            data = data))
 
 # compute AIC, QAIC, and BIC tables
 model_list <- list(quadratic_model, no_speed2,
-                   no_space2, no_guard2, no_inter1,
-                   no_inter2, no_inter3, no_map, no_id)
+                   no_space2, no_guard2, no_map, no_id)
 
 model_names <- c("quadratic_model", "no_speed2", "no_space2",
-                 "no_guard2", "no_inter1", "no_inter2",
-                 "no_inter3", "no_map", "no_id")
+                 "no_guard2", "no_map", "no_id")
 
 
 # BIC method

@@ -68,3 +68,25 @@ system.time(
 save(icc_quad_boot, file = "05D_quad_icc_boot.rda")
 # =======================================================================
 # =======================================================================
+
+
+
+
+
+# Combine the outputs
+ICC_tab <- rbind(ICC_boot$t, ICC_boot$t)
+
+# Compute confidence intervals from the bootMer object
+CI_lower <- apply(ICC_tab, 2, function(x) as.numeric(quantile(x, probs = .025, na.rm = TRUE)))
+CI_upper <- apply(ICC_tab, 2, function(x) as.numeric(quantile(x, probs = .975, na.rm = TRUE)))
+
+# Create a table to save ICC's and their 95% confidence intervals
+ICC_boot_tab <- as.data.table(ICC_boot$t0)
+setnames(ICC_boot_tab, "V1", "ICC")
+ICC_boot_tab[, ":="(random_effect = c("mirrors_id", "map_name"),
+                    upper_CI = CI_upper,
+                    lower_CI = CI_lower)]
+save(ICC_boot_tab, file = "05B_ICC-table.rda")
+
+
+
