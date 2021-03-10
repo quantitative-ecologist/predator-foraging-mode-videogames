@@ -123,20 +123,20 @@ make_stancode(formula = model_formula2,
 
 # Quadratic model brms
 # -----------------------------------------------------------------------
-system.time(quadratic_model <- brm(formula = model_formula2,
-                                    family = binomial(link = "logit"),
-                                    warmup = 3000, 
-                                    iter = 53000,
-                                    thin = 50,
-                                    chains = 2, 
-                                    inits = "0", 
-                                    cores = 2,
-                                    seed = 123,
-                                    prior = priors,
-                                    control = list(adapt_delta = 0.95),
-                                    data = data_sub))
-save(quadratic_model, "quadratic_model_test.rda")
+system.time(quadratic_model_test <- brm(formula = model_formula2,
+                                        family = binomial(link = "logit"),
+                                        warmup = 3000, 
+                                        iter = 53000,
+                                        thin = 50,
+                                        chains = 2, 
+                                        inits = "0", 
+                                        cores = 2,
+                                        seed = 123,
+                                        prior = priors,
+                                        control = list(adapt_delta = 0.95),
+                                        data = data_sub))
 
+save(quadratic_model_test, file = "quadratic_model_test.rda")
 # -----------------------------------------------------------------------
 
 
@@ -156,24 +156,25 @@ base_model_stan <- stan(file = "base_model.stan",
                              control = list(adapt_delta = 0.95) # smaller steps
                              )
 
-save(base_model_stan, "base_model_stanCC.rda")
+save(base_model_stan, file = "base_model_stanCC.rda")
 # -----------------------------------------------------------------------
 
 
 # Quadratic model with STAN
 # -----------------------------------------------------------------------
-base_model_stan <- stan(file = "base_model.stan", 
+quadratic_model_stan <- stan(file = "quadratic_model.stan", 
                              data = data, 
                              iter = 53000,
                              warmup = 3000, 
                              thin = 50,
                              chains = 4,
-                             cores = 30),
+                             cores = 30,
                              init = 0, # or "random"?
                              seed = 20210310, # date the model was ran 
                              algorithm = "NUTS",
                              verbose = TRUE,
                              control = list(adapt_delta = 0.95) # smaller steps
                              )
-save(quadratic_model_stan, "quadratic_model_stanCC.rda")
+
+save(quadratic_model_stan, file = "quadratic_model_stanCC.rda")
 # -----------------------------------------------------------------------
