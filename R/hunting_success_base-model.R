@@ -24,10 +24,10 @@ library(data.table)
 library(rstan)
 
 # Set the working directory on the servers
-setwd("/home/maxime11/projects/def-monti/maxime11/data")
+setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
 
 # Load dataset
-data <- fread("02_merged-data.csv",
+data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
