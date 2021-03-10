@@ -101,7 +101,7 @@ model_formula <- brmsformula(hunting_success | trials(total_prey) ~
 
 # Base model with STAN
 # -----------------------------------------------------------------------
-base_model_stan <- stan(file = "base_model.stan", 
+base_model_stan <- stan(file = "03B_base_model.stan", 
                              data = data, 
                              iter = 203000,
                              warmup = 3000, 
