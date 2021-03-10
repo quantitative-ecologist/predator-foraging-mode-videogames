@@ -14,6 +14,7 @@
 
 
 
+
 # =======================================================================
 # 1. Set working directory, load libraries, and import dataset 
 # =======================================================================
@@ -102,9 +103,9 @@ model_formula <- brmsformula(hunting_success | trials(total_prey) ~
 # -----------------------------------------------------------------------
 base_model_stan <- stan(file = "base_model.stan", 
                              data = data, 
-                             iter = 53000,
+                             iter = 203000,
                              warmup = 3000, 
-                             thin = 50,
+                             thin = 100,
                              chains = 4,
                              cores = 30),
                              init = 0, # or "random"?
@@ -114,5 +115,5 @@ base_model_stan <- stan(file = "base_model.stan",
                              control = list(adapt_delta = 0.95) # smaller steps
                              )
 
-save(base_model_stan, file = "base_model_stanCC.rda")
+save(base_model_stan, file = "base_model_stan.rda")
 # -----------------------------------------------------------------------
