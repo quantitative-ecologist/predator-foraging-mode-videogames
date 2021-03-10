@@ -18,7 +18,7 @@
 # =======================================================================
 # 1. Set working directory, load libraries, and import dataset 
 # =======================================================================
-setwd("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/chapter1/outputs") # personal computer onedrive UQAM Montiglio lab
+setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs")
 
 library(data.table)
 library(AICcmodavg)
@@ -26,8 +26,9 @@ library(lme4)
 library(lattice)
 library(MuMIn)
 library(DHARMa)
+library(insight)
 
-data <- fread("02_merged-data.csv",
+data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv",
               select = c("cohort", "mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
@@ -144,7 +145,43 @@ system.time(base_model <- glmer(cbind(hunting_success, 4 - hunting_success) ~
                                            family = binomial,
                                            data = data))
 
-# Save the model for further use in plots
+
+data[, total_prey := 4]
+data_sub <- data[mirrors_id %in% c("JATHS5909D", "OZDOD9085O", "ZETSA0228O"),]
+data_sub$obs <- 1:nrow(data_sub)
+
+
+
+priors <- set_prior("normal(0, 5)", class = "b")
+
+system.time(base_model <- brm(hunting_success | trials(total_prey) ~
+                                 Zspeed +
+                                 Zprox_mid_guard +
+                                 Zspace_covered_rate +
+                                 Zsurv_speed +
+                                 Zsurv_space_covered_rate +
+                                 (1 | obs) +
+                                 (1 | map_name) +
+                                 (1 | mirrors_id),
+                              family = binomial(link = "logit"),
+                              warmup = 3000, 
+                              iter = 53000,
+                              thin = 50,
+                              chains = 2, 
+                              inits = "0", 
+                              cores = 2,
+                              seed = 123,
+                              prior = priors,
+                              control = list(adapt_delta = 0.95),
+                              data = data_sub))
+
+summary(base_model)
+
+mcmc_plot(base_model, 
+         type = "trace")
+
+
+#Save the model for further use in plots
 save(base_model, file = "05B_base-model.rda")
 # =======================================================================
 # =======================================================================
@@ -397,10 +434,21 @@ R2_C <- (VarF + sum(as.numeric(VarCorr(base_model)[c(2,3)]))) / # Fixed effect v
 # Save r-squared values into a table
 r_squared <- as.data.table(cbind(R2_M, R2_C))
 save(r_squared, file = "05B_r2-table.rda")
+
+
+
+# R2 for brms fit
+fixef_var <- get_variance(base_model2, component = "fixed")
+ranef_var <- get_variance(base_model2, component = "intercept")
+
+# Marfinal R2
+as.numeric(fixef_var) / (as.numeric(fixef_var) + sum(ranef_var$var.intercept) + VarDS)
+
+# Conditional R2
+(as.numeric(fixef_var) + sum(ranef_var$var.intercept[c(1,2)])) / (as.numeric(fixef_var) + sum(ranef_var$var.intercept) + VarDS)
+
+
 # End of script =========================================================
-
-
-
 
 
 
