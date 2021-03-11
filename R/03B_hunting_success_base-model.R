@@ -21,6 +21,8 @@
 
 # Packages
 library(data.table)
+library(ggplot2)
+library(rlang)
 library(rstan)
 
 # Set the working directory on the servers
