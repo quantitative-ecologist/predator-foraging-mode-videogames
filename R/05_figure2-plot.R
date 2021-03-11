@@ -1,10 +1,15 @@
-###################################################################
+#########################################################################
 
-####    A. Chapter 1. Panel plot of hunting success analyses   ####
+#                Panel plot of hunting success analyses                 #
 
-###################################################################
+#########################################################################
 
-# Produce plots from the model's marginal effects (mean effect)
+# Code to produce Figure 2 in Fraser Franco et al. 2021.
+# Plot marginal effects of the base and quadratic hunting success models
+
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -----------------------------------------------------------------------
 
 
 

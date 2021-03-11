@@ -1,9 +1,15 @@
 
-####################################################################################
+###########################################################################
 
-#                       Chapter 1. Principal component analysis                    #
+#           Principal component analysis on predator behaviour            #
 
-####################################################################################
+###########################################################################
+
+# Code to produce the PCA and Figure S1 in Fraser Franco et al. (2021).
+
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -------------------------------------------------------------------------
 
 
 

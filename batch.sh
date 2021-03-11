@@ -12,4 +12,4 @@ module load r/4.0.2
 module load r-bundle-bioconductor/3.12
 
 export R_LIBS=~/.local/R/$EBVERSIONR/
-R CMD BATCH --no-save --no-restore hunting_success_base-model.R
+R CMD BATCH --no-save --no-restore 03B_hunting_success_base-model.R

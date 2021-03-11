@@ -1,15 +1,22 @@
-#############################################################
-#### A. Chapter 1. Predator behavioural variation plots ####
-#############################################################
+#########################################################################
 
-# Code to produce figure 1 in Fraser Franco et al. 2020 JAE.
+#                     Behavioural correlations plot                     #
+
+#########################################################################
+
+# Code to produce Figure 1 in Fraser Franco et al. 2021.
 # Powerpoint was used to produce the final adjustements
 
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -----------------------------------------------------------------------
 
 
 
 
-# 1. Set working directory, load libraries, and export dataset ==========
+
+# =======================================================================
+# 1. Set working directory, load libraries, and export dataset
 # =======================================================================
 # personal computer onedrive UQAM Montiglio lab
 setwd("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/masters_project/chapter1/outputs")
@@ -25,6 +32,10 @@ library(MCMCglmm)
 load("05A_multivariate_ranef.rda")
 load("05A_IDcorr_list.rda")
 load("05A_ModMV1.rda")
+
+# Character variables to factor variables
+char_as_factor <- names(ranef_table)[sapply(ranef_table, is.character)] # extract columns that are characters
+ranef_table[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_factor] # columns as factors
 # =======================================================================
 # =======================================================================
 
@@ -32,15 +43,12 @@ load("05A_ModMV1.rda")
 
 
 
-# 2. Prepare the tables =================================================
+# =======================================================================
+# 2. Prepare the tables
 # =======================================================================
 
 # Random effects table
 # ------------------------------------------
-# Character variables to factor variables
-char_as_factor <- names(ranef_table)[sapply(ranef_table, is.character)] # extract columns that are characters
-ranef_table[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_factor] # columns as factors
-
 
 # Create variables for the plot groupings
 #ranef_table[, type := c(rep("Agreement", 9),
@@ -68,7 +76,7 @@ ranef_table[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_fact
 
 
 
-# Correlation table (matrixes) #1
+# 2.a table for correlation matrixes #1
 # ------------------------------------------
 
 # Individual level matrix ---
@@ -110,7 +118,7 @@ env_corr[3, 3] <- NA
 
 
 
-# Correlation table #2
+# 2.b table for correlation matrixes #2
 # ------------------------------------------
 corr_table <- as.data.table(among_corr[2:3])
 corr_table <- rbind(corr_table, as.data.table(among_corr[3, 2]))
@@ -144,7 +152,8 @@ corr_table[, group_ordered := factor(group, levels = c("Vitesse~Espace", "Vitess
 
 
 
-# Correlation table #3 (including environmental correlations for plot #3)
+# 2.c table for correlation matrixes #3 
+# (including environmental correlations for plot #3)
 # ------------------------------------------
 env_table <- as.data.table(env_corr[2:3])
 env_table <- rbind(env_table, as.data.table(env_corr[3,2]))
@@ -167,7 +176,8 @@ corr_table2 <- rbind(corr_table, env_table)
 
 
 
-# 3. Prepare some plot options ==========================================
+# =======================================================================
+# 3. Prepare some plot options
 # =======================================================================
 # Colorblind friendly palettes
 # The palette with grey:
@@ -188,7 +198,8 @@ pd <- position_dodge(0.5)
 
 
 
-# 4. Generate final figure =============================================
+# ======================================================================
+# 4. Generate final figure
 # ======================================================================
 
 # Repeatabilities (ICC) plot

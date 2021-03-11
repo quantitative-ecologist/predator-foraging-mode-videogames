@@ -1,13 +1,17 @@
-#######################################################
-#### A. Chapter 1. Predator behavioural expression ####
-#######################################################
-# Build two multivariate mixed-model to :
-# 1. partition the variance of predator behaviour
-# 2. evaluate how predators respond to prey behaviour
+##########################################################################
 
+#          Predator repeatability and behavioural correlations           #
 
-# Build a small model to evaluate prey repeatability of space covered rate (to do maybe)
-# (to assess if prey are leading the predator-prey interaction)
+##########################################################################
+
+# Code to for two multivariate mixed-models to :
+# 1. partition the variance in predator behaviour
+# 2. quantify behavioural correlations among predator behaviours
+# 3. evaluate how predators respond to prey behaviour
+
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -----------------------------------------------------------------------
 
 
 
