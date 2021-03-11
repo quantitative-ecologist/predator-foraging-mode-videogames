@@ -104,13 +104,13 @@ model_formula <- brmsformula(hunting_success | trials(total_prey) ~
 
 # Base model with STAN
 # -----------------------------------------------------------------------
-base_model_stan <- stan(file = "03B_base_model.stan", 
+base_model_stan <- stan(file = "03B_base-model.stan", 
                              data = data, 
                              iter = 203000,
                              warmup = 3000, 
                              thin = 100,
                              chains = 4,
-                             cores = 30),
+                             cores = 30,
                              init = 0, # or "random"?
                              seed = 20210310, # date the model was ran 
                              algorithm = "NUTS",
