@@ -24,7 +24,7 @@ library(data.table)
 library(rstan)
 
 # Set the working directory on the servers
-setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
+#setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
 
 # Load dataset
 data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
