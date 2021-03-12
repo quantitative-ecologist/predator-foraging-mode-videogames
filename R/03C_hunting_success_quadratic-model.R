@@ -26,7 +26,7 @@
 
 # Packages
 library(data.table)
-library(rstan)
+library(brms)
 
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
@@ -36,7 +36,8 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zsurv_speed", "Zsurv_space_covered_rate"))
+                         "Zsurv_speed", "Zsurv_space_covered_rate"),
+                         stringsAsFactors = TRUE)
 
 # Add total number of prey
 data[, total_prey := 4]
@@ -108,38 +109,38 @@ model_formula <- brmsformula(hunting_success | trials(total_prey) ~
 
 # Base model brms
 # -----------------------------------------------------------------------
-#system.time(quadratic_model <- brm(formula = model_formula,
-#                                   family = binomial(link = "logit"),
-#                                   warmup = 3000, 
-#                                   iter = 53000,
-#                                   thin = 50,
-#                                   chains = 2, 
-#                                   inits = "0", 
-#                                   cores = 2,
-#                                   seed = 20210312,
-#                                   prior = priors,
-#                                   control = list(adapt_delta = 0.95),
-#                                   data = data_sub))
-#
-#save(quadratic_model, file = "quadratic_model_test.rda")
+system.time(quadratic_model <- brm(formula = model_formula,
+                                   family = binomial(link = "logit"),
+                                   warmup = 3000, 
+                                   iter = 203000,
+                                   thin = 100,
+                                   chains = 4, 
+                                   inits = "0", 
+                                   cores = 30,
+                                   seed = 20210312,
+                                   prior = priors,
+                                   control = list(adapt_delta = 0.95),
+                                   data = data_sub))
+
+save(quadratic_model, file = "quadratic_model.rda")
 # -----------------------------------------------------------------------
 
 
 # Base model with STAN
 # -----------------------------------------------------------------------
-quadratic_model_stan <- stan(file = "03C_quadratic-model.stan", 
-                             data = data, 
-                             iter = 203000,
-                             warmup = 3000, 
-                             thin = 100,
-                             chains = 4,
-                             cores = 30,
-                             init = 0, # or "random"?
-                             seed = 20210312, # date the model was ran 
-                             algorithm = "NUTS",
-                             verbose = TRUE,
-                             control = list(adapt_delta = 0.95) # smaller steps
-                             )
-
-save(quadratic_model_stan, file = "quadratic_model_stan.rda")
+#quadratic_model_stan <- stan(file = "03C_hunting_success_quadratic-model.stan", 
+#                             data = data, 
+#                             iter = 203000,
+#                             warmup = 3000, 
+#                             thin = 100,
+#                             chains = 4,
+#                             cores = 30,
+#                             init = 0, # or "random"?
+#                             seed = 20210312, # date the model was ran 
+#                             algorithm = "NUTS",
+#                             verbose = TRUE,
+#                             control = list(adapt_delta = 0.95) # smaller steps
+#                             )
+#
+#save(quadratic_model_stan, file = "quadratic_model_stan.rda")
 # -----------------------------------------------------------------------
