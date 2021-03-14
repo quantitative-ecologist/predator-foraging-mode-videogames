@@ -31,8 +31,8 @@ Type 'q()' to quit R.
 > # Contact: maxime.fraser.franco@hotmail.com
 > # Département des Sciences Biologiques, UQAM, Montréal, Québec
 > 
-> # Detect number of cores?
-> # options(mc.cores = parallel::detectCores())
+> # Detect number of cores
+> options(mc.cores = parallel::detectCores())
 > # -----------------------------------------------------------------------
 > 
 > 
@@ -46,132 +46,5 @@ Type 'q()' to quit R.
 > # Packages
 > library(data.table)
 > library(brms)
-Loading required package: Rcpp
-Loading 'brms' package (version 2.14.4). Useful instructions
-can be found by typing help('brms'). A more detailed introduction
-to the package is available through vignette('brms_overview').
-
-Attaching package: ‘brms’
-
-The following object is masked from ‘package:stats’:
-
-    ar
-
-> 
-> # Set the working directory on the servers
-> #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
-> 
-> # Load dataset
-> data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
-+               select = c("mirrors_id", "match_id", 
-+                          "map_name", "hunting_success", "Zspeed", 
-+                          "Zprox_mid_guard", "Zspace_covered_rate",
-+                          "Zsurv_speed", "Zsurv_space_covered_rate"),
-+                          stringsAsFactors = TRUE)
-> 
-> # Add total number of prey
-> data[, total_prey := 4]
-> 
-> # Add observation-level random effect
-> data$obs <- 1:nrow(data)
-> 
-> # =======================================================================
-> # =======================================================================
-> 
-> 
-> 
-> 
-> 
-> # =======================================================================
-> # 2. Parametrize the model
-> # =======================================================================
-> 
-> # Set priors
-> priors <- set_prior("normal(0, 5)", class = "b")
-> # on the random intercepts?
-> 
-> # linear model formula
-> model_formula <- brmsformula(hunting_success | trials(total_prey) ~
-+                                         Zspeed +
-+                                         Zspace_covered_rate +
-+                                         Zprox_mid_guard +
-+                                         Zsurv_speed +
-+                                         Zsurv_space_covered_rate +
-+                                         (1 | map_name) +
-+                                         (1 | mirrors_id) +
-+                                         (1 | obs))
-> 
-> # Create the stan code (RUN ONCE):
-> #make_stancode(formula = model_formula, 
-> #              family = binomial(link = "logit"),
-> #              data = data,
-> #              prior = priors,
-> #              )
-> 
-> # =======================================================================
-> # =======================================================================
-> 
-> 
-> 
-> 
-> 
-> # =======================================================================
-> # 3. Run model
-> # =======================================================================
-> 
-> # Base model brms
-> # -----------------------------------------------------------------------
-> system.time(base_model <- brm(formula = model_formula,
-+                               family = binomial(link = "logit"),
-+                               warmup = 3000, 
-+                               iter = 203000,
-+                               thin = 100,
-+                               chains = 4, 
-+                               inits = "0", 
-+                               cores = 30,
-+                               seed = 20210310,
-+                               prior = priors,
-+                               control = list(adapt_delta = 0.95),
-+                               data = data))
-Compiling Stan program...
-Start sampling
-
-SAMPLING FOR MODEL '1c038b6e093eeed3c8de590fdb61dbff' NOW (CHAIN 2).
-
-SAMPLING FOR MODEL '1c038b6e093eeed3c8de590fdb61dbff' NOW (CHAIN 1).
-
-
-SAMPLINGSAMPLING FOR MODEL ' FOR MODEL '1c038b6e093eeed3c8de590fdb61dbff1c038b6e093eeed3c8de590fdb61dbff' NOW (CHAIN ' NOW (CHAIN 43).
-).
-Chain 2: 
-Chain 2: Gradient evaluation took 0.026605 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 266.05 seconds.
-Chain 2: Adjust your expectations accordingly!
-Chain 2: 
-Chain 2: 
-Chain 4: 
-Chain 4: Gradient evaluation took 0.028455 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 284.55 seconds.
-Chain 4: Adjust your expectations accordingly!
-Chain 4: 
-Chain 4: 
-Chain 1: 
-Chain 1: Gradient evaluation took 0.027354 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 273.54 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 2: Iteration:      1 / 203000 [  0%]  (Warmup)
-Chain 3: 
-Chain 3: Gradient evaluation took 0.028795 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 287.95 seconds.
-Chain 3: Adjust your expectations accordingly!
-Chain 3: 
-Chain 3: 
-Chain 4: Iteration:      1 / 203000 [  0%]  (Warmup)
-Chain 1: Iteration:      1 / 203000 [  0%]  (Warmup)
-Chain 3: Iteration:      1 / 203000 [  0%]  (Warmup)
-Chain 2: Iteration:   3001 / 203000 [  1%]  (Sampling)
-Chain 1: Iteration:   3001 / 203000 [  1%]  (Sampling)
-Chain 4: Iteration:   3001 / 203000 [  1%]  (Sampling)
-Chain 3: Iteration:   3001 / 203000 [  1%]  (Sampling)
+Error: package ‘Rcpp’ required by ‘brms’ could not be found
+Execution halted

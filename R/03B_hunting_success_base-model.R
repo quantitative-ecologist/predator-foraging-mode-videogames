@@ -28,6 +28,9 @@ options(mc.cores = parallel::detectCores())
 library(data.table)
 library(brms)
 
+# Avoid recompilation
+rstan_options(auto_write = TRUE)
+
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
 
