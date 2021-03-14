@@ -12,8 +12,8 @@
 # Contact: maxime.fraser.franco@hotmail.com
 # Département des Sciences Biologiques, UQAM, Montréal, Québec
 
-# Detect number of cores?
-# options(mc.cores = parallel::detectCores())
+# Detect number of cores
+options(mc.cores = parallel::detectCores())
 # -----------------------------------------------------------------------
 
 
@@ -98,7 +98,7 @@ system.time(base_model <- brm(formula = model_formula,
                               thin = 100,
                               chains = 4, 
                               inits = "0", 
-                              cores = 30,
+                              cores = 31,
                               seed = 20210310,
                               prior = priors,
                               control = list(adapt_delta = 0.95),

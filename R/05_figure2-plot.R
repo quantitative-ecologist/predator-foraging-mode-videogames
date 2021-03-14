@@ -18,32 +18,32 @@
 # 1. Set working directory, load libraries, datasets, and models
 # =======================================================================
 
-setwd("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/masters_project/chapter1/outputs") # personal computer onedrive UQAM Montiglio lab
+setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2") # personal computer onedrive UQAM Montiglio lab
 
 library(data.table)
-library(lme4)
-library(Matrix)
-library(arm)
+library(brms)
+library(tidybayes)
+library(modelr)
+#library(Matrix)
+#library(arm)
 library(ggplot2)
-library(ggpubr)
-library(tidyr)
+#library(ggpubr)
+#library(tidyr)
 
-# Load the dataset
-data <- fread("02_merged-data.csv",
-                        select = c("cohort", "mirrors_id", "match_id", "map_name", "sum_bloodpoints",
-                                   "Zspeed", "Zprox_mid_guard", "Zspace_covered_rate",
-                                   "sqrtspeed", "sqrtprox_mid_guard", "sqrtspace_covered_rate"))
+# Load dataset
+data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv",
+              select = c("mirrors_id", "match_id", 
+                         "map_name", "hunting_success", "Zspeed", 
+                         "Zprox_mid_guard", "Zspace_covered_rate",
+                         "Zsurv_speed", "Zsurv_space_covered_rate"),
+                         stringsAsFactors = TRUE)
 
-# Create the proportion of bloodpoints obtained for plotting
-data[, prop_bloodpoints := sum_bloodpoints / 32000]
-
-# Character variables to factor variables
-char_as_factor <- names(data)[sapply(data, is.character)] # extract columns that are characters
-data[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_factor] # columns as factors
+# Create a variable for y axis
+data[, prop_captures := hunting_success/4]
 
 # Load both models
-load("05B_directional-model.rda")
-load("05C_quadratic-model.rda")
+load("base-model.rda")
+load("quadratic-model.rda")
 # =======================================================================
 # =======================================================================
 
@@ -51,9 +51,118 @@ load("05C_quadratic-model.rda")
 
 
 
-# 2 Directional selection plots =========================================
+
+# Method 1 custom
+ggplot() +
+geom_point(data = data,
+             aes(x = Zspeed, y = prop_captures),
+             shape = 16, 
+             alpha = 0.1, 
+             color = "black") + # or point shape 20
+  geom_line(data = data,
+            aes(x = Zspeed, y = plogis(fixef(base_model2)[1] + fixef(base_model2)[2] * Zspeed)), 
+            size = 1.5,
+            color = "#F8766D") +
+  scale_y_continuous(breaks = seq(0, 1, .25), 
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(-8, 6, 4), 
+                     limits = c(-8, 6)) +
+  xlab("\nSpeed") +
+  ylab("Proportion of prey captured\n") +
+  custom_theme +
+  geom_line(aes(x = data$Zspeed, y = plogis(fixef(base_model2)[2,3])),
+            linetype = "dashed", 
+            size = 1,
+            color = "#00BFC4") +
+  geom_line(aes(x = data$Zspeed, y = plogis(fixef(base_model2)[2,4])),
+            linetype = "dashed", 
+            size = 1,
+            color = "#00BFC4")
+  
+
+
+
+custom_theme <- theme(axis.text.x = element_text(face = "plain", 
+                                                 size = 14,
+                                                 color = "black"), # axis tick numbers size
+                      axis.text.y = element_text(face = "plain", 
+                                                 size = 14,
+                                                 color = "black"),
+                      axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
+                      axis.ticks = element_line(size = 0.90, 
+                                                color = "black"), # axis ticks width
+                      axis.title = element_text(size = 14, 
+                                                face = "plain"), # axis titles size
+                      axis.line = element_line(size = 0.95),
+                      plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
+                      legend.position = "none",
+                      panel.grid = element_blank(),
+                      panel.background = element_blank())
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Method 2 with tidybayes
+fe_only <- tibble(Zspeed =     seq(min(data$Zspeed), 
+                                  max(data$Zspeed),
+                                  length.out = 100), 
+                  Zspace_covered_rate =     seq(min(data$Zspace_covered_rate), 
+                                  max(data$Zspace_covered_rate),
+                                  length.out = 100),             
+                  Zprox_mid_guard =     seq(min(data$Zprox_mid_guard), 
+                                  max(data$Zprox_mid_guard),
+                                  length.out = 100),             
+                  Zsurv_speed = seq(min(data$Zsurv_speed), 
+                                  max(data$Zsurv_speed),
+                                  length.out = 100),             
+                  Zsurv_space_covered_rate = seq(min(data$Zsurv_space_covered_rate), 
+                                  max(data$Zsurv_space_covered_rate),             
+                                  length.out = 100),
+                  total_prey = rep(4, length = 100)) %>%
+  add_fitted_draws(base_model2,
+                   re_formula = NA, 
+                   value = ".value",
+                   scale = "response", 
+                   n = 1e3)
+
+fe_only_mean <- fe_only[,1:4] %>% 
+  group_by(data$Zspeed) %>%
+  summarize(.value = mean(.value))
+
+
+ggplot(fe_only,
+       aes(x = speed, y = .value,
+           group = .draw)) +
+  geom_line(alpha = 0.1) +
+  geom_line(data = fe_only_mean, color = "red", lwd = 2, group = 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # =======================================================================
-# -----------------------------------------------------------------------------------------
+# 2. Base hunting success plots
+# =======================================================================
+
 # Build model matrixes and coefficient tables
 
 # Z speed gradient model matrix
