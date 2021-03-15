@@ -13,7 +13,7 @@
 # Département des Sciences Biologiques, UQAM, Montréal, Québec
 
 # Detect number of cores?
-# options(mc.cores = parallel::detectCores())
+options(mc.cores = parallel::detectCores())
 # -----------------------------------------------------------------------
 
 
@@ -116,7 +116,7 @@ system.time(quadratic_model <- brm(formula = model_formula,
                                    thin = 100,
                                    chains = 4, 
                                    inits = "0", 
-                                   cores = 30,
+                                   cores = 79,
                                    seed = 20210312,
                                    prior = priors,
                                    control = list(adapt_delta = 0.95),
