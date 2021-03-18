@@ -27,6 +27,7 @@ options(mc.cores = parallel::detectCores())
 # Packages
 library(data.table)
 library(brms)
+library(cmdstanr)
 
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
@@ -87,7 +88,6 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 # =======================================================================
 
 # Base model brms
-# -----------------------------------------------------------------------
 system.time(base_model <- brm(formula = model_formula,
                               family = binomial(link = "logit"),
                               warmup = 3000, 
@@ -95,31 +95,14 @@ system.time(base_model <- brm(formula = model_formula,
                               thin = 100,
                               chains = 4, 
                               inits = "0", 
-                              cores = 39,
-                              seed = 20210310,
+                              threads = threading(20),
+                              backend = "cmdstanr",
+                              seed = 20210318,
                               prior = priors,
                               control = list(adapt_delta = 0.95),
                               data = data))
 
 save(base_model, file = "base_model.rda")
-# -----------------------------------------------------------------------
 
-
-# Base model with STAN
-# -----------------------------------------------------------------------
-#base_model_stan <- stan(file = "03B_hunting_success_base-model.stan", 
-#                             data = data, 
-#                             iter = 203000,
-#                             warmup = 3000, 
-#                             thin = 100,
-#                             chains = 4,
-#                             cores = 30,
-#                             init = 0, # or "random"?
-#                             seed = 20210310, # date the model was ran 
-#                             algorithm = "NUTS",
-#                             verbose = TRUE,
-#                             control = list(adapt_delta = 0.95) # smaller steps
-#                             )
-
-#save(base_model_stan, file = "base_model_stan.rda")
-# -----------------------------------------------------------------------
+# =======================================================================
+# =======================================================================
