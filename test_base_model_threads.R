@@ -27,6 +27,7 @@ options(mc.cores = parallel::detectCores())
 # Packages
 library(data.table)
 library(brms)
+library(cmdstanr)
 
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
@@ -95,6 +96,7 @@ system.time(base_model <- brm(formula = model_formula,
                               seed = 20210310,
                               prior = priors,
                               threads = threading(5),
+                              backend = "cmdstanr",
                               control = list(adapt_delta = 0.95),
                               data = data_sub))
 
