@@ -26,7 +26,7 @@ options(mc.cores = parallel::detectCores())
 
 # Packages
 library(data.table)
-library(brms)
+library(brms) # version 2.15.0
 
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
