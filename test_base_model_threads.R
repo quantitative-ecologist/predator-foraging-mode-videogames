@@ -39,8 +39,13 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
                          "Zsurv_speed", "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
+
 # Add observation-level random effect
 data$obs <- 1:nrow(data)
+
+# Small subset of the data for testing the models
+data_sub <- data[mirrors_id %in% c("JATHS5909D", "OZDOD9085O", "ZETSA0228O", "YZGIN4008I", "IMVTR2511Q"),]
+data_sub$obs <- 1:nrow(data_sub)
 
 # =======================================================================
 # =======================================================================
@@ -68,13 +73,6 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         (1 | mirrors_id) +
                                         (1 | obs))
 
-# Create the stan code (RUN ONCE):
-#make_stancode(formula = model_formula, 
-#              family = binomial(link = "logit"),
-#              data = data,
-#              prior = priors,
-#              )
-
 # =======================================================================
 # =======================================================================
 
@@ -87,39 +85,20 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 # =======================================================================
 
 # Base model brms
-# -----------------------------------------------------------------------
 system.time(base_model <- brm(formula = model_formula,
                               family = binomial(link = "logit"),
                               warmup = 3000, 
-                              iter = 203000,
-                              thin = 100,
+                              iter = 53000,
+                              thin = 50,
                               chains = 4, 
-                              inits = "0", 
-                              cores = 39,
+                              inits = "0",
                               seed = 20210310,
                               prior = priors,
+                              threads = threading(5),
                               control = list(adapt_delta = 0.95),
-                              data = data))
+                              data = data_sub))
 
-save(base_model, file = "base_model.rda")
-# -----------------------------------------------------------------------
+save(base_model, file = "base_model_threads.rda")
 
-
-# Base model with STAN
-# -----------------------------------------------------------------------
-#base_model_stan <- stan(file = "03B_hunting_success_base-model.stan", 
-#                             data = data, 
-#                             iter = 203000,
-#                             warmup = 3000, 
-#                             thin = 100,
-#                             chains = 4,
-#                             cores = 30,
-#                             init = 0, # or "random"?
-#                             seed = 20210310, # date the model was ran 
-#                             algorithm = "NUTS",
-#                             verbose = TRUE,
-#                             control = list(adapt_delta = 0.95) # smaller steps
-#                             )
-
-#save(base_model_stan, file = "base_model_stan.rda")
-# -----------------------------------------------------------------------
+# =======================================================================
+# =======================================================================

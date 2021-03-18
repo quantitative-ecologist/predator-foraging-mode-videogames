@@ -39,9 +39,6 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
                          "Zsurv_speed", "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
-# Add total number of prey
-data[, total_prey := 4]
-
 # Add observation-level random effect
 data$obs <- 1:nrow(data)
 
@@ -61,7 +58,7 @@ priors <- set_prior("normal(0, 5)", class = "b")
 # on the random intercepts?
 
 # quadratic model formula
-model_formula <- brmsformula(hunting_success | trials(total_prey) ~
+model_formula <- brmsformula(hunting_success | trials(4) ~
                                         # Quadratic terms
                                         I(Zspeed^2) +
                                         I(Zspace_covered_rate^2) +
