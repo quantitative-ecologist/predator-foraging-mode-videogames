@@ -91,18 +91,23 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 system.time(base_model <- brm(formula = model_formula,
                               family = binomial(link = "logit"),
                               warmup = 3000, 
-                              iter = 203000,
+                              iter = 153000,
                               thin = 100,
                               chains = 4, 
                               inits = "0", 
-                              threads = threading(20),
+                              threads = threading(10),
                               backend = "cmdstanr",
-                              seed = 20210318,
+                              seed = 20210322, # date when the model was ran
                               prior = priors,
                               control = list(adapt_delta = 0.95),
                               data = data))
 
 save(base_model, file = "base_model.rda")
+
+
+# Save session info for reproducibility
+session <- sessionInfo()
+capture.output(session, file = "03B_sessioninfo.txt")
 
 # =======================================================================
 # =======================================================================

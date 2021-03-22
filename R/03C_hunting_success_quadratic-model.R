@@ -26,7 +26,8 @@ options(mc.cores = parallel::detectCores())
 
 # Packages
 library(data.table)
-library(brms) # version 2.15.0
+library(brms)
+library(cmdstanr)
 
 # Set the working directory on the servers
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
@@ -109,35 +110,22 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 system.time(quadratic_model <- brm(formula = model_formula,
                                    family = binomial(link = "logit"),
                                    warmup = 3000, 
-                                   iter = 203000,
+                                   iter = 153000,
                                    thin = 100,
                                    chains = 4, 
                                    inits = "0", 
-                                   cores = 79,
-                                   seed = 20210312,
+                                   threads = threading(10),
+                                   backend = "cmdstanr",
+                                   seed = 20210322, # date when the model was ran
                                    prior = priors,
                                    control = list(adapt_delta = 0.95),
                                    data = data_sub))
 
 save(quadratic_model, file = "quadratic_model.rda")
-# -----------------------------------------------------------------------
 
+# Save session info for reproducibility
+session <- sessionInfo()
+capture.output(session, file = "03C_sessioninfo.txt")
 
-# Base model with STAN
-# -----------------------------------------------------------------------
-#quadratic_model_stan <- stan(file = "03C_hunting_success_quadratic-model.stan", 
-#                             data = data, 
-#                             iter = 203000,
-#                             warmup = 3000, 
-#                             thin = 100,
-#                             chains = 4,
-#                             cores = 30,
-#                             init = 0, # or "random"?
-#                             seed = 20210312, # date the model was ran 
-#                             algorithm = "NUTS",
-#                             verbose = TRUE,
-#                             control = list(adapt_delta = 0.95) # smaller steps
-#                             )
-#
-#save(quadratic_model_stan, file = "quadratic_model_stan.rda")
-# -----------------------------------------------------------------------
+# =======================================================================
+# =======================================================================
