@@ -105,8 +105,7 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 # 3. Run model
 # =======================================================================
 
-# Base model brms
-# -----------------------------------------------------------------------
+# Quadratic model with brms
 system.time(quadratic_model <- brm(formula = model_formula,
                                    family = binomial(link = "logit"),
                                    warmup = 3000, 
@@ -119,7 +118,7 @@ system.time(quadratic_model <- brm(formula = model_formula,
                                    seed = 20210322, # date when the model was ran
                                    prior = priors,
                                    control = list(adapt_delta = 0.95),
-                                   data = data_sub))
+                                   data = data))
 
 save(quadratic_model, file = "quadratic_model.rda")
 
