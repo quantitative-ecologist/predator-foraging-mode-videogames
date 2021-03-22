@@ -347,7 +347,7 @@ guard <- ggplot(data_sub,
                                     x = Zprox_mid_guard, 
                                     group = .draw),
                       color = cbp1[6], 
-                      alpha = 0.1) +
+                      alpha = 0.1) + 
             geom_line(data = fe_guard, 
                       mapping = aes(y = plogis(.value), 
                                     x = Zprox_mid_guard, 
@@ -365,7 +365,8 @@ guard <- ggplot(data_sub,
                     xlab("\nGuard") +
                     scale_y_continuous(breaks = seq(0, 1, .25),
                                        limits = c(0, 1)) +
-                    custom_theme
+                    #custom_theme +
+                    stat_interval()
 # -----------------------------------
 
 # =======================================================================
