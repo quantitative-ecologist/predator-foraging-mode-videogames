@@ -17,10 +17,9 @@
 
 
 
-# 1. Set working directory, load libraries, and export dataset ==========
 # =======================================================================
-# personal computer onedrive UQAM Montiglio lab
-setwd("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/masters_project/chapter1/outputs")
+# 1. Set working directory, load libraries, and export dataset
+# =======================================================================
 
 # Import libraries
 library(data.table)
@@ -29,40 +28,18 @@ library(GGally)
 library(MCMCglmm)
 
 # load dataset
-behaviour_data <- fread("02_merged-data.csv")
+behaviour_data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv", stringsAsFactors = TRUE)
 
-
-
-# Character variables to factor variables
-char_as_factor <- names(behaviour_data)[sapply(behaviour_data, is.character)] # extract columns that are characters
-behaviour_data[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_factor] # columns as factors
-# ======================================================================
-# ======================================================================
-
-
-
-
-
-# 2. Draw a random subsample of the table (for testing only)=============
 # =======================================================================
-# Filter out players who played less than 5 matches
-# -------------------------------------------------
-#behaviour_data[, n_matches := length(unique(match_id)), by = mirrors_id]
-
-# How many players have less than 5 matches?
-#length(unique(behaviour_data[n_matches < 5]$mirrors_id))
-
-# Proportion of players having less than 5 matches on the total
-#(length(unique(behaviour_data[n_matches < 5]$mirrors_id))) / (length(unique(behaviour_data$mirrors_id)))
-# 41.7% of the entire player base
+# =======================================================================
 
 
 
-# Model should be runned on a small subsample for testing
-# -------------------------------------------------------
-#set.seed(20200519)
-#sub_behaviour_data <- behaviour_data[mirrors_id %in% sample(unique(mirrors_id), 100)]
 
+
+# =======================================================================
+# 2. Prepare data for the model
+# =======================================================================
 
 
 # Normalize sqrt variables (Z-scores)
@@ -74,58 +51,44 @@ behaviour_data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard
                 lapply(.SD, standardize), 
                 .SDcols = c(48, 49, 47, 58, 59)]
 
-# Remove matches where survivor speed seem like outliers (-9 stdev)
-#behaviour_data_NOoutliers <- behaviour_data[Zsqrtsurv_speed > -8] 
-# STANDARDIZE AGAIN AFTER
-#behaviour_data_NOoutliers[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
-#                              "Zsqrtsurv_speed", "Zsqrtsurv_space_covered_rate") :=
-#                          lapply(.SD, standardize), 
-#                          .SDcols = c(48, 49, 47, 58, 59)]
-
 
 # Plot the data
 # -------------------------------------------------------
 # Standard plots
-#with(sub_behaviour_data, plot(Zspeed))
 with(behaviour_data, plot(Zspeed))
 with(behaviour_data, plot(Zsurv_speed))
 
-#with(sub_behaviour_data, plot(Zspace_covered_rate))
 with(behaviour_data, plot(Zspace_covered_rate))
 with(behaviour_data, plot(Zsurv_space_covered_rate))
 
-#with(sub_behaviour_data, plot(Zprox_mid_guard))
 with(behaviour_data, plot(Zprox_mid_guard))
 
 
 
-# ZSqrt seems to be the best scaling for the model
+# Pair plot
 ggpairs(behaviour_data[, c(77, 78, 79, # Zsqrt pred
                            80, 81 # Zsqrt prey
                            )
                       ]
        )
 
-ggpairs(behaviour_data_NOoutliers[, c(78, 79, 80, # Zsqrt pred
-                           81, 82 # Zsqrt prey
-                           )
-                      ]
-       )
-# ======================================================================
-# ======================================================================
+# ZSqrt seems to be the best scaling for the model
+
+# =======================================================================
+# =======================================================================
 
 
 
 
 
-# 3. Specify the multivariate model ===================================== 
+# =======================================================================
+# 3. Build the multivariate model 
 # =======================================================================
 # ( nitt - burnin ) / thin = 1000
 # nitt: number of iterations, it has to be nitt = (thin*10000) + burnin
 # burnin: the number of iterations that are discarded at the beginning
 # thin: every how many iterations we take one to store
 
-# For testing, nitt = 53000, thin = 50, burnin = 3000
 # For the final model, thinning = 100 with nitt = 203 000 with burning = 3000
 
 # Assign prior for variance-covariance matrix (inverse-Wishart) and random effects
@@ -150,62 +113,64 @@ prior <- list(R = list(V = diag(3), nu = 2.002),
                                  nu = 2.002),
                        G3 = list(V = diag(3), 
                                  nu = 2.002)))
-#
 
 # First model
 # ------------------------------------------------
 system.time(
 ModMV1 <- MCMCglmm(
-                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
+                  cbind(Zsqrtspeed,
+                        Zsqrtspace_covered_rate,
+                        Zsqrtprox_mid_guard) ~ 
                   (trait - 1), # set a general intercept for response,
-                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name, # random intercepts
+                  random = ~us(trait):mirrors_id + 
+                            us(trait):map_name + 
+                            us(trait):character_name, # random intercepts
                   rcov = ~us(trait):units, # residual matrix
-                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
+                  prior = prior,
+                  nitt = 203000, 
+                  thin = 100, 
+                  burnin = 3000, 
                   verbose = TRUE, 
-                  family = c("gaussian", "gaussian", "gaussian"), # distribution of responses
+                  family = c("gaussian", 
+                             "gaussian",
+                             "gaussian"), # distribution of responses
                   data = behaviour_data
                   )
            )
 
-save(ModMV1, file = "05A_ModMV1.rda")
-load("05A_ModMV1.rda")
-
-#system.time(
-#ModMV1NOoutliers <- MCMCglmm(
-#                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
-#                  (trait - 1),
-#                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name,
-#                  rcov = ~us(trait):units,
-#                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
-#                  verbose = TRUE, 
-#                  family = c("gaussian", "gaussian", "gaussian"),
-#                  data = behaviour_data_NOoutliers
-#                  )
-#           )
-
-#save(ModMV1NOoutliers, file = "05A_ModMV1NOoutliers.rda")
+save(ModMV1, file = "03A_multivariate-model1.rda")
+load("03A_multivariate-model1.rda")
 
 
 
-# Second model with prey effects
+# Second model with effect of prey behaviour
 # ------------------------------------------------
 system.time(
 ModMV2 <- MCMCglmm(
-                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
+                  cbind(Zsqrtspeed,
+                        Zsqrtspace_covered_rate,
+                        Zsqrtprox_mid_guard) ~ 
                   (trait - 1) + # set a general intercept for each predictor
                   trait:Zsqrtsurv_speed +
                   trait:Zsqrtsurv_space_covered_rate,
-                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name, # random intercepts
+                  random = ~us(trait):mirrors_id + 
+                            us(trait):map_name + 
+                            us(trait):character_name, # random intercepts
                   rcov = ~us(trait):units, # residual matrix
-                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
+                  prior = prior,
+                  nitt = 203000,
+                  thin = 100,
+                  burnin = 3000, 
                   verbose = TRUE, 
-                  family = c("gaussian", "gaussian", "gaussian"), # distribution of responses
+                  family = c("gaussian",
+                             "gaussian",
+                             "gaussian"), # distribution of responses
                   data = behaviour_data
                   )
            )
 
-save(ModMV2, file = "05A_ModMV2.rda")
-load("05A_ModMV2.rda")
+save(ModMV2, file = "03A_multivariate-model2.rda")
+load("03A_multivariate-model2.rda")
 # ======================================================================
 # ======================================================================
 
@@ -213,7 +178,8 @@ load("05A_ModMV2.rda")
 
 
 
-# 4. Model diagnostics ================================================== 
+# =======================================================================
+# 4. Model diagnostics 
 # =======================================================================
 # consider trying gelman.diag and gelman.plot for diagnostics too!
 
@@ -249,7 +215,7 @@ HPDinterval(ModMV1$VCV)
 
 
 
-# Second model with prey effects
+# Second model with effect of prey
 # ------------------------------------------------
 # Visualize fixed effects and random effect variance components
 plot(ModMV2$Sol)
@@ -288,8 +254,10 @@ HPDinterval(ModMV2$VCV)
 
 
 
-# 5. Variance-covariance and correlation matrixes ======================= 
 # =======================================================================
+# 5. Variance-covariance and correlation matrixes 
+# =======================================================================
+
 # Model 1
 # ------------------------------------------------
 # Correlations AMONG individuals (it's a 3x3 matrix so we take the first 9)
@@ -316,6 +284,7 @@ load("05A_IDcorr_list.rda")
 # ------------------------------------------------
 
 
+
 # Model 2
 # ------------------------------------------------
 # Correlations AMONG individuals (it's 3 3x3 matrix so we take the first 9)
@@ -327,6 +296,7 @@ matrix(posterior.mode(posterior.cor(ModMV2$VCV[, 28:36])), ncol = 3, byrow = TRU
 HPDinterval(posterior.cor(ModMV2$VCV[, 28:36]))
 
 # Results are mostly the same
+
 # ======================================================================
 # ======================================================================
 
@@ -334,8 +304,10 @@ HPDinterval(posterior.cor(ModMV2$VCV[, 28:36]))
 
 
 
-# 6. Calculate repeatabilities (ICCs)  ================================== 
 # =======================================================================
+# 6. Calculate repeatabilities (ICCs) 
+# =======================================================================
+
 # First model
 # ------------------------------------------------
 # Speed player ID repeatability
@@ -426,10 +398,10 @@ char3.1 <- mean(char3.1)
 
 
 
-# Second model with prey effects + environment ID and player avatar
+# Second model with effect of prey
 # ------------------------------------------------
 # Speed 
-# repeatability
+# player ID repeatability
 rz1.2 <- ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] / 
          (ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
@@ -459,7 +431,7 @@ char1.2 <- mean(char1.2)
 
 
 # Space 
-# repeatability
+# player ID repeatability
 rz2.2 <- ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] / 
          (ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] + 
           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
@@ -489,7 +461,7 @@ char2.2 <- mean(char2.2)
 
 
 # Guard 
-# repeatability
+# player ID repeatability
 rz3.2 <- ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] / 
          (ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] +
           ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] +
@@ -544,66 +516,9 @@ ranef_table <- cbind(parameter = c("CIrz1.1", "CIrz2.1", "CIrz3.1",
                      rpt = rpt, 
                      CI)
 
-save(ranef_table, file = "05A_multivariate_ranef.rda")
-load("05A_multivariate_ranef.rda")
+save(ranef_table, file = "03A_multivariate_ranef.rda")
+load("03A_multivariate_ranef.rda")
+
 # ======================================================================
 # ======================================================================
-
-
-
-
-
-
-
-
-
-# Compute 4 other models like the first one to check if convergence is OK
-# ========================================================================
-# ========================================================================
-system.time(
-ModMV1_2 <- MCMCglmm(
-                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
-                  (trait - 1), # set a general intercept for response,
-                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name, # random intercepts
-                  rcov = ~us(trait):units, # residual matrix
-                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
-                  verbose = TRUE, 
-                  family = c("gaussian", "gaussian", "gaussian"), # distribution of responses
-                  data = behaviour_data
-                  )
-           )
-
-save(ModMV1_2, file = "05A_ModMV1_2.rda")
-load("05A_ModMV1_2.rda")
-
-system.time(
-ModMV1_3 <- MCMCglmm(
-                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
-                  (trait - 1), # set a general intercept for response,
-                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name, # random intercepts
-                  rcov = ~us(trait):units, # residual matrix
-                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
-                  verbose = TRUE, 
-                  family = c("gaussian", "gaussian", "gaussian"), # distribution of responses
-                  data = behaviour_data
-                  )
-           )
-
-save(ModMV1_3, file = "05A_ModMV1_3.rda")
-load("05A_ModMV1_3.rda")
-
-
-system.time(
-ModMV1_4 <- MCMCglmm(
-                  cbind(Zsqrtspeed, Zsqrtspace_covered_rate, Zsqrtprox_mid_guard) ~ 
-                  (trait - 1), # set a general intercept for response,
-                  random = ~us(trait):mirrors_id + us(trait):map_name + us(trait):character_name, # random intercepts
-                  rcov = ~us(trait):units, # residual matrix
-                  prior = prior, nitt = 203000, thin = 100, burnin = 3000, 
-                  verbose = TRUE, 
-                  family = c("gaussian", "gaussian", "gaussian"), # distribution of responses
-                  data = behaviour_data, pr = TRUE
-                  )
-           )
-save(ModMV1_4, file = "05A_ModMV1_4.rda")
 

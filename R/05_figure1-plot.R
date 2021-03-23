@@ -19,7 +19,7 @@
 # 1. Set working directory, load libraries, and export dataset
 # =======================================================================
 # personal computer onedrive UQAM Montiglio lab
-setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2")
+setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs")
 
 # Import libraries
 library(data.table)
