@@ -125,29 +125,41 @@ corr_table <- rbind(corr_table, as.data.table(among_corr[3, 2]))
 corr_table <- rbind(corr_table, as.data.table(among_corr[1, 2]))
 corr_table <- rbind(corr_table, as.data.table(among_corr[1:2, 3]))
 
-corr_table[, ID_level := as.factor(c("among_ID", "among_ID", "among_ID", "within_ID", "within_ID", "within_ID"))]
+corr_table[, ID_level := as.factor(c("among_ID",
+                                     "among_ID", 
+                                     "among_ID", 
+                                     "within_ID", 
+                                     "within_ID", 
+                                     "within_ID"))]
+
 setnames(corr_table, "V1", "correlation")
 
 # Confidence intervals for the correlations
 among_int <- as.data.table(HPDinterval(posterior.cor(ModMV1$VCV[, 1:9]))) # among
 among_int <- among_int[c(2, 3, 6),]
+
 within_int <- as.data.table(HPDinterval(posterior.cor(ModMV1$VCV[, 28:36]))) # within
 within_int <- within_int[c(2, 3, 6),]
 
 # Bind tables together to have final table
 int <- rbind(among_int, within_int)
 corr_table <- cbind(corr_table, int)
-corr_table[, group := as.factor(rep(c("Speed~Space", "Speed~Guard", "Space~Guard"), 2))]
+corr_table[, group := as.factor(rep(c("Speed~Space",
+                                      "Speed~Guard",
+                                      "Space~Guard"), 2))]
+
 # Order the factor
-corr_table[, group_ordered := factor(group, levels = c("Speed~Space", "Speed~Guard", "Space~Guard"))]
+corr_table[, group_ordered := factor(group, levels = c("Speed~Space",
+                                                       "Speed~Guard",
+                                                       "Space~Guard"))]
 
 
 # Bind tables together to have final table (french version)
-int <- rbind(among_int, within_int)
-corr_table <- cbind(corr_table, int)
-corr_table[, group := as.factor(rep(c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"), 2))]
-# Order the factor
-corr_table[, group_ordered := factor(group, levels = c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"))]
+# int <- rbind(among_int, within_int)
+# corr_table <- cbind(corr_table, int)
+# corr_table[, group := as.factor(rep(c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"), 2))]
+# # Order the factor
+# corr_table[, group_ordered := factor(group, levels = c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"))]
 # ------------------------------------------
 
 
@@ -162,10 +174,12 @@ env_table[, ID_level := as.factor("among_env")]
 among_envCI <- as.data.table(IDcorr_list$env_corrCI[c(2,3,6),]) # among env.
 
 env_table <- cbind(env_table, among_envCI)
-env_table[, group := as.factor(c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"))]
-env_table[, group_ordered := factor(group, levels = c("Vitesse~Espace", 
-                                                      "Vitesse~Garde", 
-                                                      "Espace~Garde"))]
+env_table[, group := as.factor(c("Speed~Space",
+                                 "Speed~Guard",
+                                 "Space~Guard"))]
+env_table[, group_ordered := factor(group, levels = c("Speed~Space", 
+                                                      "Speed~Guard", 
+                                                      "Space~Guard"))]
 # merge with the corr_table created above to have corr_table2
 corr_table2 <- rbind(corr_table, env_table)
 # ------------------------------------------
@@ -361,8 +375,8 @@ IDcorr_plot3 <- ggplot() +
               #scale_y_continuous(breaks = seq(-0.80, 0.20, 0.20),
               #                   limits = c(-0.80, 0.20)) +
               scale_color_manual(values = cbp1[c(6, 7, 4)],
-                                 labels = c("Inter-IND", "Intra-IND", "Inter-ENV")) +
-              ylab("\nCorrélation ± 95% IC") +
+                                 labels = c("Among-ID", "Within-ID", "Among-ENV")) +
+              ylab("\nCorrelation ± 95% CI") +
               xlab("") +
                theme(axis.text.x = element_text(face = "plain",
                                                 size = 14,
@@ -389,6 +403,21 @@ IDcorr_plot3 <- ggplot() +
 # ---------------------------------------------------------------------
 
 
+# Make arrangements on the figure
+ModMV1.1_figure <- ggarrange(IDcorr_plot, NULL, ENVcorr_plot,
+                           labels = c("(a)", "", "(b)"),
+                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.45), 
+                           common.legend = TRUE, legend = "right")
+
+# Save and export figure
+ggexport(ModMV1.1_figure, filename = "03A_multivariate_model-plot1.tiff",
+         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
+
+
+ggexport(IDcorr_plot3, filename = "05A_multivariate_model-plot2.tiff",
+         width = 2500, height = 2500, res = 450)
+
+
 
 # Combine both plots and annotate with labels
 #ModMV1_figure <- ggarrange(rpt_plot, NULL, IDcorr_plot,
@@ -399,15 +428,6 @@ IDcorr_plot3 <- ggplot() +
 #         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
 #
 
-ModMV1.1_figure <- ggarrange(IDcorr_plot, NULL, ENVcorr_plot,
-                           labels = c("(a)", "", "(b)"),
-                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.45), 
-                           common.legend = TRUE, legend = "right")
-# Save and export figure
-ggexport(ModMV1.1_figure, filename = "06A_ModMV1.1-plot.tiff",
-         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
-#
-
 #ModMV1_figure2 <- ggarrange(rpt_plot, NULL, IDcorr_plot2,
 #                           labels = c("(a)", "", "(b)"),
 #                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.5))
@@ -416,8 +436,5 @@ ggexport(ModMV1.1_figure, filename = "06A_ModMV1.1-plot.tiff",
 # Save and export figure
 #ggexport(ModMV1_figure2, filename = "06A_ModMV1_second-plot.tiff",
 #         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
-
-ggexport(IDcorr_plot3, filename = "06A_ModMV1_third_plot.tiff",
-         width = 2500, height = 2500, res = 450)
 # End of script --------------------------------------------------------
 
