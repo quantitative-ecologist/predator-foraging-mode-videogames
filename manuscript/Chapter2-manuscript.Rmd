@@ -1,0 +1,36 @@
+---
+title: "Analysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
+author: "Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Olivier Montiglio^1^"
+output: 
+  word_document:
+    reference_docx: Chapter2-styles.docx
+bibliography: references.bib
+csl: e-letters.csl
+---
+###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
+  
+###### ^1^Correspondence: Pavillon des Sciences Biologiques (SB) SB-1805, 141 Avenue du Président-Kennedy, Montréal (Québec), Canada, H2X 1Y4
+
+###### ^1^Corresponding author: maxime(dot)fraser(dot)franco(at)hotmail.com
+
+
+\newpage
+# Abstract{.unnumbered}
+This is my abstract paragraph
+
+Keywords: individual variation, hunting success, foraging mode, hunting tactics, predator-prey behaviour, online videogames
+
+\newpage
+# Introduction {.unnumbered}
+
+Predator hunting mode plays a crucial role in structuring ecological communities and ecosystems [@hueyEcologicalConsequencesForaging1981; @preisserPredatorHuntingMode2007; @schmitzEffectsPredatorHunting2008; @romeroContrastingCascadeEffects2011; @kersch-beckerCommunitywideResponsesPredation2018]. In recent years, there has been a growing interest in investigating how ecological factors shape individual variation in hunting behaviour within populations, and how these differences may alter predator-prey interactions [@pettorelliChapterTwoIndividual2015; @schmitzPredatorPreyFunctional2017].
+
+
+dire que c'était assigné à l'espece selon comportement moyen? on a donc du mal à prédire les conséquences de ces différences à l'échelle des communautés
+
+
+parler de spécialisation et flexibilité
+
+
+however, we dont understand well how predators vary at the individual level
+
