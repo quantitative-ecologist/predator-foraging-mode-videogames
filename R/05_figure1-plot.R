@@ -29,9 +29,9 @@ library(ggpubr)
 library(MCMCglmm)
 
 # Load data
-load("05A_multivariate_ranef.rda")
-load("05A_IDcorr_list.rda")
-load("05A_ModMV1.rda")
+load("03A_multivariate_ranef.rda")
+load("03A_IDcorr_list.rda")
+load("03A_multivariate-model1.rda")
 
 # Character variables to factor variables
 char_as_factor <- names(ranef_table)[sapply(ranef_table, is.character)] # extract columns that are characters
