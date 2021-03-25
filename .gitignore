@@ -1,5 +1,9 @@
 .Rproj.user
 .Rhistory
 .RData
+<<<<<<< HEAD
 .Ruserdata
-Chapter2.Rproj
+C:\Users\maxim\OneDrive\Documents\GitHub\Chapter2\outputs\base_model.rda
+=======
+.Ruserdata
+>>>>>>> parent of f4a7c7b (no base_model in git because file too large)
