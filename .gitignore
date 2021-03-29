@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 >>>>>>> parent of f4a7c7b (no base_model in git because file too large)
-outputs/base_model.rda
+outputs/03B_hunting_success_base-model.rda
+outputs/03C_hunting_success_quadratic-model.rda
