@@ -19,13 +19,12 @@
 # 1. Set working directory, load libraries, datasets, and models
 # =======================================================================
 
-setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2") # personal computer onedrive UQAM Montiglio lab
+setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs") # personal computer onedrive UQAM Montiglio lab
 
 library(data.table)
 library(brms)
 library(ggplot2)
-library(viridis)
-#library(ggpubr)
+library(ggpubr)
 #library(tidyr)
 
 # Load dataset
@@ -37,9 +36,8 @@ data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Fra
                          stringsAsFactors = TRUE)
 
 # Load both models
-load("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/base-model.rda")
-load("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/quadratic-model.rda")
-#load("base_model_threads.rda")
+load("03B_hunting_success_base-model.rda")
+load("03C_hunting_success_quadratic-model.rda")
 # =======================================================================
 # =======================================================================
 
@@ -64,7 +62,7 @@ custom_theme <- theme(axis.text.x = element_text(face = "plain",
                       axis.title = element_text(size = 14, 
                                                 face = "plain"), # axis titles size
                       axis.line = element_line(size = 0.95),
-                      plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
+                    #  plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
                       legend.position = "none",
                       panel.grid = element_blank(),
                       panel.background = element_blank())
@@ -78,9 +76,9 @@ custom_theme <- theme(axis.text.x = element_text(face = "plain",
 # Create a variable for the y axis
 data[, prop_captures := hunting_success/4]
 
-
-# Visualise color palette for plotting options
-library(scales)
+# Visualise color palette to choose colors
+#library(scales)
+#library(viridis)
 #show_col(viridis_pal()(20))
 # =======================================================================
 # =======================================================================
@@ -128,10 +126,10 @@ speed_newdat <- data.table(
   surv_speed = speed_dat$surv_speed,
   surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
-  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar1)),
-  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar1)),
-  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar1)),
-  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar1))
+  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar)),
+  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar)),
+  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar)),
+  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar))
 )
 
 # Keep columns of interest
@@ -139,11 +137,11 @@ speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator speed
 speed <- ggplot(speed_newdat) +
-          geom_point(data = data,
-                       aes(x = Zspeed, y = prop_captures),
-                       shape = 16, 
-                       alpha = 0.1, 
-                       color = "black") +
+          #geom_point(data = data,
+          #             aes(x = Zspeed, y = prop_captures),
+          #             shape = 16, 
+          #             alpha = 0.1, 
+          #             color = "black") +
             geom_line(aes(x = speed, y = speed_y.Estimate),
                       size = 1.5,
                       color = "#3CBC75FF") +
@@ -162,9 +160,13 @@ speed <- ggplot(speed_newdat) +
                             ymax = speed_thi.Estimate),
                         alpha = 0.2,
                         fill = "#3CBC75FF") +
+            scale_y_continuous(breaks = seq(0, 1, .25),
+                               limits = c(0, 1)) +
+            scale_x_continuous(breaks = seq(-8, 4, 4),
+                               limits = c(-8, 4.8)) +
             xlab("\nSpeed") +
             ylab("") +
-            custom_theme
+            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 # -----------------------------------
 
 
@@ -172,19 +174,19 @@ speed <- ggplot(speed_newdat) +
 # Predator rate of space covered
 # -----------------------------------
 # Create new data
-space_dat <- data.table(space      = seq(min(data$Zspace_covered_rate), 
-                                         max(data$Zspace_covered_rate),
-                                         length.out = 100), 
-                        speed      = mean(data$Zspeed),             
+space_dat <- data.table(speed      = mean(data$Zspeed),
+                        space      = seq(min(data$Zspace_covered_rate), 
+                                         5,
+                                         length.out = 100),           
                         guard      = mean(data$Zprox_mid_guard),             
                         surv_speed = mean(data$Zsurv_speed),            
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
-space_mm <- model.matrix(~ space + 
-                           speed + 
+space_mm <- model.matrix(~ speed + 
+                           space + 
                            guard + 
                            surv_speed + 
-                           surv_space, guard_dat)
+                           surv_space, space_dat)
 # Compute fitted values
 space_y <- space_mm%*%fixef(base_model)
 
@@ -214,6 +216,11 @@ space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator space
 space <- ggplot(space_newdat) +
+        #  geom_point(data = data[Zspace_covered_rate <= 5],
+        #               aes(x = Zspace_covered_rate, y = prop_captures),
+        #               shape = 16, 
+        #               alpha = 0.1, 
+        #               color = "black") +
           geom_line(aes(x = space, y = space_y.Estimate),
                     size = 1.5,
                     color = "#3CBC75FF") +
@@ -232,9 +239,11 @@ space <- ggplot(space_newdat) +
                           ymax = space_thi.Estimate),
                       alpha = 0.2,
                       fill = "#3CBC75FF") +
+          scale_y_continuous(breaks = seq(0, 1, .25),
+                             limits = c(0, 1)) +
           xlab("\nSpace") +
           ylab("") +
-          custom_theme
+          custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
 
@@ -242,17 +251,17 @@ space <- ggplot(space_newdat) +
 # Predator proportion of time spent guarding
 # -----------------------------------
 # Create new data
-guard_dat <- data.table(guard      = seq(min(data$Zprox_mid_guard), 
-                                         5,
-                                         length.out = 100), 
-                        speed      = mean(data$Zspeed),             
-                        space      = mean(data$Zspace_covered_rate),             
-                        surv_speed = mean(data$Zsurv_speed),            
+guard_dat <- data.table(speed      = mean(data$Zspeed),             
+                        space      = mean(data$Zspace_covered_rate),
+                        guard      = seq(min(data$Zprox_mid_guard), 
+                                         7,
+                                         length.out = 100),
+                        surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
-guard_mm <- model.matrix(~ guard + 
-                           speed + 
-                           space + 
+guard_mm <- model.matrix(~ speed + 
+                           space +
+                           guard + 
                            surv_speed + 
                            surv_space, guard_dat)
 # Compute fitted values
@@ -284,6 +293,11 @@ guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator guard
 guard <- ggplot(guard_newdat) +
+         #   geom_point(data = data[Zprox_mid_guard <= 7],
+         #              aes(x = Zprox_mid_guard, y = prop_captures),
+         #              shape = 16, 
+         #              alpha = 0.1, 
+         #              color = "black") +
             geom_line(aes(x = guard, y = guard_y.Estimate),
                       size = 1.5,
                       color = "#3CBC75FF") +
@@ -302,9 +316,11 @@ guard <- ggplot(guard_newdat) +
                             ymax = guard_thi.Estimate),
                         alpha = 0.2,
                         fill = "#3CBC75FF") +
+            scale_y_continuous(breaks = seq(0, 1, .25),
+                               limits = c(0, 1)) +
             xlab("\nGuard") +
             ylab("") +
-            custom_theme
+            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 # =======================================================================
 # =======================================================================
@@ -329,20 +345,29 @@ speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 speed_mm <- model.matrix(~ 
-                           I(speed^2) +
-                           I(space^2) +
-                           I(guard^2) +
-                           I(surv_speed^2) +
-                           I(surv_space^2) +
-                           speed * space +
-                           speed * guard +
-                           space * guard +
-                           speed * surv_speed +
-                           space * surv_speed +
-                           guard * surv_speed +
-                           speed * surv_space +
-                           space * surv_space +
-                           guard * surv_space, speed_dat)
+                          # Quadratic terms
+                          I(speed^2) +
+                          I(space^2) +
+                          I(guard^2) +
+                          I(surv_speed^2) +
+                          I(surv_space^2) +
+                          # Linear terms
+                          speed +
+                          space +
+                          guard +
+                          surv_speed +
+                          surv_space +
+                          # Predator trait covariances
+                          speed : space +
+                          speed : guard +
+                          space : guard +
+                          # Predator-prey trait covariances
+                          speed : surv_speed +
+                          speed : surv_space +
+                          space : surv_speed +
+                          space : surv_space +
+                          guard : surv_speed +
+                          guard : surv_space, speed_dat)
 # Compute fitted values
 speed_y <- speed_mm%*%fixef(quadratic_model)
 
@@ -361,10 +386,10 @@ speed_newdat <- data.table(
   surv_speed = speed_dat$surv_speed,
   surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
-  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar1)),
-  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar1)),
-  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar1)),
-  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar1))
+  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar)),
+  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar)),
+  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar)),
+  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar))
 )
 
 # Keep columns of interest
@@ -372,11 +397,11 @@ speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator speed^2
 quad_speed <- ggplot(speed_newdat) +
-                geom_point(data = data,
-                             aes(x = Zspeed, y = prop_captures),
-                             shape = 16, 
-                             alpha = 0.1, 
-                             color = "black") +
+            #    geom_point(data = data,
+            #                 aes(x = Zspeed, y = prop_captures),
+            #                 shape = 16, 
+            #                 alpha = 0.1, 
+            #                 color = "black") +
                   geom_line(aes(x = speed, y = speed_y.Estimate),
                             size = 1.5,
                             color = "#3CBC75FF") +
@@ -395,9 +420,13 @@ quad_speed <- ggplot(speed_newdat) +
                                   ymax = speed_thi.Estimate),
                               alpha = 0.2,
                               fill = "#3CBC75FF") +
+                  scale_y_continuous(breaks = seq(0, 1, .25),
+                                     limits = c(0, 1)) +
+                  scale_x_continuous(breaks = seq(-8, 4, 4),
+                                     limits = c(-8, 4.8)) +
                   xlab("\nSpeed") +
                   ylab("") +
-                  custom_theme
+                  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 # -----------------------------------
 
 
@@ -405,29 +434,38 @@ quad_speed <- ggplot(speed_newdat) +
 # Predator rate of space covered
 # -----------------------------------
 # Create new data
-space_dat <- data.table(space      = seq(min(data$Zspace_covered_rate), 
-                                         max(data$Zspace_covered_rate),
-                                         length.out = 100), 
-                        speed      = mean(data$Zspeed),             
+space_dat <- data.table(speed      = mean(data$Zspeed),
+                        space      = seq(min(data$Zspace_covered_rate), 
+                                         5,
+                                         length.out = 100),
                         guard      = mean(data$Zprox_mid_guard),             
                         surv_speed = mean(data$Zsurv_speed),            
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
-space_mm <- model.matrix(~  
-                           I(speed^2) +
-                           I(space^2) +
-                           I(guard^2) +
-                           I(surv_speed^2) +
-                           I(surv_space^2) +
-                           speed * space +
-                           speed * guard +
-                           space * guard +
-                           speed * surv_speed +
-                           space * surv_speed +
-                           guard * surv_speed +
-                           speed * surv_space +
-                           space * surv_space +
-                           guard * surv_space, space_dat)
+space_mm <- model.matrix(~ 
+                          # Quadratic terms
+                          I(speed^2) +
+                          I(space^2) +
+                          I(guard^2) +
+                          I(surv_speed^2) +
+                          I(surv_space^2) +
+                          # Linear terms
+                          speed +
+                          space +
+                          guard +
+                          surv_speed +
+                          surv_space +
+                          # Predator trait covariances
+                          speed : space +
+                          speed : guard +
+                          space : guard +
+                          # Predator-prey trait covariances
+                          speed : surv_speed +
+                          speed : surv_space +
+                          space : surv_speed +
+                          space : surv_space +
+                          guard : surv_speed +
+                          guard : surv_space, space_dat)
 # Compute fitted values
 space_y <- space_mm%*%fixef(quadratic_model)
 
@@ -457,6 +495,11 @@ space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator space^2
 quad_space <- ggplot(space_newdat) +
+            #    geom_point(data = data[Zspace_covered_rate <= 5],
+            #               aes(x = Zspace_covered_rate, y = prop_captures),
+            #               shape = 16, 
+            #               alpha = 0.1, 
+            #               color = "black") +
                 geom_line(aes(x = space, y = space_y.Estimate),
                           size = 1.5,
                           color = "#3CBC75FF") +
@@ -475,9 +518,11 @@ quad_space <- ggplot(space_newdat) +
                                 ymax = space_thi.Estimate),
                             alpha = 0.2,
                             fill = "#3CBC75FF") +
+                 scale_y_continuous(breaks = seq(0, 1, .25),
+                                    limits = c(0, 1)) +
                 xlab("\nSpace") +
                 ylab("") +
-                custom_theme
+                custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
 
@@ -486,28 +531,37 @@ quad_space <- ggplot(space_newdat) +
 # -----------------------------------
 # Create new data
 guard_dat <- data.table(guard      = seq(min(data$Zprox_mid_guard), 
-                                         5,
+                                         7,
                                          length.out = 100), 
                         speed      = mean(data$Zspeed),             
                         space      = mean(data$Zspace_covered_rate),             
                         surv_speed = mean(data$Zsurv_speed),            
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
-guard_mm <- model.matrix(~  
-                           I(speed^2) +
-                           I(space^2) +
-                           I(guard^2) +
-                           I(surv_speed^2) +
-                           I(surv_space^2) +
-                           speed * space +
-                           speed * guard +
-                           space * guard +
-                           speed * surv_speed +
-                           space * surv_speed +
-                           guard * surv_speed +
-                           speed * surv_space +
-                           space * surv_space +
-                           guard * surv_space, guard_dat)
+guard_mm <- model.matrix(~ 
+                          # Quadratic terms
+                          I(speed^2) +
+                          I(space^2) +
+                          I(guard^2) +
+                          I(surv_speed^2) +
+                          I(surv_space^2) +
+                          # Linear terms
+                          speed +
+                          space +
+                          guard +
+                          surv_speed +
+                          surv_space +
+                          # Predator trait covariances
+                          speed : space +
+                          speed : guard +
+                          space : guard +
+                          # Predator-prey trait covariances
+                          speed : surv_speed +
+                          speed : surv_space +
+                          space : surv_speed +
+                          space : surv_space +
+                          guard : surv_speed +
+                          guard : surv_space, guard_dat)
 # Compute fitted values
 guard_y <- guard_mm%*%fixef(quadratic_model)
 
@@ -537,6 +591,11 @@ guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator guard^2
 quad_guard <- ggplot(guard_newdat) +
+             #   geom_point(data = data[Zprox_mid_guard <= 7],
+             #              aes(x = Zprox_mid_guard, y = prop_captures),
+             #              shape = 16, 
+             #              alpha = 0.1, 
+             #              color = "black") +
                 geom_line(aes(x = guard, y = guard_y.Estimate),
                           size = 1.5,
                           color = "#3CBC75FF") +
@@ -555,9 +614,11 @@ quad_guard <- ggplot(guard_newdat) +
                                 ymax = guard_thi.Estimate),
                             alpha = 0.2,
                             fill = "#3CBC75FF") +
+                scale_y_continuous(breaks = seq(0, 1, .25),
+                                   limits = c(0, 1)) +
                 xlab("\nGuard") +
                 ylab("") +
-                custom_theme
+                custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 # =======================================================================
 # =======================================================================
@@ -581,22 +642,26 @@ panel_plot <- ggarrange(speed,
                         heights = c(2.8, 2.8, 2.8),
                         labels = c("(a)", "(b)", "(c)", 
                                    "(d)", "(e)", "(f)"))
+# Upper y label
+panel_plot <- annotate_figure(panel_plot,
+                              left = text_grob("Hunting success", 
+                                               rot = 90,
+                                               size = 14,
+                                               hjust = -1.23, vjust = 0.5)) #-0.6
+# lower y label
+panel_plot <- annotate_figure(panel_plot,
+                              left = text_grob("Hunting success", 
+                                               rot = 90,
+                                               size = 14,
+                                               hjust = 1.7, vjust = 2.1))
 
-panel_plot <- annotate_figure(panel_plot,
-                              left = text_grob("Hunting success", 
-                                               rot = 90,
-                                               size = 14,
-                                               hjust = -0.55, vjust = 0.5))
-# almost perfect
-panel_plot <- annotate_figure(panel_plot,
-                              left = text_grob("Hunting success", 
-                                               rot = 90,
-                                               size = 14,
-                                               hjust = 1.23, vjust = 2.1))
-# 1.11 avant
+
+# Save and export figure (with no points)
+ggexport(panel_plot, filename = "04_figure2.1.tiff",
+         width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
+
 # Save and export figure
 ggexport(panel_plot, filename = "04_figure2.tiff",
          width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
-
 # =======================================================================
 # =======================================================================
