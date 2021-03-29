@@ -595,7 +595,7 @@ panel_plot <- annotate_figure(panel_plot,
                                                hjust = 1.23, vjust = 2.1))
 # 1.11 avant
 # Save and export figure
-ggexport(panel_plot, filename = "05_Figure2.tiff",
+ggexport(panel_plot, filename = "04_figure2.tiff",
          width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
 
 # =======================================================================
