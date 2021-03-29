@@ -14,6 +14,7 @@
 
 
 
+
 # =======================================================================
 # 1. Set working directory, load libraries, datasets, and models
 # =======================================================================
@@ -22,10 +23,6 @@ setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2") # personal computer o
 
 library(data.table)
 library(brms)
-library(tidybayes)
-library(modelr)
-#library(Matrix)
-#library(arm)
 library(ggplot2)
 library(viridis)
 #library(ggpubr)
@@ -40,10 +37,18 @@ data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Fra
                          stringsAsFactors = TRUE)
 
 # Load both models
-load("base-model.rda")
-load("quadratic-model.rda")
-load("base_model_threads.rda")
+load("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/base-model.rda")
+load("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/quadratic-model.rda")
+#load("base_model_threads.rda")
 # =======================================================================
+# =======================================================================
+
+
+
+
+
+# =======================================================================
+# 2. Prepare plot customizations
 # =======================================================================
 
 # Set custom theme for plots
@@ -64,18 +69,19 @@ custom_theme <- theme(axis.text.x = element_text(face = "plain",
                       panel.grid = element_blank(),
                       panel.background = element_blank())
 
-# colorblind friendly palette
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-
-# Small subset of the data for testing the models
-data_sub <- data[mirrors_id %in% c("JATHS5909D", "OZDOD9085O", "ZETSA0228O", "YZGIN4008I", "IMVTR2511Q"),]
-data_sub$obs <- 1:nrow(data_sub)
-data_sub[, prop_captures := hunting_success/4]
+# Small subset of the data for testing
+#data_sub <- data[mirrors_id %in% c("JATHS5909D", "OZDOD9085O", "ZETSA0228O", "YZGIN4008I", "IMVTR2511Q"),]
+#data_sub$obs <- 1:nrow(data_sub)
+#data_sub[, prop_captures := hunting_success/4]
 
 # Create a variable for the y axis
 data[, prop_captures := hunting_success/4]
+
+
+# Visualise color palette for plotting options
+library(scales)
+#show_col(viridis_pal()(20))
 # =======================================================================
 # =======================================================================
 
@@ -84,291 +90,222 @@ data[, prop_captures := hunting_success/4]
 
 
 # =======================================================================
-# Fixed effects plots for the base model
+# 3. Fixed effects plots for the base model
 # =======================================================================
 
 # -----------------------------------
 # Predator average movement speed
 # -----------------------------------
-# Fixed effects table for main effects variance
-fe_speed <- tibble(Zspeed = seq(min(data$Zspeed), 
-                               max(data$Zspeed),
-                               length.out = 100), 
-                  Zspace_covered_rate = mean(data$Zspace_covered_rate),             
-                  Zprox_mid_guard = mean(data$Zprox_mid_guard),             
-                  Zsurv_speed = mean(data$Zsurv_speed),            
-                  Zsurv_space_covered_rate = mean(data$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   re_formula = NA, 
-                   value = ".value",
-                   scale = "linear", 
-                   n = 1e3)
+# Create new data
+speed_dat <- data.table(speed      = seq(min(data$Zspeed), 
+                                         max(data$Zspeed),
+                                         length.out = 100), 
+                        space      = mean(data$Zspace_covered_rate),             
+                        guard      = mean(data$Zprox_mid_guard),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+speed_mm <- model.matrix(~ speed + 
+                           space + 
+                           guard + 
+                           surv_speed + 
+                           surv_space, speed_dat)
+# Compute fitted values
+speed_y <- speed_mm%*%fixef(base_model)
 
-# Random effects table for random effect variance
-re_speed <- tibble(Zspeed = seq(min(data$Zspeed), 
-                                max(data$Zspeed),
-                                length.out = 100),
-                  Zspace_covered_rate = mean(data$Zspace_covered_rate),           
-                  Zprox_mid_guard = mean(data$Zprox_mid_guard),             
-                  Zsurv_speed = mean(data$Zsurv_speed),             
-                  Zsurv_space_covered_rate = mean(data$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   scale = "linear", n = 1e3,
-                   re_formula = NULL,
-                   allow_new_levels = TRUE)
+# Confidence intervals
+speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(base_model), speed_mm))
+speed_tvar <- speed_pvar + 
+              VarCorr(base_model)$obs$sd[1] + 
+              VarCorr(base_model)$mirrors_id$sd[1] + 
+              VarCorr(base_model)$map_name$sd[1]
 
-# Calculate fitted values
-fe_speed_mean <- fe_speed %>% 
-  group_by(Zspeed) %>%
-  summarize(.value = mean(.value))
+# Generate table
+speed_newdat <- data.table(
+  speed = speed_dat$speed,
+  space = speed_dat$space,
+  guard = speed_dat$guard,
+  surv_speed = speed_dat$surv_speed,
+  surv_space = speed_dat$surv_space,
+  speed_y = plogis(speed_y),
+  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar1)),
+  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar1)),
+  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar1)),
+  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar1))
+)
 
-# Marginal effect of Zspeed
- speed <- ggplot(data, 
-                 mapping = aes(y = prop_captures, 
-                               x = Zspeed)) +
-              geom_point(shape = 16, 
-                         alpha = 0.1, 
-                         color = "black") +
-              geom_line(data = fe_speed,
-                         mapping = aes(x = Zspeed, 
-                                       y = plogis(.value),
-                                       group = .draw), 
-                         alpha = 0.1) +
-              geom_line(data = fe_speed_mean, 
-                        mapping = aes(x = Zspeed,
-                                      y = plogis(.value)),
-                        color = cbp1[7], 
-                        lwd = 2, 
-                        group = 1) +
-              ylab("") +
-              xlab("\nSpeed") +
-              custom_theme +
-              scale_y_continuous(breaks = seq(0, 1, .25),
-                                 limits = c(0, 1)) +
-              custom_theme
-  
-# Plot with fixed and random effect variance
-speed <- ggplot(data, 
-                aes(y = prop_captures, 
-                    x = Zspeed)) +
-            geom_point(shape = 16, 
+# Keep columns of interest
+speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
+
+# Plot for predator speed
+speed <- ggplot(speed_newdat) +
+          geom_point(data = data,
+                       aes(x = Zspeed, y = prop_captures),
+                       shape = 16, 
                        alpha = 0.1, 
                        color = "black") +
-            geom_line(data = re_speed, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspeed, 
-                                    group = .draw),
-                      color = cbp1[6], 
-                      alpha = 0.1) +
-            geom_line(data = fe_speed, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspeed, 
-                                    group = .draw), 
-                      color = cbp1[2], 
-                      alpha = 0.1) +
-            geom_line(data = fe_speed_mean, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspeed),
-                      color = cbp1[6], 
-                      lwd = 2, 
-                      group = 1, 
-                      linetype = "dashed") +
-                    ylab("") +
-                    xlab("\nSpeed") +
-                    scale_y_continuous(breaks = seq(0, 1, .25),
-                                       limits = c(0, 1)) +
-                    custom_theme
+            geom_line(aes(x = speed, y = speed_y.Estimate),
+                      size = 1.5,
+                      color = "#3CBC75FF") +
+            geom_line(aes(x = speed, y = speed_plo.Estimate),
+                      linetype = "dashed",
+                      size = 1,
+                      color = "black") +
+            geom_line(data = speed_newdat,
+                      aes(x = speed, y = speed_phi.Estimate),
+                      linetype = "dashed",
+                      size = 1, 
+                      color = "black") +
+            geom_ribbon(data = speed_newdat,
+                        aes(x = speed,
+                            ymin = speed_tlo.Estimate,
+                            ymax = speed_thi.Estimate),
+                        alpha = 0.2,
+                        fill = "#3CBC75FF") +
+            xlab("\nSpeed") +
+            ylab("") +
+            custom_theme
 # -----------------------------------
 
 
 # -----------------------------------
 # Predator rate of space covered
 # -----------------------------------
-# Fixed effects table for main effects variance
-fe_space <- tibble(Zspace_covered_rate = seq(min(data$Zspace_covered_rate), 
+# Create new data
+space_dat <- data.table(space      = seq(min(data$Zspace_covered_rate), 
                                          max(data$Zspace_covered_rate),
-                                         length.out = 100),
-                  Zspeed = mean(data$Zspeed),           
-                  Zprox_mid_guard = mean(data$Zprox_mid_guard),             
-                  Zsurv_speed = mean(data$Zsurv_speed),             
-                  Zsurv_space_covered_rate = mean(data$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   re_formula = NA, 
-                   value = ".value",
-                   scale = "linear", 
-                   n = 1e3)
+                                         length.out = 100), 
+                        speed      = mean(data$Zspeed),             
+                        guard      = mean(data$Zprox_mid_guard),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+space_mm <- model.matrix(~ space + 
+                           speed + 
+                           guard + 
+                           surv_speed + 
+                           surv_space, guard_dat)
+# Compute fitted values
+space_y <- space_mm%*%fixef(base_model)
 
-# Random effects table for random effect variance
-re_space <- tibble(Zspace_covered_rate = seq(min(data$Zspace_covered_rate), 
-                                         max(data$Zspace_covered_rate),
-                                         length.out = 100),
-                  Zspeed = mean(data$Zspeed),           
-                  Zprox_mid_guard = mean(data$Zprox_mid_guard),             
-                  Zsurv_speed = mean(data$Zsurv_speed),             
-                  Zsurv_space_covered_rate = mean(data$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   scale = "linear", n = 1e3,
-                   re_formula = NULL,
-                   allow_new_levels = TRUE)
+# Confidence intervals
+space_pvar <- diag(space_mm %*% tcrossprod(vcov(base_model), space_mm))
+space_tvar <- space_pvar + 
+              VarCorr(base_model)$obs$sd[1] + 
+              VarCorr(base_model)$mirrors_id$sd[1] + 
+              VarCorr(base_model)$map_name$sd[1]
 
-# Calculate fitted values
-fe_space_mean <- fe_space %>% 
-  group_by(Zspace_covered_rate) %>%
-  summarize(.value = mean(.value))
+# Generate table
+space_newdat <- data.table(
+  speed = space_dat$speed,
+  space = space_dat$space,
+  guard = space_dat$guard,
+  surv_speed = space_dat$surv_speed,
+  surv_space = space_dat$surv_space,
+  space_y = plogis(space_y),
+  space_plo = plogis(space_y - 1.96 * sqrt(space_pvar)),
+  space_phi = plogis(space_y + 1.96 * sqrt(space_pvar)),
+  space_tlo = plogis(space_y - 1.96 * sqrt(space_tvar)),
+  space_thi = plogis(space_y + 1.96 * sqrt(space_tvar))
+)
 
-# # Marginal effect of Zspace
- space <- ggplot(data, 
-                 mapping = aes(y = prop_captures, 
-                               x = Zspace_covered_rate)) +
-              geom_point(shape = 16, 
-                         alpha = 0.1, 
-                         color = "black") +
-              geom_line(data = fe_space,
-                         mapping = aes(x = Zspace_covered_rate, 
-                                       y = plogis(.value),
-                                       group = .draw), 
-                         alpha = 0.1) +
-              geom_line(data = fe_space_mean, 
-                        mapping = aes(x = Zspace_covered_rate,
-                                      y = plogis(.value)),
-                        color = cbp1[7], 
-                        lwd = 2, 
-                        group = 1) +
-              ylab("") +
-              xlab("\nSpace") +
-              custom_theme +
-              scale_y_continuous(breaks = seq(0, 1, .25),
-                                 limits = c(0, 1)) +
-              custom_theme
+# Keep columns of interest
+space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
 
-# Plot with fixed and random effect variance
-space <- ggplot(data, 
-                aes(y = prop_captures, 
-                    x = Zspace_covered_rate)) +
-            geom_point(shape = 16, 
-                       alpha = 0.1, 
-                       color = "black") +
-            geom_line(data = re_space, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspace_covered_rate, 
-                                    group = .draw),
-                      color = cbp1[6], 
-                      alpha = 0.1) +
-            geom_line(data = fe_space, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspace_covered_rate, 
-                                    group = .draw), 
-                      color = cbp1[2], 
-                      alpha = 0.1) +
-            geom_line(data = fe_space_mean, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zspace_covered_rate),
-                      color = cbp1[6], 
-                      lwd = 2, 
-                      group = 1, 
-                      linetype = "dashed") +
-                    ylab("") +
-                    xlab("\nSpace") +
-                    scale_y_continuous(breaks = seq(0, 1, .25),
-                                       limits = c(0, 1)) +
-                    custom_theme
+# Plot for predator space
+space <- ggplot(space_newdat) +
+          geom_line(aes(x = space, y = space_y.Estimate),
+                    size = 1.5,
+                    color = "#3CBC75FF") +
+          geom_line(aes(x = space, y = space_plo.Estimate),
+                    linetype = "dashed",
+                    size = 1,
+                    color = "black") +
+          geom_line(data = space_newdat,
+                    aes(x = space, y = space_phi.Estimate),
+                    linetype = "dashed",
+                    size = 1, 
+                    color = "black") +
+          geom_ribbon(data = space_newdat,
+                      aes(x = space,
+                          ymin = space_tlo.Estimate,
+                          ymax = space_thi.Estimate),
+                      alpha = 0.2,
+                      fill = "#3CBC75FF") +
+          xlab("\nSpace") +
+          ylab("") +
+          custom_theme
 # -----------------------------------
 
 
 # -----------------------------------
 # Predator proportion of time spent guarding
 # -----------------------------------
-# Fixed effects table for main effects variance
-fe_guard <- tibble(Zprox_mid_guard = seq(min(data_sub$Zprox_mid_guard), 
-                                         max(data_sub$Zprox_mid_guard),
-                                         length.out = 100),
-                  Zspeed = mean(data_sub$Zspeed),           
-                  Zspace_covered_rate = mean(data_sub$Zspace_covered_rate),             
-                  Zsurv_speed = mean(data_sub$Zsurv_speed),             
-                  Zsurv_space_covered_rate = mean(data_sub$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   re_formula = NA, 
-                   value = ".value",
-                   scale = "linear", 
-                   n = 1e3)
+# Create new data
+guard_dat <- data.table(guard      = seq(min(data$Zprox_mid_guard), 
+                                         5,
+                                         length.out = 100), 
+                        speed      = mean(data$Zspeed),             
+                        space      = mean(data$Zspace_covered_rate),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+guard_mm <- model.matrix(~ guard + 
+                           speed + 
+                           space + 
+                           surv_speed + 
+                           surv_space, guard_dat)
+# Compute fitted values
+guard_y <- guard_mm%*%fixef(base_model)
 
-# Random effects table for random effect variance
-re_guard <- tibble(Zprox_mid_guard = seq(min(data_sub$Zprox_mid_guard), 
-                                         max(data_sub$Zprox_mid_guard),
-                                         length.out = 100),
-                  Zspeed = mean(data_sub$Zspeed),           
-                  Zspace_covered_rate = mean(data_sub$Zspace_covered_rate),             
-                  Zsurv_speed = mean(data_sub$Zsurv_speed),             
-                  Zsurv_space_covered_rate = mean(data_sub$Zsurv_space_covered_rate)) %>%
-  add_fitted_draws(base_model,
-                   scale = "linear", n = 1e3,
-                   re_formula = NULL,
-                   allow_new_levels = TRUE)
+# Confidence intervals
+guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(base_model), guard_mm))
+guard_tvar <- guard_pvar + 
+              VarCorr(base_model)$obs$sd[1] + 
+              VarCorr(base_model)$mirrors_id$sd[1] + 
+              VarCorr(base_model)$map_name$sd[1]
 
-# Calculate fitted values
-fe_guard_mean <- fe_guard %>% 
-  group_by(Zprox_mid_guard) %>%
-  summarize(.value = mean(.value))
+# Generate table
+guard_newdat <- data.table(
+  speed = guard_dat$speed,
+  space = guard_dat$space,
+  guard = guard_dat$guard,
+  surv_speed = guard_dat$surv_speed,
+  surv_space = guard_dat$surv_space,
+  guard_y = plogis(guard_y),
+  guard_plo = plogis(guard_y - 1.96 * sqrt(guard_pvar)),
+  guard_phi = plogis(guard_y + 1.96 * sqrt(guard_pvar)),
+  guard_tlo = plogis(guard_y - 1.96 * sqrt(guard_tvar)),
+  guard_thi = plogis(guard_y + 1.96 * sqrt(guard_tvar))
+)
 
-# Marginal effect of Zspeed
- guard <- ggplot(data_sub, 
-                 mapping = aes(y = prop_captures, 
-                               x = Zprox_mid_guard)) +
-              geom_point(shape = 16, 
-                         alpha = 0.1, 
-                         color = "black") +
-              geom_line(data = fe_guard,
-                         mapping = aes(x = Zprox_mid_guard, 
-                                       y = plogis(.value),
-                                       group = .draw), 
-                         alpha = 0.1) +
-              geom_line(data = fe_guard_mean, 
-                        mapping = aes(x = Zprox_mid_guard,
-                                      y = plogis(.value)),
-                        color = cbp1[7], 
-                        lwd = 2, 
-                        group = 1) +
-              ylab("") +
-              xlab("\nGuard") +
-              custom_theme +
-              scale_y_continuous(breaks = seq(0, 1, .25),
-                                 limits = c(0, 1)) +
-              custom_theme
+# Keep columns of interest
+guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
 
-# Plot with fixed and random effect variance
-guard <- ggplot(data_sub, 
-                aes(y = prop_captures, 
-                    x = Zprox_mid_guard)) +
-            geom_point(shape = 16, 
-                       alpha = 0.1, 
-                       color = "black") +
-            geom_line(data = re_guard, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zprox_mid_guard, 
-                                    group = .draw),
-                      color = cbp1[6], 
-                      alpha = 0.1) + 
-            geom_line(data = fe_guard, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zprox_mid_guard, 
-                                    group = .draw), 
-                      color = cbp1[2], 
-                      alpha = 0.1) +
-            geom_line(data = fe_guard_mean, 
-                      mapping = aes(y = plogis(.value), 
-                                    x = Zprox_mid_guard),
-                      color = cbp1[6], 
-                      lwd = 2, 
-                      group = 1, 
-                      linetype = "dashed") +
-                    ylab("") +
-                    xlab("\nGuard") +
-                    scale_y_continuous(breaks = seq(0, 1, .25),
-                                       limits = c(0, 1)) +
-                    #custom_theme +
-                    stat_interval()
+# Plot for predator guard
+guard <- ggplot(guard_newdat) +
+            geom_line(aes(x = guard, y = guard_y.Estimate),
+                      size = 1.5,
+                      color = "#3CBC75FF") +
+            geom_line(aes(x = guard, y = guard_plo.Estimate),
+                      linetype = "dashed",
+                      size = 1,
+                      color = "black") +
+            geom_line(data = guard_newdat,
+                      aes(x = guard, y = guard_phi.Estimate),
+                      linetype = "dashed",
+                      size = 1, 
+                      color = "black") +
+            geom_ribbon(data = guard_newdat,
+                        aes(x = guard, 
+                            ymin = guard_tlo.Estimate,
+                            ymax = guard_thi.Estimate),
+                        alpha = 0.2,
+                        fill = "#3CBC75FF") +
+            xlab("\nGuard") +
+            ylab("") +
+            custom_theme
 # -----------------------------------
-
 # =======================================================================
 # =======================================================================
 
@@ -376,200 +313,252 @@ guard <- ggplot(data_sub,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # =======================================================================
-# 2. Base hunting success plots
+# 4. Fixed effects plots for the quadratic model
 # =======================================================================
-
-# Build model matrixes and coefficient tables
-
-# Z speed gradient model matrix
-# -------------------------------------------------
-speed_newdat <- data.frame(speed_x = seq(min(data$Zspeed), max(data$Zspeed), length = 100))
-
-# Compute fitted values
-speed_mm <- model.matrix(~speed_x, speed_newdat)
-speed_y <- speed_mm%*%fixef(directional_model)[c(1,2)] # I'm extracting only Zspeed and the intercept
-
-# Compute 95% confidence intervals and prediction intervals
-speed_pvar1 <- diag(speed_mm %*% tcrossprod(vcov(directional_model)[c(1,2), c(1,2)], speed_mm)) # 2x2 matrix of intercept and Zspeed
-speed_tvar1 <- speed_pvar1 + VarCorr(directional_model)$obs[1] + VarCorr(directional_model)$mirrors_id[1] + VarCorr(directional_model)$map_name[1]
-
-# Create the table used for the plot
-speed_newdat <- data.frame(
-  speed_x = speed_newdat$speed_x,
-  speed_y = invlogit(speed_y),
-  speed_plo = invlogit(speed_y - 1.96 * sqrt(speed_pvar1)),
-  speed_phi = invlogit(speed_y + 1.96 * sqrt(speed_pvar1)),
-  speed_tlo = invlogit(speed_y - 1.96 * sqrt(speed_tvar1)),
-  speed_thi = invlogit(speed_y + 1.96 * sqrt(speed_tvar1))
-)
-
-# Z space covered rate gradient model matrix
-# -------------------------------------------------
-space_newdat <- data.frame(space_x = seq(min(data$Zspace_covered_rate), max(data$Zspace_covered_rate), length = 100))
-
-# Compute fitted values
-space_mm <- model.matrix(~space_x, space_newdat)
-space_y <- space_mm%*%fixef(directional_model)[c(1,4)] # I'm extracting only Z space covered and the intercept
-
-# Compute 95% confidence intervals and prediction intervals
-space_pvar1 <- diag(space_mm %*% tcrossprod(vcov(directional_model)[c(1,4), c(1,4)], space_mm)) # 2x2 matrix of intercept and Z space covered
-space_tvar1 <- space_pvar1 + VarCorr(directional_model)$obs[1] + VarCorr(directional_model)$mirrors_id[1] + VarCorr(directional_model)$map_name[1]
-
-# Create the table used for the plot
-space_newdat <- data.frame(
-  space_x = space_newdat$space_x,
-  space_y = invlogit(space_y),
-  space_plo = invlogit(space_y - 1.96 * sqrt(space_pvar1)),
-  space_phi = invlogit(space_y + 1.96 * sqrt(space_pvar1)),
-  space_tlo = invlogit(space_y - 1.96 * sqrt(space_tvar1)),
-  space_thi = invlogit(space_y + 1.96 * sqrt(space_tvar1))
-)
-
-# Z prey guarding gradient model matrix
-# -------------------------------------------------
-guard_newdat <- data.frame(guard_x = seq(min(data$Zprox_mid_guard), max(data$Zprox_mid_guard), length = 100))
-
-# Compute fitted values
-guard_mm <- model.matrix(~guard_x, guard_newdat)
-guard_y <- guard_mm%*%fixef(directional_model)[c(1,3)] # I'm extracting only Z space covered and the intercept
-
-# Compute 95% confidence intervals and prediction intervals
-guard_pvar1 <- diag(guard_mm %*% tcrossprod(vcov(directional_model)[c(1,3), c(1,3)], guard_mm)) # 2x2 matrix of intercept and Z guarding
-guard_tvar1 <- guard_pvar1 + VarCorr(directional_model)$obs[1] + VarCorr(directional_model)$mirrors_id[1] + VarCorr(directional_model)$map_name[1]
-
-# Create the table used for the plot
-guard_newdat <- data.frame(
-  guard_x = guard_newdat$guard_x,
-  guard_y = invlogit(guard_y),
-  guard_plo = invlogit(guard_y - 1.96 * sqrt(guard_pvar1)),
-  guard_phi = invlogit(guard_y + 1.96 * sqrt(guard_pvar1)),
-  guard_tlo = invlogit(guard_y - 1.96 * sqrt(guard_tvar1)),
-  guard_thi = invlogit(guard_y + 1.96 * sqrt(guard_tvar1))
-)
-# -----------------------------------------------------------------------------------------
-
-
-
-
-
-# 3. Quadratic selection plots ==========================================
-# =======================================================================
-# -----------------------------------------------------------------------------------------
-# Build model matrixes and coefficient tables
-
-# Z speed^2 gradient model matrix
-# -------------------------------------------------
-# Covariates fixed at average values
-speed_newdat <- expand.grid(speed = seq(min(data$Zspeed),
-                                        max(data$Zspeed),
-                                        length = 20),
-                            space = seq(mean(data$Zspace_covered_rate),
-                                        mean(data$Zspace_covered_rate)),
-                            guard = seq(mean(data$Zprox_mid_guard),
-                                        mean(data$Zprox_mid_guard)))
-
-# Compute fitted values
-speed_mm <- model.matrix(~
+# -----------------------------------
+# Predator average movement speed
+# -----------------------------------
+# Create new data
+speed_dat <- data.table(speed      = seq(min(data$Zspeed), 
+                                         max(data$Zspeed),
+                                         length.out = 100), 
+                        space      = mean(data$Zspace_covered_rate),             
+                        guard      = mean(data$Zprox_mid_guard),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+speed_mm <- model.matrix(~ 
                            I(speed^2) +
                            I(space^2) +
                            I(guard^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
                            speed * space +
                            speed * guard +
-                           space * guard, speed_newdat)
+                           space * guard +
+                           speed * surv_speed +
+                           space * surv_speed +
+                           guard * surv_speed +
+                           speed * surv_space +
+                           space * surv_space +
+                           guard * surv_space, speed_dat)
+# Compute fitted values
 speed_y <- speed_mm%*%fixef(quadratic_model)
 
-# Compute 95% confidence intervals and prediction intervals
-speed_pvar1 <- diag(speed_mm %*% tcrossprod(vcov(quadratic_model), speed_mm))
-speed_tvar1 <- speed_pvar1 + VarCorr(quadratic_model)$obs[1] + VarCorr(quadratic_model)$mirrors_id[1] + VarCorr(quadratic_model)$map_name[1]
+# Confidence intervals
+speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(quadratic_model), speed_mm))
+speed_tvar <- speed_pvar + 
+              VarCorr(quadratic_model)$obs$sd[1] + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
+              VarCorr(quadratic_model)$map_name$sd[1]
 
-# Create the table used for the plot
-speed_newdat <- data.frame(
-  speed_x = speed_newdat$speed,
-  space_x = speed_newdat$space,
-  guard_x = speed_newdat$guard,
-  speed_y = invlogit(speed_y),
-  speed_plo = invlogit(speed_y - 1.96 * sqrt(speed_pvar1)),
-  speed_phi = invlogit(speed_y + 1.96 * sqrt(speed_pvar1)),
-  speed_tlo = invlogit(speed_y - 1.96 * sqrt(speed_tvar1)),
-  speed_thi = invlogit(speed_y + 1.96 * sqrt(speed_tvar1))
+# Generate table
+speed_newdat <- data.table(
+  speed = speed_dat$speed,
+  space = speed_dat$space,
+  guard = speed_dat$guard,
+  surv_speed = speed_dat$surv_speed,
+  surv_space = speed_dat$surv_space,
+  speed_y = plogis(speed_y),
+  speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar1)),
+  speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar1)),
+  speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar1)),
+  speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar1))
 )
 
-speed_newdat <- gather(speed_newdat, variable, estimate, c(2:3))
-# -----------------------------------------------------------------------------------------
+# Keep columns of interest
+speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
+
+# Plot for predator speed^2
+quad_speed <- ggplot(speed_newdat) +
+                geom_point(data = data,
+                             aes(x = Zspeed, y = prop_captures),
+                             shape = 16, 
+                             alpha = 0.1, 
+                             color = "black") +
+                  geom_line(aes(x = speed, y = speed_y.Estimate),
+                            size = 1.5,
+                            color = "#3CBC75FF") +
+                  geom_line(aes(x = speed, y = speed_plo.Estimate),
+                            linetype = "dashed",
+                            size = 1,
+                            color = "black") +
+                  geom_line(data = speed_newdat,
+                            aes(x = speed, y = speed_phi.Estimate),
+                            linetype = "dashed",
+                            size = 1, 
+                            color = "black") +
+                  geom_ribbon(data = speed_newdat,
+                              aes(x = speed,
+                                  ymin = speed_tlo.Estimate,
+                                  ymax = speed_thi.Estimate),
+                              alpha = 0.2,
+                              fill = "#3CBC75FF") +
+                  xlab("\nSpeed") +
+                  ylab("") +
+                  custom_theme
+# -----------------------------------
 
 
-# -----------------------------------------------------------------------------------------
-# Create the plots
+# -----------------------------------
+# Predator rate of space covered
+# -----------------------------------
+# Create new data
+space_dat <- data.table(space      = seq(min(data$Zspace_covered_rate), 
+                                         max(data$Zspace_covered_rate),
+                                         length.out = 100), 
+                        speed      = mean(data$Zspeed),             
+                        guard      = mean(data$Zprox_mid_guard),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+space_mm <- model.matrix(~  
+                           I(speed^2) +
+                           I(space^2) +
+                           I(guard^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
+                           speed * space +
+                           speed * guard +
+                           space * guard +
+                           speed * surv_speed +
+                           space * surv_speed +
+                           guard * surv_speed +
+                           speed * surv_space +
+                           space * surv_space +
+                           guard * surv_space, space_dat)
+# Compute fitted values
+space_y <- space_mm%*%fixef(quadratic_model)
 
-# Z speed^2 plot
-# -------------------------------------------------
-quadratic_speed_plot <- ggplot() +
-  geom_point(data = data,
-             aes(x = Zspeed, y = prop_bloodpoints),
-             shape = 16,
-             alpha = 0.1,
-             color = "black") + # or point shape 20
-  geom_line(data = speed_newdat,
-            aes(x = speed_x, y = speed_y),
-            size = 1.5,
-            color = "#F8766D") +
-  geom_line(data = speed_newdat,
-            aes(x = speed_x, y = speed_plo),
-            linetype = "dashed",
-            size = 1,
-            color = "#00BFC4") +
-  geom_line(data = speed_newdat,
-            aes(x = speed_x, y = speed_phi),
-            linetype = "dashed",
-            size = 1, 
-            color = "#00BFC4") +
-  geom_ribbon(data = speed_newdat,
-              aes(x = speed_x, ymin = speed_tlo, ymax = speed_thi),
-              alpha = 0.2,
-              fill = "#F8766D") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     expand = c(0, 0),
-                     limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(-8, 6, 4),
-                     expand = c(0, 0),
-                     limits = c(-8, 6)) +
-  #ylab("Probability of gaining bloodpoints\n") +
-  ylab("") +
-  xlab("\nSpeed") +
-  theme(axis.text.x = element_text(face = "plain",
-                                   size = 14,
-                                   color = "black"), # axis tick numbers size
-        axis.text.y = element_text(face = "plain",
-                                   size = 14,
-                                   color = "black"),
-        axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-        axis.ticks = element_line(size = 0.90,
-                                  color = "black"), # axis ticks width
-        axis.title = element_text(size = 14,
-                                  face = "plain"), # axis titles size
-        axis.line = element_line(size = 0.95),
-        plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
-        legend.position = "none",
-        panel.grid = element_blank(),
-        panel.background = element_blank())
+# Confidence intervals
+space_pvar <- diag(space_mm %*% tcrossprod(vcov(quadratic_model), space_mm))
+space_tvar <- space_pvar + 
+              VarCorr(quadratic_model)$obs$sd[1] + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
+              VarCorr(quadratic_model)$map_name$sd[1]
+
+# Generate table
+space_newdat <- data.table(
+  speed = space_dat$speed,
+  space = space_dat$space,
+  guard = space_dat$guard,
+  surv_speed = space_dat$surv_speed,
+  surv_space = space_dat$surv_space,
+  space_y = plogis(space_y),
+  space_plo = plogis(space_y - 1.96 * sqrt(space_pvar)),
+  space_phi = plogis(space_y + 1.96 * sqrt(space_pvar)),
+  space_tlo = plogis(space_y - 1.96 * sqrt(space_tvar)),
+  space_thi = plogis(space_y + 1.96 * sqrt(space_tvar))
+)
+
+# Keep columns of interest
+space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
+
+# Plot for predator space^2
+quad_space <- ggplot(space_newdat) +
+                geom_line(aes(x = space, y = space_y.Estimate),
+                          size = 1.5,
+                          color = "#3CBC75FF") +
+                geom_line(aes(x = space, y = space_plo.Estimate),
+                          linetype = "dashed",
+                          size = 1,
+                          color = "black") +
+                geom_line(data = space_newdat,
+                          aes(x = space, y = space_phi.Estimate),
+                          linetype = "dashed",
+                          size = 1, 
+                          color = "black") +
+                geom_ribbon(data = space_newdat,
+                            aes(x = space,
+                                ymin = space_tlo.Estimate,
+                                ymax = space_thi.Estimate),
+                            alpha = 0.2,
+                            fill = "#3CBC75FF") +
+                xlab("\nSpace") +
+                ylab("") +
+                custom_theme
+# -----------------------------------
+
+
+# -----------------------------------
+# Predator proportion of time spent guarding
+# -----------------------------------
+# Create new data
+guard_dat <- data.table(guard      = seq(min(data$Zprox_mid_guard), 
+                                         5,
+                                         length.out = 100), 
+                        speed      = mean(data$Zspeed),             
+                        space      = mean(data$Zspace_covered_rate),             
+                        surv_speed = mean(data$Zsurv_speed),            
+                        surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+guard_mm <- model.matrix(~  
+                           I(speed^2) +
+                           I(space^2) +
+                           I(guard^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
+                           speed * space +
+                           speed * guard +
+                           space * guard +
+                           speed * surv_speed +
+                           space * surv_speed +
+                           guard * surv_speed +
+                           speed * surv_space +
+                           space * surv_space +
+                           guard * surv_space, guard_dat)
+# Compute fitted values
+guard_y <- guard_mm%*%fixef(quadratic_model)
+
+# Confidence intervals
+guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(quadratic_model), guard_mm))
+guard_tvar <- guard_pvar + 
+              VarCorr(quadratic_model)$obs$sd[1] + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
+              VarCorr(quadratic_model)$map_name$sd[1]
+
+# Generate table
+guard_newdat <- data.table(
+  speed = guard_dat$speed,
+  space = guard_dat$space,
+  guard = guard_dat$guard,
+  surv_speed = guard_dat$surv_speed,
+  surv_space = guard_dat$surv_space,
+  guard_y = plogis(guard_y),
+  guard_plo = plogis(guard_y - 1.96 * sqrt(guard_pvar)),
+  guard_phi = plogis(guard_y + 1.96 * sqrt(guard_pvar)),
+  guard_tlo = plogis(guard_y - 1.96 * sqrt(guard_tvar)),
+  guard_thi = plogis(guard_y + 1.96 * sqrt(guard_tvar))
+)
+
+# Keep columns of interest
+guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
+
+# Plot for predator guard^2
+quad_guard <- ggplot(guard_newdat) +
+                geom_line(aes(x = guard, y = guard_y.Estimate),
+                          size = 1.5,
+                          color = "#3CBC75FF") +
+                geom_line(aes(x = guard, y = guard_plo.Estimate),
+                          linetype = "dashed",
+                          size = 1,
+                          color = "black") +
+                geom_line(data = guard_newdat,
+                          aes(x = guard, y = guard_phi.Estimate),
+                          linetype = "dashed",
+                          size = 1, 
+                          color = "black") +
+                geom_ribbon(data = guard_newdat,
+                            aes(x = guard,
+                                ymin = guard_tlo.Estimate,
+                                ymax = guard_thi.Estimate),
+                            alpha = 0.2,
+                            fill = "#3CBC75FF") +
+                xlab("\nGuard") +
+                ylab("") +
+                custom_theme
+# -----------------------------------
 # =======================================================================
 # =======================================================================
 
@@ -577,7 +566,8 @@ quadratic_speed_plot <- ggplot() +
 
 
 
-# 4. Create the figure with 6 panels ====================================
+# =======================================================================
+# 5. Create the figure with 6 panels
 # =======================================================================
 # Create the 3 paneled figure
 panel_plot <- ggarrange(speed,
@@ -605,9 +595,8 @@ panel_plot <- annotate_figure(panel_plot,
                                                hjust = 1.23, vjust = 2.1))
 # 1.11 avant
 # Save and export figure
-ggexport(panel_plot, filename = "06D_Figure1.tiff",
+ggexport(panel_plot, filename = "05_Figure2.tiff",
          width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
 
-
-# End of script =========================================================
+# =======================================================================
 # =======================================================================
