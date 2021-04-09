@@ -34,23 +34,29 @@ data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Fra
                          stringsAsFactors = TRUE)
 
 # Load both models
-#load("03B_hunting_success_base-model.rda")
-#load("03C_hunting_success_quadratic-model.rda")
-load("base_model_threads.rda")
-load("03B_base-model.rda")
-load("03B_r2-table.rda")
+load("03B_hunting_success_base-model.rda")
+load("03C_hunting_success_quadratic-model.rda")
+# =======================================================================
+# =======================================================================
 
 
 
+
+
+# =======================================================================
+# 2. Basic model diagnostics (take a very long time to compute)
+# =======================================================================
+
+# Visualize on web browser :
 # Shinystan app
-# ===================
+# -------------------
 launch_shinystan(base_model)
 launch_shinystan(quadratic_model)
-
+# -------------------
 
 
 # Diagnose functions
-# ===================
+# -------------------
 # Posterior predictive checks
 pp_check(base_model)
 pp_check(quadratic_model)
@@ -75,23 +81,28 @@ neff_table <- as.data.table(mcmc_neff_data(neff_vals))
 
 neff_vals_quad <- neff_ratio(quadratic_model)
 neff_table_quad <- as.data.table(mcmc_neff_data(neff_vals_quad))
+# -------------------
+# =======================================================================
+# =======================================================================
 
 
+
+
+
+# =======================================================================
+# 3. Assess model fit (R-squared)
+# =======================================================================
 # Gelman's R2
 # For an introduction to the approach, see Gelman et al. (2018) and
 # <URL: https://github.com/jgabry/bayes_R2/>.
-bayes_R2(base_model)
-bayes_R2(quadratic_model)
+base_bayesr2 <- bayes_R2(base_model)
+quad_bayesr2 <- bayes_R2(quadratic_model)
 
 
 
+capture.output(blabla, file = "blabla.txt")
 
-
-# =======================================================================
-# Assess model fit (R-squared)
-# =======================================================================
 # Calculation by hand (supplementary material 2 from Nakagawa & al. 2017)
-
 # Create new data
 dat <- data.table(speed      = seq(min(data$Zspeed), 
                                    max(data$Zspeed),
@@ -141,7 +152,6 @@ mm2 <- model.matrix(~ # Quadratic terms
 
 
 # Variance components :
-
 # 1. Fixed effects variance
 # --------------------------
 # Compute variance in fitted values (Fixed effects variance)
@@ -193,4 +203,7 @@ R2_C2 <- (VarF2 + VarR_no_obs2) /
 
 # Save r-squared values into a table
 r_squared <- as.data.table(cbind(R2_M1, R2_C1, R2_M2, R2_C2))
-save(r_squared, file = "04_r2-table.rda")
+
+capture.output(r_squared, file = "r2-table.txt")
+# =======================================================================
+# =======================================================================
