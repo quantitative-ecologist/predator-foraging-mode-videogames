@@ -36,6 +36,10 @@ data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Fra
 # Load both models
 load("03B_hunting_success_base-model.rda")
 load("03C_hunting_success_quadratic-model.rda")
+
+print(object.size(base_model), units = "MB")
+print(object.size(base_model2), units = "MB")
+
 # =======================================================================
 # =======================================================================
 
@@ -58,7 +62,7 @@ launch_shinystan(quadratic_model)
 # Diagnose functions
 # -------------------
 # Posterior predictive checks
-pp_check(base_model)
+brms::pp_check(base_model)
 pp_check(quadratic_model)
 
 # Trace plots
@@ -119,6 +123,9 @@ dat <- data.table(speed      = seq(min(data$Zspeed),
                   surv_space = seq(min(data$Zsurv_space_covered_rate), 
                                    max(data$Zsurv_space_covered_rate),
                                    length.out = 100))
+
+library(broom.helpers) # good way to do
+mm1 <- model_get_model_matrix(base_model)
 # Model matrices
 mm1 <- model.matrix(~ speed + 
                       space + 
