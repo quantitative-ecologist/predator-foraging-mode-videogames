@@ -123,3 +123,42 @@ save(beta_binom_mod, file = "beta_binom_mod.rda")
 
 # =======================================================================
 # =======================================================================
+
+
+
+
+
+
+# Tests
+
+# test again on a subsample
+
+data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv", 
+              select = c("mirrors_id", "match_id", 
+                         "map_name", "hunting_success", "Zspeed", 
+                         "Zprox_mid_guard", "Zspace_covered_rate",
+                         "Zhook_start_time", "Zsurv_speed", 
+                         "Zsurv_space_covered_rate"),
+              stringsAsFactors = TRUE)
+
+# Small subset of the data for testing the models
+data_sub <- data[mirrors_id %in% c("INTPA4488Y", "ENJPY8322S", 
+                                   "LMDUQ5788L", "JXJGU1188A"),]
+data_sub$obs <- 1:nrow(data_sub)
+
+
+system.time(betabi_mod <- brm(formula = model_formula,
+                              family = beta_binomial2,
+                              warmup = 1000, 
+                              iter = 5000,
+                              thin = 5,
+                              chains = 4, 
+                              inits = "0", 
+                            #  threads = threading(10),
+                            #  backend = "cmdstanr",
+                              seed = 20210414,
+                              stanvars = stanvars,
+                              prior = priors,
+                              control = list(adapt_delta = 0.95),
+                              data = data_sub))
+
