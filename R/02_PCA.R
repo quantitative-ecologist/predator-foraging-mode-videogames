@@ -16,11 +16,8 @@
 
 
 # =========================================================================
-# 1. Set working directory and load libraries
+# 1. Load libraries
 # =========================================================================
-# personal computer onedrive UQAM Montiglio lab
-setwd("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/chapter1/outputs")
-
 library(data.table)
 library(ggcorrplot)
 library(factoextra)
@@ -39,10 +36,10 @@ library(ggpubr)
 # =========================================================================
 # Full centered data matrix
 # Load original data
-game_data <- fread("02_merged-data.csv")
+game_data <- fread("./data/02_merged-data.csv")
 
 # Select column to be analyzed
-full_Zmatrix <- game_data[, c(65:68, 70, 71, 73:75)]
+full_Zmatrix <- game_data[, c(68:71, 73, 74, 76:79)]
 
 names(full_Zmatrix)
 # Change variable names
@@ -55,6 +52,7 @@ setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")
 setnames(full_Zmatrix, "Zpallet_destroyed", "pallets destroyed")
 setnames(full_Zmatrix, "Zchase_per_second", "number of chases")
 setnames(full_Zmatrix, "Zdamage_generator", "generators damaged")
+setnames(full_Zmatrix, "Zhook_start_time", "time before 1st capture")
 
 #setnames(full_Zmatrix, "Zhit_close_count", "attacks while carrying")
 #setnames(full_Zmatrix, "Zhook_count", "prey hooked count")
@@ -177,8 +175,10 @@ PCA_fullZ_biplot12 <- fviz_pca_biplot(PCA_fullZ,
                                     labelsize = 6,
                                     select.var = list(contrib = 13),
                                     repel = TRUE) + # no text overlap
-  scale_y_continuous(breaks = seq(-10, 15, 5), limits = c(-10, 16)) +
-  scale_x_continuous(breaks = seq(-15, 15, 5), limits = c(-18, 15)) +
+  #scale_y_continuous(breaks = seq(-10, 15, 5), limits = c(-10, 16)) +
+  #scale_x_continuous(breaks = seq(-15, 15, 5), limits = c(-18, 15)) +
+  scale_y_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
+  scale_x_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
   background_grid(major = "none") +
   theme(panel.border = element_rect(fill = NA, size = 0.95),
         axis.text.x = element_text(face = "plain", size = 14, color = "black"),
@@ -188,8 +188,8 @@ PCA_fullZ_biplot12 <- fviz_pca_biplot(PCA_fullZ,
         plot.margin = margin(0.1, 0.5, 0.2, 0.3, "cm"))
 
 PCA_fullZ_biplot12 <- ggpubr::ggpar(PCA_fullZ_biplot12,
-                                  xlab = "\nPC1 (20.9% of explained variance)",
-                                  ylab = "PC2 (18.6% of explained variance)\n",
+                                  xlab = "\nPC1 (19.2% of explained variance)",
+                                  ylab = "PC2 (17.5% of explained variance)\n",
                                   title = "",
                                   font.x = c(15, "plain"),
                                   font.y = c(15, "plain"))
@@ -208,8 +208,10 @@ PCA_fullZ_biplot23 <- fviz_pca_biplot(PCA_fullZ,
                                     labelsize = 6,
                                     select.var = list(contrib = 13),
                                     repel = TRUE) + # no text overlap
-  scale_y_continuous(breaks = seq(-10, 15, 5), limits = c(-10, 15)) +
-  scale_x_continuous(breaks = seq(-15, 15, 5), limits = c(-15, 18)) +
+  #scale_y_continuous(breaks = seq(-10, 15, 5), limits = c(-10, 15)) +
+  #scale_x_continuous(breaks = seq(-15, 15, 5), limits = c(-15, 18)) +
+  scale_y_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
+  scale_x_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
   background_grid(major = "none") +
   theme(panel.border = element_rect(fill = NA, size = 0.95),
         axis.text.x = element_text(face = "plain", size = 14, color = "black"),
@@ -219,8 +221,8 @@ PCA_fullZ_biplot23 <- fviz_pca_biplot(PCA_fullZ,
         plot.margin = margin(0.1, 0.5, 0.2, 0.5, "cm"))
 
 PCA_fullZ_biplot23 <- ggpubr::ggpar(PCA_fullZ_biplot23,
-                                  xlab = "\nPC2 (18.6% of explained variance)",
-                                  ylab = "PC3 (13.3% of explained variance)\n",
+                                  xlab = "\nPC2 (17.5% of explained variance)",
+                                  ylab = "PC3 (12.8% of explained variance)\n",
                                   title = "",
                                   font.x = c(15, "plain"),
                                   font.y = c(15, "plain"))
@@ -259,13 +261,13 @@ game_data <- cbind(game_data, individuals$coord)
 # =========================================================================
 # 10. Save table for selection analysis using PC scores
 # =========================================================================
-setnames(game_data, "Dim.1", "PC1")
-setnames(game_data, "Dim.2", "PC2")
-setnames(game_data, "Dim.3", "PC3")
-setnames(game_data, "Dim.4", "PC4")
-setnames(game_data, "Dim.5", "PC5")
-fwrite(game_data[,.(mirrors_id, match_id, PC1, PC2, PC3, PC4, PC5)],
-       "04_PCscores-data.csv", sep = ",")
+#setnames(game_data, "Dim.1", "PC1")
+#setnames(game_data, "Dim.2", "PC2")
+#setnames(game_data, "Dim.3", "PC3")
+#setnames(game_data, "Dim.4", "PC4")
+#setnames(game_data, "Dim.5", "PC5")
+#fwrite(game_data[,.(mirrors_id, match_id, PC1, PC2, PC3, PC4, PC5)],
+#       "04_PCscores-data.csv", sep = ",")
 # =========================================================================
 # =========================================================================
 
@@ -280,7 +282,7 @@ ggexport(plotlist = list(scree_plot,
                          contrib_PC1, contrib_PC2,
                          contrib_PC3),
          nrow = 1, ncol = 1,
-         filename = "04_PCA_diagnostics-plots.pdf") # as PDF file
+         filename = "./outputs/04_PCA_diagnostics-plots.pdf") # as PDF file
 
 
 # as one figure
@@ -288,18 +290,8 @@ PCA_figure <- ggarrange(PCA_fullZ_biplot12,
                         PCA_fullZ_biplot23,
                         ncol = 2, nrow = 1)
 
-ggexport(PCA_figure, filename = "04_PCA_figure.tiff", 
+ggexport(PCA_figure, filename = "./outputs/04_PCA_figure.tiff", 
          width = 4000, height = 1800, res = 300)
 
 
 # End of script ==========================================================
-
-
-# as two seperate figures
-#ggsave("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/masters_project/chapter1/outputs/04_PCA_dim12-biplot.tiff",
-#       plot = PCA_fullZ_biplot12, device = "tiff",
-#       dpi = 400, height = 6, width = 6) # at home as a tiff file
-
-#ggsave("/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/masters_project/chapter1/outputs/04_PCA_dim23-biplot.tiff",
-#       plot = PCA_fullZ_biplot23, device = "tiff",
-#       dpi = 400, height = 6, width = 6) # at home as a tiff file
