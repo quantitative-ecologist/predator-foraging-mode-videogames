@@ -24,11 +24,12 @@ library(bayesplot)
 library(broom.helpers)
 
 # Load dataset
-data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv",
+data <- fread("./data/02_merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zsurv_speed", "Zsurv_space_covered_rate"),
+                         "Zsurv_speed", "Zhook_start_time",
+                         "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # Load both models

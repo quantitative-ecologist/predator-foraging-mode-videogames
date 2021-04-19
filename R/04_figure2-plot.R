@@ -16,10 +16,8 @@
 
 
 # =======================================================================
-# 1. Set working directory, load libraries, datasets, and models
+# 1. Load libraries, datasets, and models
 # =======================================================================
-
-setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs") # personal computer onedrive UQAM Montiglio lab
 
 library(data.table)
 library(brms)
@@ -28,22 +26,24 @@ library(ggpubr)
 #library(tidyr)
 
 # Load dataset
-data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv",
+data <- fread("./data/02_merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zsurv_speed", "Zsurv_space_covered_rate"),
+                         "Zsurv_speed", "Zhook_start_time",
+                         "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # Load both models
-load("03B_hunting_success_base-model.rda")
-load("03C_hunting_success_quadratic-model.rda")
+load("./outputs/03B_hunting_success_base-model.rda")
+load("./outputs/03C_hunting_success_quadratic-model.rda")
 # =======================================================================
 # =======================================================================
+back <- function (x) { exp(x) / (1 + exp(x)) }
 
-
-
-
+spe <- conditional_effects(base_model, "Zspeed")
+spe1 <- conditional_effects(base_model, "Zspeed", 
+                            method = "fitted")
 
 # =======================================================================
 # 2. Prepare plot customizations
@@ -95,17 +95,19 @@ data[, prop_captures := hunting_success/4]
 # Predator average movement speed
 # -----------------------------------
 # Create new data
-speed_dat <- data.table(speed      = seq(min(data$Zspeed), 
+speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                                          max(data$Zspeed),
-                                         length.out = 100), 
-                        space      = mean(data$Zspace_covered_rate),             
-                        guard      = mean(data$Zprox_mid_guard),             
-                        surv_speed = mean(data$Zsurv_speed),            
+                                         length.out = 100),
+                        space      = mean(data$Zspace_covered_rate),
+                        guard      = mean(data$Zprox_mid_guard),
+                        hook       = mean(data$Zhook_start_time),
+                        surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 speed_mm <- model.matrix(~ speed + 
                            space + 
                            guard + 
+                           hook +
                            surv_speed + 
                            surv_space, speed_dat)
 # Compute fitted values
@@ -123,6 +125,7 @@ speed_newdat <- data.table(
   speed = speed_dat$speed,
   space = speed_dat$space,
   guard = speed_dat$guard,
+  hook = speed_dat$hook,
   surv_speed = speed_dat$surv_speed,
   surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
@@ -131,9 +134,6 @@ speed_newdat <- data.table(
   speed_tlo = plogis(speed_y - 1.96 * sqrt(speed_tvar)),
   speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar))
 )
-
-# Keep columns of interest
-speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator speed
 speed <- ggplot(speed_newdat) +
@@ -178,13 +178,15 @@ space_dat <- data.table(speed      = mean(data$Zspeed),
                         space      = seq(min(data$Zspace_covered_rate), 
                                          5,
                                          length.out = 100),           
-                        guard      = mean(data$Zprox_mid_guard),             
+                        guard      = mean(data$Zprox_mid_guard), 
+                        hook       = mean(data$Zhook_start_time),            
                         surv_speed = mean(data$Zsurv_speed),            
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 space_mm <- model.matrix(~ speed + 
                            space + 
                            guard + 
+                           hook +
                            surv_speed + 
                            surv_space, space_dat)
 # Compute fitted values
@@ -202,6 +204,7 @@ space_newdat <- data.table(
   speed = space_dat$speed,
   space = space_dat$space,
   guard = space_dat$guard,
+  hook = space_dat$hook,
   surv_speed = space_dat$surv_speed,
   surv_space = space_dat$surv_space,
   space_y = plogis(space_y),
@@ -210,9 +213,6 @@ space_newdat <- data.table(
   space_tlo = plogis(space_y - 1.96 * sqrt(space_tvar)),
   space_thi = plogis(space_y + 1.96 * sqrt(space_tvar))
 )
-
-# Keep columns of interest
-space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator space
 space <- ggplot(space_newdat) +
@@ -256,13 +256,15 @@ guard_dat <- data.table(speed      = mean(data$Zspeed),
                         guard      = seq(min(data$Zprox_mid_guard), 
                                          7,
                                          length.out = 100),
+                        hook       = mean(data$Zhook_start_time),
                         surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
-guard_mm <- model.matrix(~ speed + 
+guard_mm <- model.matrix(~ speed +
                            space +
-                           guard + 
-                           surv_speed + 
+                           guard +
+                           hook +
+                           surv_speed +
                            surv_space, guard_dat)
 # Compute fitted values
 guard_y <- guard_mm%*%fixef(base_model)
@@ -279,6 +281,7 @@ guard_newdat <- data.table(
   speed = guard_dat$speed,
   space = guard_dat$space,
   guard = guard_dat$guard,
+  hook = guard_dat$hook,
   surv_speed = guard_dat$surv_speed,
   surv_space = guard_dat$surv_space,
   guard_y = plogis(guard_y),
@@ -287,9 +290,6 @@ guard_newdat <- data.table(
   guard_tlo = plogis(guard_y - 1.96 * sqrt(guard_tvar)),
   guard_thi = plogis(guard_y + 1.96 * sqrt(guard_tvar))
 )
-
-# Keep columns of interest
-guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator guard
 guard <- ggplot(guard_newdat) +
@@ -322,6 +322,77 @@ guard <- ggplot(guard_newdat) +
             ylab("") +
             custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
+
+
+# -----------------------------------
+# Predator time before 1st capture
+# -----------------------------------
+# Create new data
+hook_dat <- data.table(speed      = mean(data$Zspeed),             
+                       space      = mean(data$Zspace_covered_rate),
+                       guard      = mean(data$Zprox_mid_guard),
+                       hook       = seq(min(data$Zhook_start_time),
+                                        max(data$Zhook_start_time),
+                                        length.out = 100),
+                       surv_speed = mean(data$Zsurv_speed),
+                       surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+hook_mm <- model.matrix(~ speed +
+                          space +
+                          guard +
+                          hook +
+                          surv_speed +
+                          surv_space, hook_dat)
+# Compute fitted values
+hook_y <- hook_mm%*%fixef(base_model)
+
+# Confidence intervals
+hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(base_model), hook_mm))
+hook_tvar <- hook_pvar + 
+              VarCorr(base_model)$obs$sd[1] + 
+              VarCorr(base_model)$mirrors_id$sd[1] + 
+              VarCorr(base_model)$map_name$sd[1]
+
+# Generate table
+hook_newdat <- data.table(
+  speed = hook_dat$speed,
+  space = hook_dat$space,
+  guard = hook_dat$guard,
+  hook = hook_dat$hook,
+  surv_speed = hook_dat$surv_speed,
+  surv_space = hook_dat$surv_space,
+  hook_y = plogis(hook_y),
+  hook_plo = plogis(hook_y - 1.96 * sqrt(hook_pvar)),
+  hook_phi = plogis(hook_y + 1.96 * sqrt(hook_pvar)),
+  hook_tlo = plogis(hook_y - 1.96 * sqrt(hook_tvar)),
+  hook_thi = plogis(hook_y + 1.96 * sqrt(hook_tvar))
+)
+
+# Plot for predator guard
+hook <- ggplot(hook_newdat) +
+            geom_line(aes(x = hook, y = hook_y.Estimate),
+                      size = 1.5,
+                      color = "#3CBC75FF") +
+            geom_line(aes(x = hook, y = hook_plo.Estimate),
+                      linetype = "dashed",
+                      size = 1,
+                      color = "black") +
+            geom_line(data = hook_newdat,
+                      aes(x = hook, y = hook_phi.Estimate),
+                      linetype = "dashed",
+                      size = 1, 
+                      color = "black") +
+            geom_ribbon(data = hook_newdat,
+                        aes(x = hook, 
+                            ymin = hook_tlo.Estimate,
+                            ymax = hook_thi.Estimate),
+                        alpha = 0.2,
+                        fill = "#3CBC75FF") +
+            scale_y_continuous(breaks = seq(0, 1, .25),
+                               limits = c(0, 1)) +
+            xlab("\nTime for 1st capture") +
+            ylab("") +
+            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # =======================================================================
 # =======================================================================
 
@@ -336,12 +407,12 @@ guard <- ggplot(guard_newdat) +
 # Predator average movement speed
 # -----------------------------------
 # Create new data
-speed_dat <- data.table(speed      = seq(min(data$Zspeed), 
+speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                                          max(data$Zspeed),
-                                         length.out = 100), 
-                        space      = mean(data$Zspace_covered_rate),             
-                        guard      = mean(data$Zprox_mid_guard),             
-                        surv_speed = mean(data$Zsurv_speed),            
+                                         length.out = 100),
+                        space      = mean(data$Zspace_covered_rate),
+                        guard      = mean(data$Zprox_mid_guard),
+                        surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 speed_mm <- model.matrix(~ 
