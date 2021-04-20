@@ -37,7 +37,8 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zsurv_speed", "Zsurv_space_covered_rate"),
+                         "Zsurv_speed", "Zhook_start_time",
+                         "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # Add observation-level random effect
@@ -64,18 +65,23 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         I(Zspeed^2) +
                                         I(Zspace_covered_rate^2) +
                                         I(Zprox_mid_guard^2) +
+                                        I(Zhook_start_time^2) +
                                         I(Zsurv_speed^2) +
                                         I(Zsurv_space_covered_rate^2) +
                                         # Linear terms
                                         Zspeed +
                                         Zspace_covered_rate +
                                         Zprox_mid_guard +
+                                        Zhook_start_time +
                                         Zsurv_speed +
                                         Zsurv_space_covered_rate +
                                         # Predator trait covariances
                                         Zspeed : Zspace_covered_rate +
                                         Zspeed : Zprox_mid_guard +
+                                        Zspeed : Zhook_start_time +
                                         Zspace_covered_rate : Zprox_mid_guard +
+                                        Zspace_covered_rate : Zhook_start_time +
+                                        Zprox_mid_guard : Zhook_start_time +
                                         # Predator-prey trait covariances
                                         Zspeed : Zsurv_speed +
                                         Zspeed : Zsurv_space_covered_rate +
@@ -83,6 +89,8 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         Zspace_covered_rate : Zsurv_space_covered_rate +
                                         Zprox_mid_guard : Zsurv_speed +
                                         Zprox_mid_guard : Zsurv_space_covered_rate +
+                                        Zhook_start_time : Zsurv_speed +
+                                        Zhook_start_time : Zsurv_space_covered_rate +
                                         (1 | map_name) +
                                         (1 | mirrors_id) +
                                         (1 | obs))
@@ -115,7 +123,7 @@ system.time(quadratic_model <- brm(formula = model_formula,
                                    inits = "0", 
                                    threads = threading(10),
                                    backend = "cmdstanr",
-                                   seed = 20210322, # date when the model was ran
+                                   seed = 20210419,
                                    prior = priors,
                                    control = list(adapt_delta = 0.95),
                                    data = data))

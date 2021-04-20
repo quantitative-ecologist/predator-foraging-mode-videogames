@@ -16,8 +16,8 @@
 options(mc.cores = parallel::detectCores())
 # -----------------------------------------------------------------------
 
-
-
+# to use an interactive node to test my model
+salloc --time=00:30:00 --mem=5000M --account=def-monti --ntasks=4
 
 
 # =======================================================================
@@ -46,7 +46,23 @@ data$obs <- 1:nrow(data)
 # =======================================================================
 # =======================================================================
 
+# Load dataset
+data <- fread("./data/02_merged-data.csv",
+              select = c("mirrors_id", "match_id", "character_name",
+                         "map_name", "hunting_success", "Zspeed", 
+                         "Zprox_mid_guard", "Zspace_covered_rate",
+                         "Zhook_start_time", "Zsurv_speed", 
+                         "Zsurv_space_covered_rate"),
+                         stringsAsFactors = TRUE)
 
+# Add observation-level random effect
+data$obs <- 1:nrow(data)
+
+
+# Small subset of the data for testing the models
+data_sub <- data[mirrors_id %in% c("GGMRS1168C", "GDJRB7034K", "GAGKF3834V", 
+                                   "ZLGGM6266Z", "ZPAOC9787K"),]
+data_sub$obs <- 1:nrow(data_sub)
 
 
 
@@ -101,18 +117,18 @@ model_formula <- brmsformula(hunting_success | vint(4) ~
 
 system.time(beta_binom_mod <- brm(formula = model_formula,
                               family = beta_binomial2,
-                              warmup = 3000, 
-                              iter = 153000,
-                              thin = 100,
-                              chains = 4, 
+                              warmup = 1000, 
+                              iter = 3000,
+                              thin = 10,
+                              chains = 2, 
                               inits = "0", 
-                              threads = threading(10),
+                              threads = threading(2),
                               backend = "cmdstanr",
                               seed = 20210414,
                               stanvars = stanvars,
                               prior = priors,
                               control = list(adapt_delta = 0.95),
-                              data = data))
+                              data = data_sub))
 
 save(beta_binom_mod, file = "beta_binom_mod.rda")
 
@@ -128,37 +144,164 @@ save(beta_binom_mod, file = "beta_binom_mod.rda")
 
 
 
+# =======================================================================
+# =======================================================================
 
-# Tests
+# -----------------------------------------------------------
+# linear model formula
+speed_formula <- bf(Zspeed ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id))
 
-# test again on a subsample
+space_formula <- bf(Zspace_covered_rate ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id))
 
-data <- fread("C:/Users/maxim/UQAM/Montiglio, Pierre-Olivier - Maxime Fraser Franco/MFraserFranco(2019-06-11)/PhD_project/project_data/02_merged-data.csv", 
-              select = c("mirrors_id", "match_id", 
-                         "map_name", "hunting_success", "Zspeed", 
-                         "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zhook_start_time", "Zsurv_speed", 
-                         "Zsurv_space_covered_rate"),
-              stringsAsFactors = TRUE)
+guard_formula <- bf(Zprox_mid_guard ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id))
 
-# Small subset of the data for testing the models
-data_sub <- data[mirrors_id %in% c("INTPA4488Y", "ENJPY8322S", 
-                                   "LMDUQ5788L", "JXJGU1188A"),]
-data_sub$obs <- 1:nrow(data_sub)
+hook_formula <- bf(Zhook_start_time ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id))
 
+# priors
+priors <- c(
+  set_prior("normal(0, 5)", 
+            class = "b", 
+            coef = "Zsurv_speed",
+            resp = c("Zspeed", "Zspace_covered_rate", 
+                     "Zprox_mid_guard", "Zhook_start_time")),
+  set_prior("normal(0, 5)", 
+            class = "b", 
+            coef = "Zsurv_space_covered_rate",
+            resp = c("Zspeed", "Zspace_covered_rate", 
+                     "Zprox_mid_guard", "Zhook_start_time")),
+  set_prior("lkj(2)", class = "cor"))
 
-system.time(betabi_mod <- brm(formula = model_formula,
-                              family = beta_binomial2,
-                              warmup = 1000, 
-                              iter = 5000,
-                              thin = 5,
-                              chains = 4, 
-                              inits = "0", 
+# Base model brms
+system.time(mv_model <- brm(speed_formula + 
+                              space_formula + 
+                              guard_formula + 
+                              hook_formula +
+                              set_rescor(TRUE),
+                          #  family = gaussian(), #this model was run without a specified family
+                            warmup = 1000, 
+                            iter = 4000,
+                            thin = 5,
+                            chains = 4, 
+                            inits = "0",
                             #  threads = threading(10),
                             #  backend = "cmdstanr",
-                              seed = 20210414,
-                              stanvars = stanvars,
-                              prior = priors,
-                              control = list(adapt_delta = 0.95),
-                              data = data_sub))
+                            seed = 20210414,
+                            #prior = priors, #this model was run without priors
+                            control = list(adapt_delta = 0.95),
+                            data = data_sub))
+#save(mv_model, file = "mv_model_test.rda")
+load("mv_model_test.rda")
+mv_model <- add_criterion(mv_model, "loo")
+# -----------------------------------------------------------
+
+
+
+# -----------------------------------------------------------
+# linear model formula
+speed_formula1 <- bf(Zspeed ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id)) +
+                      gaussian()
+
+space_formula1 <- bf(Zspace_covered_rate ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id)) +
+                      gaussian()
+
+guard_formula1 <- bf(Zprox_mid_guard ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id)) +
+                      gaussian()
+
+hook_formula1 <- bf(Zhook_start_time ~
+                      Zsurv_speed +
+                      Zsurv_space_covered_rate +
+                      (1 |a| map_name) +
+                      (1 |b| character_name) +
+                      (1 |c| mirrors_id)) +
+                      gaussian()
+# -----------------------------------------------------------
+
+
+
+
+# WORKS!!!!!
+# -----------------------------------------------------------
+# Formula
+mv_form3 <- bf(mvbind(Zspeed,
+                     Zspace_covered_rate,
+                     Zprox_mid_guard,
+                     Zhook_start_time) ~
+                Zsurv_speed +
+                Zsurv_space_covered_rate +
+                (1 |a| map_name) +
+                (1 |b| character_name) +
+                (1 |c| mirrors_id)) + gaussian()
+
+# priors3
+priors3.1 <- c(
+  set_prior("normal(0, 5)", 
+            class = "b",
+            coef = "Zsurv_speed",
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "Zproxmidguard", "Zhookstarttime")),
+  set_prior("normal(0, 5)", 
+            class = "b",
+            coef = "Zsurv_space_covered_rate",
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "Zproxmidguard", "Zhookstarttime")),
+  set_prior("lkj(2)", 
+            class = "cor",
+            group = "character_name"),
+  set_prior("lkj(2)", 
+            class = "cor",
+            group = "map_name"),
+  set_prior("lkj(2)", 
+            class = "cor",
+            group = "mirrors_id"))
+
+# Base model brms
+system.time(mv_model3 <- brm(mv_form3 +
+                             set_rescor(TRUE),
+                             warmup = 1000, 
+                             iter = 3000,
+                             thin = 5,
+                             chains = 4, 
+                             inits = "0",
+                             #  threads = threading(10),
+                             #  backend = "cmdstanr",
+                             seed = 20210414,
+                             prior = priors3.1,
+                             control = list(adapt_delta = 0.95),
+                             data = data_sub))
+# -----------------------------------------------------------
 

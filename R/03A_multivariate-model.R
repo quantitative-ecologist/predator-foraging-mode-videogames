@@ -18,18 +18,15 @@
 
 
 # =======================================================================
-# 1. Load libraries, and export dataset
+# 1. Load libraries, and import dataset
 # =======================================================================
 
-# Detect number of cores
-options(mc.cores = parallel::detectCores())
-
-# Import libraries
+# Load libraries
 library(data.table)
 library(MCMCglmm)
 library(parallel)
 
-# load dataset
+# import dataset
 data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
               select = c("mirrors_id", "match_id", "character_name",
                          "map_name", "hunting_success", "sqrtspeed", 
@@ -50,7 +47,6 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
 # =======================================================================
 
 # Normalize sqrt variables (Z-scores)
-# -------------------------------------------------------
 standardize <- function (x) {(x - mean(x)) / sd(x)}
 
 data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
@@ -87,14 +83,14 @@ data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
 #                                 alpha.mu = rep(0, 3),
 #                                 alpha.V = diag(3)*25^2)))
 
-prior <- list(R = list(V = diag(3), nu = 2.002), 
+prior <- list(R = list(V = diag(4), nu = 2.002), 
               G = list(G1 = list(V = diag(3), 
                                  nu = 2.002),
-                       G2 = list(V = diag(3), 
+                       G2 = list(V = diag(4), 
                                  nu = 2.002),
-                       G3 = list(V = diag(3), 
+                       G3 = list(V = diag(4), 
                                  nu = 2.002),
-                       G4 = list(V = diag(3), 
+                       G4 = list(V = diag(4), 
                                  nu = 2.002)))
 
 # First model
@@ -128,8 +124,7 @@ prior <- list(R = list(V = diag(3), nu = 2.002),
 #load("03A_multivariate-model1.rda")
 
 set.seed(20210419) # day the model was run
-mv_model <- mclapply(1:20, function(i) 
-             {
+mv_model <- mclapply(1:20, function(i) {
               MCMCglmm(
                   cbind(Zsqrtspeed,
                         Zsqrtspace_covered_rate,
@@ -152,8 +147,7 @@ mv_model <- mclapply(1:20, function(i)
                   data = data, 
                   pr = TRUE, 
                   saveX = TRUE,
-                  saveZ = TRUE
-                  )
+                  saveZ = TRUE)
                }, mc.cores = 20)
 
 save(mv_model, file = "03A_multivariate-model.rda")

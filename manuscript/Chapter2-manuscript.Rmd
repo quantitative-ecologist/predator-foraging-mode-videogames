@@ -83,7 +83,7 @@ The authors declare no competing interests
 This project was funded by the Mitacs Accelerate Grant (#IT12054) through a partnership with Behaviour Interactive and Université du Québec à Montréal.
 
 # Data availability statement:
-We could not openly share the data on open science/data web platforms due to the confidential nature of the information collected on the users. However, upon reasonable request, we can provide the data used to conduct our analyses. In addition, the project’s R scripts and results are available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
+We could not openly share the data on open science/data web platforms due to privacy restrictions. However, upon reasonable request, we can provide the data used to conduct our analyses. In addition, the project’s R scripts and results are available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
 
 # References
 
