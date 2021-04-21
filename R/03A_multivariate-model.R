@@ -145,7 +145,7 @@ mv_model <- brm(speed_form +
                 inits = "0",
                 threads = threading(12),
                 backend = "cmdstanr",
-                seed = 20210414,
+                seed = 20210421,
                 prior = priors,
                 control = list(adapt_delta = 0.95),
                 data = data)
