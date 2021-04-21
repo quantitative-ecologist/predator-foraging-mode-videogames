@@ -1,345 +1,259 @@
+#########################################################################
+
+#                 Base and quadratic model diagnostics                  #
+
+#########################################################################
 
 
-# =======================================================================
-# 4. Model diagnostics 
-# =======================================================================
-# consider trying gelman.diag and gelman.plot for diagnostics too!
-
-
-# First model
-# ------------------------------------------------
-# Visualize fixed effects and random effect variance components
-plot(ModMV1$VCV)
-
-# Check for autocorrelation
-autocorr.diag(ModMV1$VCV)
-
-# Check for effective sample size
-# It should be equal to the number of times we sample (so 2000)
-effectiveSize(ModMV1$VCV)
-
-# Check linearity of residuals
-corr <- as.data.table(posterior.cor(ModMV1$VCV[, 28:36]))
-with(corr, plot(V2~V3))
-with(corr, plot(V2~V6))
-with(corr, plot(V3~V6))
-# All good
-# ----------------------
-
-# Summary statistics
-summary(ModMV1)
-
-# Checking the variance covariance matrix.
-# Values for the variances and covariances between and within IDs
-posterior.mode(ModMV1$VCV)
-HPDinterval(ModMV1$VCV)
-# ------------------------------------------------
-
-
-
-# Second model with effect of prey
-# ------------------------------------------------
-# Visualize fixed effects and random effect variance components
-plot(ModMV2$Sol)
-plot(ModMV2$VCV)
-
-# Check for autocorrelation
-autocorr.diag(ModMV2$Sol)
-autocorr.diag(ModMV2$VCV)
-
-# Check for effective sample size
-# It should be equal to the number of times we sample (so 2000)
-effectiveSize(ModMV2$Sol)
-effectiveSize(ModMV2$VCV) 
-# ----------------------
-
-# Summary statistics
-summary(ModMV2$Sol)
-
-# Extracting model parameters
-beta <- posterior.mode(ModMV2$Sol) # Point estimate for fixed effects
-CI <- HPDinterval(ModMV2$Sol) # 95% confidence intervals for fixed effects
-# making a table to work with
-beta_table <- as.data.table(cbind(beta, CI))
-beta_table <- cbind(parameter_name = rownames(CI), beta_table)
-beta_table
-
-
-# Checking the variance covariance matrix.
-# Values for the variances and covariances between and within IDs
-posterior.mode(ModMV2$VCV)
-HPDinterval(ModMV2$VCV)
-# ======================================================================
-# ======================================================================
+# Contact: maxime.fraser.franco@hotmail.com
+# Département des Sciences Biologiques, UQAM, Montréal, Québec
+# -----------------------------------------------------------------------
 
 
 
 
 
 # =======================================================================
-# 5. Variance-covariance and correlation matrixes 
+# 1. Load libraries, datasets, and models
 # =======================================================================
 
-# Model 1
-# ------------------------------------------------
-# Correlations AMONG individuals (it's a 3x3 matrix so we take the first 9)
-among_corr <- matrix(posterior.mode(posterior.cor(ModMV1$VCV[, 1:9])), ncol = 3, byrow = TRUE)
-among_corrCI <- HPDinterval(posterior.cor(ModMV1$VCV[, 1:9]))
+# Librairies
+library(data.table)
+library(brms)
+library(bayesplot)
+library(broom.helpers)
 
-# Correlations AMONG environments
-env_corr <- matrix(posterior.mode(posterior.cor(ModMV1$VCV[, 10:18])), ncol = 3, byrow = TRUE)
-env_corrCI <- HPDinterval(posterior.cor(ModMV1$VCV[, 10:18]))
-# No syndrome caused by different avatars
-matrix(posterior.mode(posterior.cor(ModMV1$VCV[, 19:27])), ncol = 3, byrow = TRUE)
+# Load dataset
+data <- fread("./data/02_merged-data.csv",
+              select = c("mirrors_id", "match_id", "character_name",
+                         "map_name", "hunting_success", "sqrtspeed", 
+                         "sqrtprox_mid_guard", "sqrtspace_covered_rate",
+                         "sqrtsurv_speed", "sqrthook_start_time",
+                         "sqrtsurv_space_covered_rate"),
+                         stringsAsFactors = TRUE)
 
-# Correlations WITHIN individuals (it's a 3x3 matrix so we take the last 9)
-within_corr <- matrix(posterior.mode(posterior.cor(ModMV1$VCV[, 28:36])), ncol = 3, byrow = TRUE)
-within_corrCI <- HPDinterval(posterior.cor(ModMV1$VCV[, 28:36]))
+# Normalize sqrt variables (Z-scores)
+standardize <- function (x) {(x - mean(x)) / sd(x)}
 
-
-# make a list of the among and within correlations and save them
-IDcorr_list <- list(among_corr = among_corr, among_corrCI = among_corrCI, 
-                    within_corr = within_corr, within_corrCI = within_corrCI,
-                    env_corr = env_corr, env_corrCI = env_corrCI)
-save(IDcorr_list, file = "05A_IDcorr_list.rda")
-load("05A_IDcorr_list.rda")
-# ------------------------------------------------
-
+data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
+         "Zsqrt_hook_start_time", "Zsqrtsurv_speed", 
+         "Zsqrtsurv_space_covered_rate") :=
+                lapply(.SD, standardize), 
+                .SDcols = c(6:11)]
 
 
-# Model 2
-# ------------------------------------------------
-# Correlations AMONG individuals (it's 3 3x3 matrix so we take the first 9)
-matrix(posterior.mode(posterior.cor(ModMV2$VCV[, 1:9])), ncol = 3, byrow = TRUE)
-HPDinterval(posterior.cor(ModMV2$VCV[, 1:9]))
+# Load model
+load("03A_multivariate-model.rda")
 
-# Correlations WITHIN individuals (taking residuals so its the last 28:36)
-matrix(posterior.mode(posterior.cor(ModMV2$VCV[, 28:36])), ncol = 3, byrow = TRUE)
-HPDinterval(posterior.cor(ModMV2$VCV[, 28:36]))
+print(object.size(mv_model), units = "MB")
 
-# Results are mostly the same
-
-# ======================================================================
-# ======================================================================
+# =======================================================================
+# =======================================================================
 
 
 
 
 
 # =======================================================================
-# 6. Calculate repeatabilities (ICCs) 
+# 2. Basic model diagnostics (takes a very long time to compute)
 # =======================================================================
 
-# First model
-# ------------------------------------------------
-# Speed player ID repeatability
-rz1.1 <- ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] / 
-         (ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-          ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-          ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] +
-          ModMV1$VCV[,"traitZsqrtspeed:traitZsqrtspeed.units"])
-CIrz1.1 <- HPDinterval(rz1.1)[, 1:2]
-rz1.1 <- mean(rz1.1)
-
-# map repeatability
-map1.1 <- ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] / 
-          (ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.units"])
-CImap1.1 <- HPDinterval(map1.1)[, 1:2]
-map1.1 <- mean(map1.1)
-
-# character repeatability
-char1.1 <- ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] / 
-          (ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] + 
-           ModMV1$VCV[, "traitZsqrtspeed:traitZsqrtspeed.units"])
-CIchar1.1 <- HPDinterval(char1.1)[, 1:2]
-char1.1 <- mean(char1.1)
+# Diagnosis
+# -------------------
+# Observed y outcomes vs posterior predicted outcomes
+dens_overlay1 <- brms::pp_check(mv_model, resp = "Zspeed",
+                                type = "dens_overlay", nsamples = 100)
+dens_overlay2 <- brms::pp_check(mv_model, resp = "Zspacecoveredrate",
+                                type = "dens_overlay", nsamples = 100)
+dens_overlay3 <- brms::pp_check(mv_model, resp = "Zproxmidguard",
+                                type = "dens_overlay", nsamples = 100)
+dens_overlay4 <- brms::pp_check(mv_model, resp = "Zhookstarttime",
+                                type = "dens_overlay", nsamples = 100)
+#brms::pp_check(mv_model, type = 'ecdf_overlay')
 
 
-
-# Space player ID repeatability
-rz2.1 <- ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] / 
-         (ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] + 
-          ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-          ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] +
-          ModMV1$VCV[,"traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CIrz2.1 <- HPDinterval(rz2.1)[, 1:2]
-rz2.1 <- mean(rz2.1)
-
-# map repeatability
-map2.1 <- ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] / 
-          (ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] +
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] +
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CImap2.1 <- HPDinterval(map2.1)[, 1:2]
-map2.1 <- mean(map2.1)
-
-# character repeatability
-char2.1 <- ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] / 
-          (ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] +
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] +
-           ModMV1$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CIchar2.1 <- HPDinterval(char2.1)[, 1:2]
-char2.1 <- mean(char2.1)
+# Error scatter for y
+error <- brms::pp_check(mv_model, type = 'error_scatter_avg', nsamples = 100)
 
 
+# Parameter value around posterior distribution
+speed1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+                         resp = "Zsqrtspeed",
+                         type = 'stat', stat = 'mean', nsamples = 1000)
+speed2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+                         resp = "Zsqrtspacecoveredrate",
+                         type = 'stat', stat = 'mean', nsamples = 1000)
+speed3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+                         resp = "Zsqrtproxmidguard",
+                         type = 'stat', stat = 'mean',  nsamples = 1000)
+speed4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+                         resp = "Zsqrthookstarttime",
+                         type = 'stat', stat = 'mean',  nsamples = 1000)
 
-# Guard player ID repeatability
-rz3.1 <- ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] / 
-         (ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] + 
-          ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] + 
-          ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] +
-          ModMV1$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CIrz3.1 <- HPDinterval(rz3.1)[, 1:2]
-rz3.1 <- mean(rz3.1)
-
-# map repeatability
-map3.1 <- ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] / 
-          (ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] + 
-           ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] + 
-           ModMV1$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CImap3.1 <- HPDinterval(map3.1)[, 1:2]
-map3.1 <- mean(map3.1)
-
-# character repeatability
-char3.1 <- ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] / 
-          (ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] + 
-           ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] + 
-           ModMV1$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] + 
-           ModMV1$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CIchar3.1 <- HPDinterval(char3.1)[, 1:2]
-char3.1 <- mean(char3.1)
-# ------------------------------------------------
+space1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
+                             resp = "Zsqrtspeed",
+                             type = 'stat', stat = 'mean',  nsamples = 1000)
+space2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
+                             resp = "Zsqrtspacecoveredrate",
+                             type = 'stat', stat = 'mean',  nsamples = 1000)
+space3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
+                             resp = "Zsqrtproxmidguard",
+                             type = 'stat', stat = 'mean',  nsamples = 1000)
+space4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
+                             resp = "Zsqrthookstarttime",
+                             type = 'stat', stat = 'mean',  nsamples = 1000)
 
 
+# residual vs covariate plots
+speed1.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+                           resp = "Zsqrtspeed",
+                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+speed2.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+                           resp = "Zsqrtspacecoveredrate", 
+                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+speed3.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+                           resp = "Zsqrtproxmidguard",
+                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+speed4.1 <-  brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+                            resp = "Zsqrthookstarttime",
+                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
 
-# Second model with effect of prey
-# ------------------------------------------------
-# Speed 
-# player ID repeatability
-rz1.2 <- ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] / 
-         (ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-          ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-          ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] + 
-          ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.units"])
-CIrz1.2 <- HPDinterval(rz1.2)[, 1:2]
-rz1.2 <- mean(rz1.2)
+space1.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
+                           resp = "Zsqrtspeed",
+                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+space2.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
+                           resp = "Zsqrtspacecoveredrate", 
+                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+space3.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
+                           resp = "Zsqrtproxmidguard",
+                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+space4.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
+                           resp = "Zsqrthookstarttime",
+                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
 
-# map repeatability
-map1.2 <- ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] / 
-          (ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.units"])
-CImap1.2 <- HPDinterval(map1.2)[, 1:2]
-map1.2 <- mean(map1.2)
 
-# char repeatability
-char1.2 <- ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] / 
-          (ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.mirrors_id"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.character_name"] + 
-           ModMV2$VCV[, "traitZsqrtspeed:traitZsqrtspeed.units"])
-CIchar1.2 <- HPDinterval(char1.2)[, 1:2]
-char1.2 <- mean(char1.2)
+# Trace plots and parameter distributions
+#plot(mv_model)
+trace1 <- mcmc_plot(mv_model, type = "trace")
+dens1 <- mcmc_plot(mv_model, type = "dens")
+
+
+# Rhat
+rhat_vals <- rhat(mv_model)
+rhat_table <- as.data.table(mcmc_rhat_data(rhat_vals))
+# Display tables
+rhat_table
+
+
+# Effective sample sizes
+neff_vals <- neff_ratio(mv_model)
+neff_table <- as.data.table(mcmc_neff_data(neff_vals))
+# Display tables
+neff_table
+# -------------------
 
 
 
-# Space 
-# player ID repeatability
-rz2.2 <- ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] / 
-         (ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] + 
-          ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-          ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] + 
-          ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CIrz2.2 <- HPDinterval(rz2.2)[, 1:2]
-rz2.2 <- mean(rz2.2)
+# Export plots and tables
+# -------------------
+pp_figure1 <- ggarrange(speed1,
+                        space1,
+                        guard1,
+                        hook1,
+                        survspeed1,
+                        survspace1,
+                        ncol = 3, nrow = 2)
 
-# map repeatability
-map2.2 <- ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] / 
-          (ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] +
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] +
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CImap2.2 <- HPDinterval(map2.2)[, 1:2]
-map2.2 <- mean(map2.2)
-
-# char repeatability
-char2.2 <- ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] / 
-          (ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.mirrors_id"] +
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.character_name"] +
-           ModMV2$VCV[, "traitZsqrtspace_covered_rate:traitZsqrtspace_covered_rate.units"])
-CIchar2.2 <- HPDinterval(char2.2)[, 1:2]
-char2.2 <- mean(char2.2)
+ggexport(pp_figure1, filename = "03A_pp_diagnose1.tiff",
+         width = 4500, height = 2500, res = 500) # more res = bigger plot zoom
 
 
+pp_figure2 <- ggarrange(speed2,
+                        space2,
+                        guard2,
+                        hook2,
+                        survspeed2,
+                        survspace2,
+                        ncol = 3, nrow = 2)
 
-# Guard 
-# player ID repeatability
-rz3.2 <- ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] / 
-         (ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] +
-          ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] +
-          ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] +
-          ModMV2$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CIrz3.2 <- HPDinterval(rz3.2)[, 1:2]
-rz3.2 <- mean(rz3.2)
+ggexport(pp_figure2, filename = "03A_pp_diagnose2.tiff",
+         width = 5500, height = 3500, res = 500) # more res = bigger plot zoom
 
-# map repeatability
-map3.2 <- ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] / 
-          (ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] + 
-           ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] + 
-           ModMV2$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CImap3.2 <- HPDinterval(map3.2)[, 1:2]
-map3.2 <- mean(map3.2)
 
-# character repeatability
-char3.2 <- ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] / 
-          (ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.mirrors_id"] + 
-           ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.map_name"] + 
-           ModMV2$VCV[, "traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.character_name"] + 
-           ModMV2$VCV[,"traitZsqrtprox_mid_guard:traitZsqrtprox_mid_guard.units"])
-CIchar3.2 <- HPDinterval(char3.2)[, 1:2]
-char3.2 <- mean(char3.2)
+ggexport(trace1, filename = "03A_trace1.tiff", 
+          width = 6500, height = 3500, res = 800)
+ggexport(dens1, filename = "03A_dens1.tiff", 
+          width = 6500, height = 3500, res = 800)
+ggexport(trace2, filename = "03A_trace2.tiff", 
+          width = 6500, height = 3500, res = 800)
+ggexport(dens2, filename = "03A_dens2.tiff", 
+          width = 6500, height = 3500, res = 800)
+# -------------------
+
+# =======================================================================
+# =======================================================================
 
 
 
-# Create a table and save it so I can check % variances
-rpt <- as.data.table(rbind(rz1.1, rz2.1, rz3.1,
-                           map1.1, map2.1, map3.1,
-                           char1.1, char2.1, char3.1,
-                           rz1.2, rz2.2, rz3.2,
-                           map1.2, map2.2, map3.2,
-                           char1.2, char2.2, char3.2)
-                    )
 
-CI <- as.data.table(rbind(CIrz1.1, CIrz2.1, CIrz3.1, 
-                          CImap1.1, CImap2.1, CImap3.1,
-                          CIchar1.1, CIchar2.1, CIchar3.1,
-                          CIrz1.2, CIrz2.2, CIrz3.2,
-                          CImap1.2, CImap2.2, CImap3.2,
-                          CIchar1.2, CIchar2.2, CIchar3.2)
-                   )
 
-ranef_table <- cbind(parameter = c("CIrz1.1", "CIrz2.1", "CIrz3.1", 
-                                   "CImap1.1", "CImap2.1", "CImap3.1",
-                                   "CIchar1.1", "CIchar2.1", "CIchar3.1",
-                                   "CIrz1.2", "CIrz2.2", "CIrz3.2",
-                                   "CImap1.2", "CImap2.2", "CImap3.2",
-                                   "CIchar1.2", "CIchar2.2", "CIchar3.2"), 
-                     rpt = rpt, 
-                     CI)
+# =======================================================================
+# 3. Assess model fit (R-squared)
+# =======================================================================
+# Calculation by hand 
+# Based on the supplementary material 2 from Nakagawa & al. 2017
 
-save(ranef_table, file = "03A_multivariate_ranef.rda")
-load("03A_multivariate_ranef.rda")
+# Compute the model matrixes
+mm1 <- model_get_model_matrix(mv_model)
 
-# ======================================================================
-# ======================================================================
+# Variance components :
+# 1. Fixed effects variance
+# --------------------------
+# Compute variance in fitted values (Fixed effects variance)
+VarF1 <- var(as.vector(mm1%*%fixef(mv_model)))
+
+# 2. Distribution-specific variance
+# --------------------------
+# For binomial model with OLRE
+#VarDS <- pi^2/3
+
+# For beta binomial model
+# (phi from the distribution)
+VarDS1 <- summary(mv_model)$spec_pars[1]
+
+# 3. Random effects variance
+# --------------------------
+VarR1 <- VarCorr(mv_model)$mirrors_id$sd[1] + 
+         VarCorr(mv_model)$map_name$sd[1]
+
+#VarSE1 <- VarCorr(mv_model)$obs$sd[1]
+
+
+# 4. Total variance
+# --------------------------
+# binomial model with OLRE
+#VarT1 <- VarF1 + VarR1 + VarSE1 + VarDS
+
+# beta-binomial model
+VarT1 <- VarF1 + VarR1 + VarDS1
+
+# 5. Compute R-squared values
+# --------------------------
+# Marginal R2
+R2_M1 <- VarF1 / # Fixed effect variance
+         VarT1   # Total variance
+
+
+# Conditional R2 (OLRE is excluded in the numerator to only account for random effects)
+R2_C1 <- (VarF1 + VarR1) / # Fixed effect variance + random effect variance
+          VarT1                   # Total variance
+
+
+# Save r-squared values into a table
+r_squared <- as.data.table(cbind(R2_M1, R2_C1))
+
+capture.output(r_squared, file = "03A_r2-table.txt")
+# =======================================================================
+# =======================================================================
+
+

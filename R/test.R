@@ -218,7 +218,7 @@ mv_model <- add_criterion(mv_model, "loo")
 
 # -----------------------------------------------------------
 # linear model formula
-speed_formula1 <- bf(Zspeed ~
+speed_form3 <- bf(Zspeed ~
                       Zsurv_speed +
                       Zsurv_space_covered_rate +
                       (1 |a| map_name) +
@@ -226,7 +226,7 @@ speed_formula1 <- bf(Zspeed ~
                       (1 |c| mirrors_id)) +
                       gaussian()
 
-space_formula1 <- bf(Zspace_covered_rate ~
+space_form3 <- bf(Zspace_covered_rate ~
                       Zsurv_speed +
                       Zsurv_space_covered_rate +
                       (1 |a| map_name) +
@@ -234,7 +234,7 @@ space_formula1 <- bf(Zspace_covered_rate ~
                       (1 |c| mirrors_id)) +
                       gaussian()
 
-guard_formula1 <- bf(Zprox_mid_guard ~
+guard_form3 <- bf(Zprox_mid_guard ~
                       Zsurv_speed +
                       Zsurv_space_covered_rate +
                       (1 |a| map_name) +
@@ -242,7 +242,7 @@ guard_formula1 <- bf(Zprox_mid_guard ~
                       (1 |c| mirrors_id)) +
                       gaussian()
 
-hook_formula1 <- bf(Zhook_start_time ~
+hook_form3 <- bf(Zhook_start_time ~
                       Zsurv_speed +
                       Zsurv_space_covered_rate +
                       (1 |a| map_name) +
@@ -303,5 +303,36 @@ system.time(mv_model3 <- brm(mv_form3 +
                              prior = priors3.1,
                              control = list(adapt_delta = 0.95),
                              data = data_sub))
-# -----------------------------------------------------------
 
+# Base model brms
+system.time(mv_model3.1 <- brm(speed_form3 +
+                               space_form3 +
+                               guard_form3 +   
+                               hook_form3  +
+                               set_rescor(TRUE),
+                               warmup = 1000, 
+                               iter = 3000,
+                               thin = 5,
+                               chains = 4, 
+                               inits = "0",
+                               #  threads = threading(10),
+                               #  backend = "cmdstanr",
+                               seed = 20210414,
+                               prior = priors3.1,
+                               control = list(adapt_delta = 0.95),
+                               data = data_sub))
+
+
+trace <- plot(mv_model3.1)
+
+pp_check(mv_model3.1, resp = "Zspeed")
+pp_check(mv_model3.1, resp = "Zspacecoveredrate")
+pp_check(mv_model3.1, resp = "Zproxmidguard")
+pp_check(mv_model3.1, resp = "Zhookstarttime")
+
+pp_check(mv_model3.1, 
+         resp = "Zspeed",
+         nsamples = 1e3, 
+         type = "stat_2d") + 
+  theme_bw(base_size = 20)
+# -----------------------------------------------------------
