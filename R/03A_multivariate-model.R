@@ -21,9 +21,12 @@
 # 1. Load libraries, and import dataset
 # =======================================================================
 
+# Detect number of cores
+options(mc.cores = parallel::detectCores())
+
 # Load libraries
 library(data.table)
-library(MCMCglmm)
+library(brms)
 library(parallel)
 
 # import dataset
@@ -50,7 +53,7 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
 standardize <- function (x) {(x - mean(x)) / sd(x)}
 
 data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
-         "Zsqrt_hook_start_time", "Zsqrtsurv_speed", 
+         "Zsqrthook_start_time", "Zsqrtsurv_speed", 
          "Zsqrtsurv_space_covered_rate") :=
                 lapply(.SD, standardize), 
                 .SDcols = c(6:11)]
@@ -136,19 +139,20 @@ priors <- c(
 mv_model <- brm(speed_form +
                 space_form +
                 guard_form +   
-                hook_form3 +
+                hook_form +
                 set_rescor(TRUE),
                 warmup = 3000, 
                 iter = 103000,
                 thin = 100,
                 chains = 4, 
                 inits = "0",
-                threads = threading(12),
+                threads = threading(10),
                 backend = "cmdstanr",
-                seed = 20210421,
+                seed = 20210422,
                 prior = priors,
                 control = list(adapt_delta = 0.95),
                 data = data)
 
+save(mv_model, file = "03A_multivariate-model.rda")
 # ======================================================================
 # ======================================================================

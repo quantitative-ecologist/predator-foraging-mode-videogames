@@ -33,51 +33,23 @@ data <- fread("./data/02_merged-data.csv",
 
 # Load model
 load("03B_hunting_success_base-model.rda")
+load("./outputs/base_model1.rda")
+load("./outputs/base_beta-model.rda")
 print(object.size(base_model), units = "MB")
 
 # =======================================================================
 # =======================================================================
 
 
+fonction <- function (x) {exp(x) / (1 + exp(x))}
+VarDS1 <- summary(base_beta)$spec_pars[1]
 
 
-
-# =======================================================================
-# 2. Define Stan functions for diagnosis of the beta-binomial model
-# =======================================================================
-
-expose_functions(betabi_mod, vectorize = TRUE)
-
-# define required log-lik.
-log_lik_beta_binomial2 <- function(i, prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  y <- prep$data$Y[i]
-  beta_binomial2_lpmf(y, mu, phi, trials)
-}
-
-# Function for posterior predict
-posterior_predict_beta_binomial2 <- function(i, prep, ...) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  beta_binomial2_rng(mu, phi, trials)
-}
-
-# 
-posterior_epred_beta_binomial2 <- function(prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  trials <- prep$data$vint1
-  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
-  mu * trials
-}
-
-# =======================================================================
-# =======================================================================
+fonction(VarDS1)
 
 
-
+VarCorr(base_beta)$mirrors_id$sd[1]^2
+VarCorr(base_beta)$map_name$sd[1]^2
 
 
 # =======================================================================
@@ -144,7 +116,24 @@ capture.output(r_squared, file = "03B_r2-table.txt")
 # 4. Compute ICCs and their 95% credibility intervals
 # =======================================================================
 
+names(posterior_samples(base_model))[1:35]
 
+ID_var <- posterior_samples(base_model)$"sd_mirrors_id__Intercept"^2
+map_var <- posterior_samples(base_model)$"sd_map_name__Intercept"^2
+res_var <- posterior_samples(base_model)$"phi"
+
+
+ID_rpt <- map_var + 
+
+mean(ID_var);coda::HPDinterval(as.mcmc(ID_var),0.95)
+
+
+ID_var <- VarCorr(base_model)$mirrors_id$sd[1]^2
+map_var <- VarCorr(base_model)$map_name$sd[1]^2
+
+
+ID_var / VarT1
+map_var / VarT1
 
 # =======================================================================
 # =======================================================================

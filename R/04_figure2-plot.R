@@ -39,11 +39,10 @@ load("./outputs/03B_hunting_success_base-model.rda")
 load("./outputs/03C_hunting_success_quadratic-model.rda")
 # =======================================================================
 # =======================================================================
-back <- function (x) { exp(x) / (1 + exp(x)) }
 
-spe <- conditional_effects(base_model, "Zspeed")
-spe1 <- conditional_effects(base_model, "Zspeed", 
-                            method = "fitted")
+
+
+
 
 # =======================================================================
 # 2. Prepare plot customizations
@@ -114,11 +113,17 @@ speed_mm <- model.matrix(~ speed +
 speed_y <- speed_mm%*%fixef(base_model)
 
 # Confidence intervals
+#speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(base_model), speed_mm))
+#speed_tvar <- speed_pvar + 
+#              VarCorr(base_model)$obs$sd[1] + 
+#              VarCorr(base_model)$mirrors_id$sd[1] + 
+#              VarCorr(base_model)$map_name$sd[1]
+
 speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(base_model), speed_mm))
 speed_tvar <- speed_pvar + 
-              VarCorr(base_model)$obs$sd[1] + 
-              VarCorr(base_model)$mirrors_id$sd[1] + 
-              VarCorr(base_model)$map_name$sd[1]
+              #summary(base_model)$spec_pars[1] +
+              VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 speed_newdat <- data.table(
@@ -195,7 +200,7 @@ space_y <- space_mm%*%fixef(base_model)
 # Confidence intervals
 space_pvar <- diag(space_mm %*% tcrossprod(vcov(base_model), space_mm))
 space_tvar <- space_pvar + 
-              VarCorr(base_model)$obs$sd[1] + 
+              #VarCorr(base_model)$obs$sd[1] + 
               VarCorr(base_model)$mirrors_id$sd[1] + 
               VarCorr(base_model)$map_name$sd[1]
 
@@ -272,7 +277,7 @@ guard_y <- guard_mm%*%fixef(base_model)
 # Confidence intervals
 guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(base_model), guard_mm))
 guard_tvar <- guard_pvar + 
-              VarCorr(base_model)$obs$sd[1] + 
+              #VarCorr(base_model)$obs$sd[1] + 
               VarCorr(base_model)$mirrors_id$sd[1] + 
               VarCorr(base_model)$map_name$sd[1]
 
@@ -349,7 +354,7 @@ hook_y <- hook_mm%*%fixef(base_model)
 # Confidence intervals
 hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(base_model), hook_mm))
 hook_tvar <- hook_pvar + 
-              VarCorr(base_model)$obs$sd[1] + 
+              #VarCorr(base_model)$obs$sd[1] + 
               VarCorr(base_model)$mirrors_id$sd[1] + 
               VarCorr(base_model)$map_name$sd[1]
 
