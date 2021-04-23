@@ -282,7 +282,7 @@ ggexport(plotlist = list(scree_plot,
                          contrib_PC1, contrib_PC2,
                          contrib_PC3),
          nrow = 1, ncol = 1,
-         filename = "./outputs/04_PCA_diagnostics-plots.pdf") # as PDF file
+         filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
 
 
 # as one figure
@@ -290,7 +290,7 @@ PCA_figure <- ggarrange(PCA_fullZ_biplot12,
                         PCA_fullZ_biplot23,
                         ncol = 2, nrow = 1)
 
-ggexport(PCA_figure, filename = "./outputs/04_PCA_figure.tiff", 
+ggexport(PCA_figure, filename = "./outputs/02_figureS1.tiff", 
          width = 4000, height = 1800, res = 300)
 
 
