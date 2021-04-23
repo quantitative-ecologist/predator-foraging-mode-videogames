@@ -8,3 +8,5 @@ outputs/03C_hunting_success_quadratic-model.rda
 data/02_merged-data.csv
 outputs/base_beta-model.rda
 outputs/base_model1.rda
+R/test.R
+R/test.sh
