@@ -10,3 +10,8 @@ outputs/base_beta-model.rda
 outputs/base_model1.rda
 R/test.R
 R/test.sh
+mv_model_test.rda
+beta-binom_base.R
+beta-binom_base.sh
+beta-binom_quad.R
+beta-binom_quad.sh
