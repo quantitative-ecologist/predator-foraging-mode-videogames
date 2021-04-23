@@ -33,8 +33,7 @@ data <- fread("./data/02_merged-data.csv",
                          stringsAsFactors = TRUE)
 
 # Load model
-load("03C_hunting_success_quadratic-model.rda")
-
+load("./outputs/03C_hunting_success_quadratic-model.rda")
 print(object.size(quadratic_model), units = "MB")
 
 # =======================================================================
@@ -50,32 +49,32 @@ print(object.size(quadratic_model), units = "MB")
 
 # Define Stan functions for diagnosis of the beta-binomial model
 # -------------------
-expose_functions(betabi_mod, vectorize = TRUE)
-
-# define required log-lik.
-log_lik_beta_binomial2 <- function(i, prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  y <- prep$data$Y[i]
-  beta_binomial2_lpmf(y, mu, phi, trials)
-}
-
-# Function for posterior predict
-posterior_predict_beta_binomial2 <- function(i, prep, ...) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  beta_binomial2_rng(mu, phi, trials)
-}
-
-# 
-posterior_epred_beta_binomial2 <- function(prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  trials <- prep$data$vint1
-  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
-  mu * trials
-}
+#expose_functions(betabi_mod, vectorize = TRUE)
+#
+## define required log-lik.
+#log_lik_beta_binomial2 <- function(i, prep) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  phi <- brms:::get_dpar(prep, "phi", i = i)
+#  trials <- prep$data$vint1[i]
+#  y <- prep$data$Y[i]
+#  beta_binomial2_lpmf(y, mu, phi, trials)
+#}
+#
+## Function for posterior predict
+#posterior_predict_beta_binomial2 <- function(i, prep, ...) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  phi <- brms:::get_dpar(prep, "phi", i = i)
+#  trials <- prep$data$vint1[i]
+#  beta_binomial2_rng(mu, phi, trials)
+#}
+#
+## 
+#posterior_epred_beta_binomial2 <- function(prep) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  trials <- prep$data$vint1
+#  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
+#  mu * trials
+#}
 # -------------------
 
 
@@ -91,33 +90,33 @@ error <- brms::pp_check(quad_model, type = 'error_scatter_avg', nsamples = 100)
 
 
 # Parameter value around posterior distribution (arrange for quad parameters)
-speed1 <- brms::pp_check(quad_model, x = 'Zspeed', 
-                        type = 'stat', stat = 'mean', nsamples = 1000)
-space1 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate', 
-                         type = 'stat', stat = 'mean', nsamples = 1000)
-guard1 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard', 
-                         type = 'stat', stat = 'mean',  nsamples = 1000)
-hook1 <- brms::pp_check(quad_model, x = 'Zhook_start_time',
-                        type = 'stat', stat = 'mean',  nsamples = 1000)
-survspeed1 <- brms::pp_check(quad_model, x = 'Zsurv_speed',
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
-survspace1 <- brms::pp_check(quad_model, x = 'Zsurv_space_covered_rate',
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
+speed1 <- brms::pp_check(quad_model, x = 'Zspeed^2', 
+                        type = 'stat', stat = 'mean', nsamples = 100)
+space1 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate^2', 
+                         type = 'stat', stat = 'mean', nsamples = 100)
+guard1 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard^2', 
+                         type = 'stat', stat = 'mean',  nsamples = 100)
+hook1 <- brms::pp_check(quad_model, x = 'Zhook_start_time^2',
+                        type = 'stat', stat = 'mean',  nsamples = 100)
+survspeed1 <- brms::pp_check(quad_model, x = 'Zsurv_speed^2',
+                             type = 'stat', stat = 'mean',  nsamples = 100)
+survspace1 <- brms::pp_check(quad_model, x = 'Zsurv_space_covered_rate^2',
+                             type = 'stat', stat = 'mean',  nsamples = 100)
 
 
 # residual vs covariate plots
-speed2 <- brms::pp_check(quad_model, x = 'Zspeed', 
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
-space2 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate', 
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
-guard2 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard', 
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
-hook2 <-  brms::pp_check(quad_model, x = 'Zhook_start_time',
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
-survspeed2 <- brms::pp_check(quad_model, x = 'Zsurv_speed',
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+speed2 <- brms::pp_check(quad_model, x = 'Zspeed^2', 
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
+space2 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate^2', 
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
+guard2 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard^2', 
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
+hook2 <-  brms::pp_check(quad_model, x = 'Zhook_start_time^2',
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
+survspeed2 <- brms::pp_check(quad_model, x = 'Zsurv_speed^2',
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
 survspace2 <- brms::pp_check(quad_model, x = 'Zsurv_space_covered_rate^2',
-               type = 'error_scatter_avg_vs_x', nsamples = 1000)
+               type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 
 # Trace plots and parameter distributions
@@ -148,38 +147,38 @@ neff_table_quad
 
 # Export plots and tables
 # -------------------
-pp_figure1 <- ggarrange(speed1,
-                        space1,
-                        guard1,
-                        hook1,
-                        survspeed1,
-                        survspace1,
-                        ncol = 3, nrow = 2)
-
-ggexport(pp_figure1, filename = "03C_pp_diagnose1.tiff",
-         width = 4500, height = 2500, res = 500) # more res = bigger plot zoom
-
-
-pp_figure2 <- ggarrange(speed2,
-                        space2,
-                        guard2,
-                        hook2,
-                        survspeed2,
-                        survspace2,
-                        ncol = 3, nrow = 2)
-
-ggexport(pp_figure2, filename = "03C_pp_diagnose2.tiff",
-         width = 5500, height = 3500, res = 500) # more res = bigger plot zoom
-
-
-ggexport(trace1, filename = "03C_trace1.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(dens1, filename = "03C_dens1.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(trace2, filename = "03C_trace2.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(dens2, filename = "03C_dens2.tiff", 
-          width = 6500, height = 3500, res = 800)
+#pp_figure1 <- ggarrange(speed1,
+#                        space1,
+#                        guard1,
+#                        hook1,
+#                        survspeed1,
+#                        survspace1,
+#                        ncol = 3, nrow = 2)
+#
+#ggexport(pp_figure1, filename = "03C_pp_diagnose1.tiff",
+#         width = 4500, height = 2500, res = 500) # more res = bigger plot zoom
+#
+#
+#pp_figure2 <- ggarrange(speed2,
+#                        space2,
+#                        guard2,
+#                        hook2,
+#                        survspeed2,
+#                        survspace2,
+#                        ncol = 3, nrow = 2)
+#
+#ggexport(pp_figure2, filename = "03C_pp_diagnose2.tiff",
+#         width = 5500, height = 3500, res = 500) # more res = bigger plot zoom
+#
+#
+#ggexport(trace1, filename = "03C_trace1.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(dens1, filename = "03C_dens1.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(trace2, filename = "03C_trace2.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(dens2, filename = "03C_dens2.tiff", 
+#          width = 6500, height = 3500, res = 800)
 # -------------------
 
 # =======================================================================

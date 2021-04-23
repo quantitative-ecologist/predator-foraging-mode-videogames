@@ -99,13 +99,12 @@ system.time(base_model <- brm(formula = model_formula,
                               inits = "0", 
                               threads = threading(10),
                               backend = "cmdstanr",
-                              #seed = 20210322, # date when the model was ran
                               seed = 20210414,
                               prior = priors,
                               control = list(adapt_delta = 0.95),
                               data = data))
 
-save(base_model, file = "base_model.rda")
+save(base_model, file = "03B_hunting_success_base_model.rda")
 
 
 # Save session info for reproducibility

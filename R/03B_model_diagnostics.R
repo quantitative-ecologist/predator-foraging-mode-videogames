@@ -33,8 +33,8 @@ data <- fread("./data/02_merged-data.csv",
                          stringsAsFactors = TRUE)
 
 # Load model
-#load("03B_hunting_success_base-model.rda")
-load("./outputs/base_beta-model.rda")
+load("./outputs/03B_hunting_success_base-model.rda")
+#load("./outputs/base_beta-model.rda")
 print(object.size(base_model), units = "MB")
 
 # =======================================================================
@@ -48,70 +48,76 @@ print(object.size(base_model), units = "MB")
 # 2. Basic model diagnostics
 # =======================================================================
 
+# --------------------------
+# Beta-binomial model only
+# --------------------------
 # Need to recompile the model with rstan to do ppchecks
-beta_binomial2 <- custom_family(
-  "beta_binomial2", dpars = c("mu", "phi"),
-  links = c("logit", "log"), lb = c(NA, 0),
-  type = "int", vars = "vint1[n]"
-)
-
-# Variables
-stanvars <- stanvar(scode = stan_funs, block = "functions")
-
-# Set priors
-priors <- set_prior("normal(0, 5)", class = "b")
-# on the random intercepts?
-
-# linear model formula
-model_formula <- brmsformula(hunting_success | vint(4) ~
-                                        Zspeed +
-                                        Zspace_covered_rate +
-                                        Zprox_mid_guard +
-                                        Zhook_start_time +
-                                        Zsurv_speed +
-                                        Zsurv_space_covered_rate +
-                                        (1 | map_name) +
-                                        (1 | mirrors_id))
-# Run the model with rstan
-modrstan <- brm(
-  model_formula, prior = priors, stanvars = stanvars,
-  data = data, backend = "rstan", chains = 0,
-  family = beta_binomial2
-)
+#beta_binomial2 <- custom_family(
+#  "beta_binomial2", dpars = c("mu", "phi"),
+#  links = c("logit", "log"), lb = c(NA, 0),
+#  type = "int", vars = "vint1[n]"
+#)
+#
+## Variables
+#stanvars <- stanvar(scode = stan_funs, block = "functions")
+#
+## Set priors
+#priors <- set_prior("normal(0, 5)", class = "b")
+## on the random intercepts?
+#
+## linear model formula
+#model_formula <- brmsformula(hunting_success | vint(4) ~
+#                                        Zspeed +
+#                                        Zspace_covered_rate +
+#                                        Zprox_mid_guard +
+#                                        Zhook_start_time +
+#                                        Zsurv_speed +
+#                                        Zsurv_space_covered_rate +
+#                                        (1 | map_name) +
+#                                        (1 | mirrors_id))
+## Run the model with rstan
+#modrstan <- brm(
+#  model_formula, prior = priors, stanvars = stanvars,
+#  data = data, backend = "rstan", chains = 0,
+#  family = beta_binomial2
+#)
 
 # Define Stan functions for diagnosis of the beta-binomial model
 # -------------------
-expose_functions(modrstan, vectorize = TRUE)
+#expose_functions(modrstan, vectorize = TRUE)
+#
+## define required log-lik.
+#log_lik_beta_binomial2 <- function(i, prep) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  phi <- brms:::get_dpar(prep, "phi", i = i)
+#  trials <- prep$data$vint1[i]
+#  y <- prep$data$Y[i]
+#  beta_binomial2_lpmf(y, mu, phi, trials)
+#}
+#
+## Function for posterior predict
+#posterior_predict_beta_binomial2 <- function(i, prep, ...) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  phi <- brms:::get_dpar(prep, "phi", i = i)
+#  trials <- prep$data$vint1[i]
+#  beta_binomial2_rng(mu, phi, trials)
+#}
+#
+## 
+#posterior_epred_beta_binomial2 <- function(prep) {
+#  mu <- brms:::get_dpar(prep, "mu", i = i)
+#  trials <- prep$data$vint1
+#  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
+#  mu * trials
+#}
+# --------------------------
+# --------------------------
 
-# define required log-lik.
-log_lik_beta_binomial2 <- function(i, prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  y <- prep$data$Y[i]
-  beta_binomial2_lpmf(y, mu, phi, trials)
-}
-
-# Function for posterior predict
-posterior_predict_beta_binomial2 <- function(i, prep, ...) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  phi <- brms:::get_dpar(prep, "phi", i = i)
-  trials <- prep$data$vint1[i]
-  beta_binomial2_rng(mu, phi, trials)
-}
-
-# 
-posterior_epred_beta_binomial2 <- function(prep) {
-  mu <- brms:::get_dpar(prep, "mu", i = i)
-  trials <- prep$data$vint1
-  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
-  mu * trials
-}
-# -------------------
 
 
+# --------------------------
 # Diagnosis
-# -------------------
+# --------------------------
 # Observed y outcomes vs posterior predicted outcomes
 dens_overlay <- brms::pp_check(base_model, type = "dens_overlay", nsamples = 100)
 #brms::pp_check(base_model, type = 'ecdf_overlay')
@@ -173,12 +179,14 @@ neff_vals <- neff_ratio(base_model)
 neff_table <- as.data.table(mcmc_neff_data(neff_vals))
 # Display tables
 neff_table
-# -------------------
+# --------------------------
+# --------------------------
 
 
 
+# --------------------------
 # Export plots and tables
-# -------------------
+# --------------------------
 #pp_figure1 <- ggarrange(speed1,
 #                        space1,
 #                        guard1,
@@ -211,7 +219,7 @@ neff_table
 #          width = 6500, height = 3500, res = 800)
 #ggexport(dens2, filename = "03B_dens2.tiff", 
 #          width = 6500, height = 3500, res = 800)
-# -------------------
+# --------------------------
 
 # =======================================================================
 # =======================================================================

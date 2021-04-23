@@ -354,9 +354,9 @@ hook_y <- hook_mm%*%fixef(base_model)
 # Confidence intervals
 hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(base_model), hook_mm))
 hook_tvar <- hook_pvar + 
-              #VarCorr(base_model)$obs$sd[1] + 
-              VarCorr(base_model)$mirrors_id$sd[1] + 
-              VarCorr(base_model)$map_name$sd[1]
+              VarCorr(base_model)$obs$sd[1]^2 + 
+              VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 hook_newdat <- data.table(
@@ -417,6 +417,7 @@ speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                                          length.out = 100),
                         space      = mean(data$Zspace_covered_rate),
                         guard      = mean(data$Zprox_mid_guard),
+                        hook       = mean(data$Zhook_start_time),
                         surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
@@ -450,9 +451,9 @@ speed_y <- speed_mm%*%fixef(quadratic_model)
 # Confidence intervals
 speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(quadratic_model), speed_mm))
 speed_tvar <- speed_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1] + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
-              VarCorr(quadratic_model)$map_name$sd[1]
+              VarCorr(quadratic_model)$obs$sd[1]^2 + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 speed_newdat <- data.table(
@@ -468,8 +469,6 @@ speed_newdat <- data.table(
   speed_thi = plogis(speed_y + 1.96 * sqrt(speed_tvar))
 )
 
-# Keep columns of interest
-speed_newdat <- speed_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator speed^2
 quad_speed <- ggplot(speed_newdat) +
@@ -513,8 +512,9 @@ quad_speed <- ggplot(speed_newdat) +
 space_dat <- data.table(speed      = mean(data$Zspeed),
                         space      = seq(min(data$Zspace_covered_rate), 
                                          5,
-                                         length.out = 100),
-                        guard      = mean(data$Zprox_mid_guard),             
+                                         length.out = 100),           
+                        guard      = mean(data$Zprox_mid_guard), 
+                        hook       = mean(data$Zhook_start_time),            
                         surv_speed = mean(data$Zsurv_speed),            
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
@@ -548,9 +548,9 @@ space_y <- space_mm%*%fixef(quadratic_model)
 # Confidence intervals
 space_pvar <- diag(space_mm %*% tcrossprod(vcov(quadratic_model), space_mm))
 space_tvar <- space_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1] + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
-              VarCorr(quadratic_model)$map_name$sd[1]
+              VarCorr(quadratic_model)$obs$sd[1]^2 + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 space_newdat <- data.table(
@@ -566,8 +566,6 @@ space_newdat <- data.table(
   space_thi = plogis(space_y + 1.96 * sqrt(space_tvar))
 )
 
-# Keep columns of interest
-space_newdat <- space_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator space^2
 quad_space <- ggplot(space_newdat) +
@@ -606,12 +604,13 @@ quad_space <- ggplot(space_newdat) +
 # Predator proportion of time spent guarding
 # -----------------------------------
 # Create new data
-guard_dat <- data.table(guard      = seq(min(data$Zprox_mid_guard), 
+guard_dat <- data.table(speed      = mean(data$Zspeed),             
+                        space      = mean(data$Zspace_covered_rate),
+                        guard      = seq(min(data$Zprox_mid_guard), 
                                          7,
-                                         length.out = 100), 
-                        speed      = mean(data$Zspeed),             
-                        space      = mean(data$Zspace_covered_rate),             
-                        surv_speed = mean(data$Zsurv_speed),            
+                                         length.out = 100),
+                        hook       = mean(data$Zhook_start_time),
+                        surv_speed = mean(data$Zsurv_speed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 guard_mm <- model.matrix(~ 
@@ -644,9 +643,9 @@ guard_y <- guard_mm%*%fixef(quadratic_model)
 # Confidence intervals
 guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(quadratic_model), guard_mm))
 guard_tvar <- guard_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1] + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1] + 
-              VarCorr(quadratic_model)$map_name$sd[1]
+              VarCorr(quadratic_model)$obs$sd[1]^2 + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 guard_newdat <- data.table(
@@ -662,8 +661,6 @@ guard_newdat <- data.table(
   guard_thi = plogis(guard_y + 1.96 * sqrt(guard_tvar))
 )
 
-# Keep columns of interest
-guard_newdat <- guard_newdat[,c(1:6, 10, 14, 18, 22)]
 
 # Plot for predator guard^2
 quad_guard <- ggplot(guard_newdat) +
@@ -696,6 +693,96 @@ quad_guard <- ggplot(guard_newdat) +
                 ylab("") +
                 custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
+
+
+# -----------------------------------
+# Predator time before 1st capture
+# -----------------------------------
+# Create new data
+hook_dat <- data.table(speed      = mean(data$Zspeed),             
+                       space      = mean(data$Zspace_covered_rate),
+                       guard      = mean(data$Zprox_mid_guard),
+                       hook       = seq(min(data$Zhook_start_time),
+                                        max(data$Zhook_start_time),
+                                        length.out = 100),
+                       surv_speed = mean(data$Zsurv_speed),
+                       surv_space = mean(data$Zsurv_space_covered_rate))
+# Model matrix
+hook_mm <- model.matrix(~ 
+                          # Quadratic terms
+                          I(speed^2) +
+                          I(space^2) +
+                          I(guard^2) +
+                          I(surv_speed^2) +
+                          I(surv_space^2) +
+                          # Linear terms
+                          speed +
+                          space +
+                          guard +
+                          surv_speed +
+                          surv_space +
+                          # Predator trait covariances
+                          speed : space +
+                          speed : guard +
+                          space : guard +
+                          # Predator-prey trait covariances
+                          speed : surv_speed +
+                          speed : surv_space +
+                          space : surv_speed +
+                          space : surv_space +
+                          guard : surv_speed +
+                          guard : surv_space, hook_dat)
+# Compute fitted values
+hook_y <- hook_mm%*%fixef(quadratic_model)
+
+# Confidence intervals
+hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(quadratic_model), hook_mm))
+hook_tvar <- hook_pvar + 
+              VarCorr(quadratic_model)$obs$sd[1]^2 + 
+              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(quadratic_model)$map_name$sd[1]^2
+
+# Generate table
+hook_newdat <- data.table(
+  speed = hook_dat$speed,
+  space = hook_dat$space,
+  guard = hook_dat$guard,
+  hook = hook_dat$hook,
+  surv_speed = hook_dat$surv_speed,
+  surv_space = hook_dat$surv_space,
+  hook_y = plogis(hook_y),
+  hook_plo = plogis(hook_y - 1.96 * sqrt(hook_pvar)),
+  hook_phi = plogis(hook_y + 1.96 * sqrt(hook_pvar)),
+  hook_tlo = plogis(hook_y - 1.96 * sqrt(hook_tvar)),
+  hook_thi = plogis(hook_y + 1.96 * sqrt(hook_tvar))
+)
+
+# Plot for predator guard
+quad_hook <- ggplot(hook_newdat) +
+            geom_line(aes(x = hook, y = hook_y.Estimate),
+                      size = 1.5,
+                      color = "#3CBC75FF") +
+            geom_line(aes(x = hook, y = hook_plo.Estimate),
+                      linetype = "dashed",
+                      size = 1,
+                      color = "black") +
+            geom_line(data = hook_newdat,
+                      aes(x = hook, y = hook_phi.Estimate),
+                      linetype = "dashed",
+                      size = 1, 
+                      color = "black") +
+            geom_ribbon(data = hook_newdat,
+                        aes(x = hook, 
+                            ymin = hook_tlo.Estimate,
+                            ymax = hook_thi.Estimate),
+                        alpha = 0.2,
+                        fill = "#3CBC75FF") +
+            scale_y_continuous(breaks = seq(0, 1, .25),
+                               limits = c(0, 1)) +
+            xlab("\nTime for 1st capture") +
+            ylab("") +
+            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+
 # =======================================================================
 # =======================================================================
 
@@ -710,14 +797,16 @@ quad_guard <- ggplot(guard_newdat) +
 panel_plot <- ggarrange(speed,
                         space,
                         guard,
+                        hook,
                         quad_speed,
                         quad_space,
                         quad_guard,
-                        ncol = 3, nrow = 2,
-                        widths = c(2.8, 2.5, 2.5),
-                        heights = c(2.8, 2.8, 2.8),
-                        labels = c("(a)", "(b)", "(c)", 
-                                   "(d)", "(e)", "(f)"))
+                        quad_hook,
+                        ncol = 4, nrow = 2,
+                        widths = c(2.8, 2.5, 2.5, 2.5),
+                        heights = c(2.8, 2.8, 2.8, 2.8),
+                        labels = c("(a)", "(b)", "(c)", "(d)",
+                                   "(d)", "(e)", "(f)", "(g)")
 # Upper y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
@@ -735,6 +824,9 @@ panel_plot <- annotate_figure(panel_plot,
 # Save and export figure (with no points)
 ggexport(panel_plot, filename = "04_figure2.1.tiff",
          width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
+
+ggexport(panel_plot, filename = "04_figure2.2.tiff",
+         width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
 
 # Save and export figure
 ggexport(panel_plot, filename = "04_figure2.tiff",

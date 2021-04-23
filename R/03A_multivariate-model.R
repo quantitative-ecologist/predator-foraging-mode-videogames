@@ -135,15 +135,15 @@ priors <- c(
 # =======================================================================
 # 4. Run the multivariate model
 # =======================================================================
-
+#( nitt - burnin ) / thin = 1000
 mv_model <- brm(speed_form +
                 space_form +
                 guard_form +   
                 hook_form +
                 set_rescor(TRUE),
                 warmup = 3000, 
-                iter = 103000,
-                thin = 100,
+                iter = 43000,
+                thin = 40,
                 chains = 4, 
                 inits = "0",
                 threads = threading(10),
