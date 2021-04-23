@@ -33,7 +33,6 @@ data <- fread("./data/02_merged-data.csv",
 
 # Load model
 load("./outputs/03B_hunting_success_base-model.rda")
-load("./outputs/base_model1.rda")
 # =======================================================================
 # =======================================================================
 
