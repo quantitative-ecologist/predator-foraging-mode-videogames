@@ -114,21 +114,21 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 # =======================================================================
 
 # Quadratic model with brms
-system.time(quadratic_model1 <- brm(formula = model_formula,
+system.time(quadratic_model <- brm(formula = model_formula,
                                    family = binomial(link = "logit"),
                                    warmup = 3000, 
-                                   iter = 153000,
+                                   iter = 103000,
                                    thin = 100,
                                    chains = 4, 
                                    inits = "0", 
                                    threads = threading(10),
                                    backend = "cmdstanr",
-                                   seed = 20210419,
+                                   seed = 20210424,
                                    prior = priors,
                                    control = list(adapt_delta = 0.95),
                                    data = data))
 
-save(quadratic_model1, file = "03B_hunting_success_quadratic_model.rda")
+save(quadratic_model, file = "03B_hunting_success_quadratic_model1.rda")
 
 # Save session info for reproducibility
 session <- sessionInfo()

@@ -12,4 +12,4 @@ module load r/4.0.2
 module load r-bundle-bioconductor/3.12
 
 #export R_LIBS=~/.local/R/$EBVERSIONR/
-Rscript --no-save --no-restore 03C_hunting_success_quadratic-model1.R
+Rscript --no-save --no-restore 03C_hunting_success_quadratic-model.R
