@@ -128,7 +128,7 @@ system.time(quadratic_model <- brm(formula = model_formula,
                                    control = list(adapt_delta = 0.95),
                                    data = data))
 
-save(quadratic_model, file = "03B_hunting_success_quadratic_model1.rda")
+save(quadratic_model, file = "03B_hunting_success_quadratic-model1.rda")
 
 # Save session info for reproducibility
 session <- sessionInfo()

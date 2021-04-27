@@ -43,8 +43,7 @@ data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
 
 
 # Load model
-load("03A_multivariate-model.rda")
-
+load("./outputs/03A_multivariate-model.rda")
 print(object.size(mv_model), units = "MB")
 
 # =======================================================================
