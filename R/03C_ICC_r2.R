@@ -75,7 +75,7 @@ VarSE2 <- VarCorr(quadratic_model)$obs$sd[1]^2
 # 4. Total variance
 # --------------------------
 # binomial model with OLRE
-VarT2 <- VarF2 + VarR2 + VarSE2 + VarDS
+VarT2 <- VarF2 + VarR2 + VarSE2 + VarDS2
 
 # beta-binomial model
 #VarT2 <- VarF2 + VarR2 + VarDS2
@@ -110,7 +110,7 @@ ran_var <- data.table(posterior_samples(quadratic_model,
 # Compute variances for each random effect + VarDS
 ran_var[, c("var_id", "var_map", "var_obs") := 
           lapply(.SD, function(x) x^2),
-            .SDcols = c(1:3)][, var_DS := VarDS1]
+            .SDcols = c(1:3)][, var_DS := VarDS2]
 
 # Compute total variance            
 ran_var[, var_tot := rowSums(ran_var[, 4:7])]
@@ -130,7 +130,6 @@ icc_tab_quad <- data.table(group = c("id", "map", "obs"),
                                  )
                             )
 
-
 # =======================================================================
 # =======================================================================
 
@@ -142,8 +141,12 @@ icc_tab_quad <- data.table(group = c("id", "map", "obs"),
 # 4. Save values in table
 # =======================================================================
 
-r2_tab_quad <- as.data.table(cbind(R2_M1, R2_C1))
-icc_tab_quad <- round(icc_tab_quad[, 2:4], digits = 3)
+r2_tab_quad <- as.data.table(cbind(R2_M2, R2_C2))
+# Round values for icc table
+round_val <- function (x) {round(x, digits = 3)}
+icc_tab_quad[, c("mean", "lower", "upper") :=
+                lapply(.SD, round_val), 
+                .SDcols = c(2:4)]
 
 capture.output(r2_tab_quad, file = "./outputs/03C_r2-table.txt")
 capture.output(icc_tab_quad, file = "./outputs/03C_icc-table.txt")

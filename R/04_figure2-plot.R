@@ -37,6 +37,7 @@ data <- fread("./data/02_merged-data.csv",
 # Load both models
 load("./outputs/03B_hunting_success_base-model.rda")
 load("./outputs/03C_hunting_success_quadratic-model.rda")
+load("./outputs/03C_hunting_success_quadratic-model1.rda")
 # =======================================================================
 # =======================================================================
 
@@ -323,7 +324,7 @@ guard <- ggplot(guard_newdat) +
                         fill = "#3CBC75FF") +
             scale_y_continuous(breaks = seq(0, 1, .25),
                                limits = c(0, 1)) +
-            xlab("\nGuard") +
+            xlab("\nAmbush") +
             ylab("") +
             custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
@@ -426,25 +427,32 @@ speed_mm <- model.matrix(~
                           I(speed^2) +
                           I(space^2) +
                           I(guard^2) +
+                          I(hook^2) +
                           I(surv_speed^2) +
                           I(surv_space^2) +
                           # Linear terms
                           speed +
                           space +
                           guard +
+                          hook +
                           surv_speed +
                           surv_space +
                           # Predator trait covariances
                           speed : space +
                           speed : guard +
                           space : guard +
+                          speed : hook +
+                          space : hook +
+                          guard : hook +
                           # Predator-prey trait covariances
                           speed : surv_speed +
                           speed : surv_space +
                           space : surv_speed +
                           space : surv_space +
                           guard : surv_speed +
-                          guard : surv_space, speed_dat)
+                          guard : surv_space +
+                          hook : surv_speed +
+                          hook : surv_space, speed_dat)
 # Compute fitted values
 speed_y <- speed_mm%*%fixef(quadratic_model)
 
@@ -460,6 +468,7 @@ speed_newdat <- data.table(
   speed = speed_dat$speed,
   space = speed_dat$space,
   guard = speed_dat$guard,
+  hook = speed_dat$hook,
   surv_speed = speed_dat$surv_speed,
   surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
@@ -523,25 +532,32 @@ space_mm <- model.matrix(~
                           I(speed^2) +
                           I(space^2) +
                           I(guard^2) +
+                          I(hook^2) +
                           I(surv_speed^2) +
                           I(surv_space^2) +
                           # Linear terms
                           speed +
                           space +
                           guard +
+                          hook +
                           surv_speed +
                           surv_space +
                           # Predator trait covariances
                           speed : space +
                           speed : guard +
                           space : guard +
+                          speed : hook +
+                          space : hook +
+                          guard : hook +
                           # Predator-prey trait covariances
                           speed : surv_speed +
                           speed : surv_space +
                           space : surv_speed +
                           space : surv_space +
                           guard : surv_speed +
-                          guard : surv_space, space_dat)
+                          guard : surv_space +
+                          hook : surv_speed +
+                          hook : surv_space, space_dat)
 # Compute fitted values
 space_y <- space_mm%*%fixef(quadratic_model)
 
@@ -557,6 +573,7 @@ space_newdat <- data.table(
   speed = space_dat$speed,
   space = space_dat$space,
   guard = space_dat$guard,
+  hook = space_dat$hook,
   surv_speed = space_dat$surv_speed,
   surv_space = space_dat$surv_space,
   space_y = plogis(space_y),
@@ -618,25 +635,32 @@ guard_mm <- model.matrix(~
                           I(speed^2) +
                           I(space^2) +
                           I(guard^2) +
+                          I(hook^2) +
                           I(surv_speed^2) +
                           I(surv_space^2) +
                           # Linear terms
                           speed +
                           space +
                           guard +
+                          hook +
                           surv_speed +
                           surv_space +
                           # Predator trait covariances
                           speed : space +
                           speed : guard +
                           space : guard +
+                          speed : hook +
+                          space : hook +
+                          guard : hook +
                           # Predator-prey trait covariances
                           speed : surv_speed +
                           speed : surv_space +
                           space : surv_speed +
                           space : surv_space +
                           guard : surv_speed +
-                          guard : surv_space, guard_dat)
+                          guard : surv_space +
+                          hook : surv_speed +
+                          hook : surv_space, guard_dat)
 # Compute fitted values
 guard_y <- guard_mm%*%fixef(quadratic_model)
 
@@ -652,6 +676,7 @@ guard_newdat <- data.table(
   speed = guard_dat$speed,
   space = guard_dat$space,
   guard = guard_dat$guard,
+  hook = guard_dat$hook,
   surv_speed = guard_dat$surv_speed,
   surv_space = guard_dat$surv_space,
   guard_y = plogis(guard_y),
@@ -689,7 +714,7 @@ quad_guard <- ggplot(guard_newdat) +
                             fill = "#3CBC75FF") +
                 scale_y_continuous(breaks = seq(0, 1, .25),
                                    limits = c(0, 1)) +
-                xlab("\nGuard") +
+                xlab("\nAmbush") +
                 ylab("") +
                 custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
@@ -713,25 +738,32 @@ hook_mm <- model.matrix(~
                           I(speed^2) +
                           I(space^2) +
                           I(guard^2) +
+                          I(hook^2) +
                           I(surv_speed^2) +
                           I(surv_space^2) +
                           # Linear terms
                           speed +
                           space +
                           guard +
+                          hook +
                           surv_speed +
                           surv_space +
                           # Predator trait covariances
                           speed : space +
                           speed : guard +
                           space : guard +
+                          speed : hook +
+                          space : hook +
+                          guard : hook +
                           # Predator-prey trait covariances
                           speed : surv_speed +
                           speed : surv_space +
                           space : surv_speed +
                           space : surv_space +
                           guard : surv_speed +
-                          guard : surv_space, hook_dat)
+                          guard : surv_space +
+                          hook : surv_speed +
+                          hook : surv_space, hook_dat)
 # Compute fitted values
 hook_y <- hook_mm%*%fixef(quadratic_model)
 
@@ -806,7 +838,7 @@ panel_plot <- ggarrange(speed,
                         widths = c(2.8, 2.5, 2.5, 2.5),
                         heights = c(2.8, 2.8, 2.8, 2.8),
                         labels = c("(a)", "(b)", "(c)", "(d)",
-                                   "(d)", "(e)", "(f)", "(g)")
+                                   "(d)", "(e)", "(f)", "(g)"))
 # Upper y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
@@ -820,16 +852,7 @@ panel_plot <- annotate_figure(panel_plot,
                                                size = 14,
                                                hjust = 1.7, vjust = 2.1))
 
-
-# Save and export figure (with no points)
-ggexport(panel_plot, filename = "04_figure2.1.tiff",
-         width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
-
-ggexport(panel_plot, filename = "04_figure2.2.tiff",
+ggexport(panel_plot, filename = "./outputs/04_figure2.tiff",
          width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
-
-# Save and export figure
-ggexport(panel_plot, filename = "04_figure2.tiff",
-         width = 3500, height = 2500, res = 300) # more res = bigger plot zoom
 # =======================================================================
 # =======================================================================

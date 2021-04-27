@@ -141,7 +141,11 @@ icc_tab <- data.table(group = c("id", "map", "obs"),
 # =======================================================================
 
 r2_tab <- as.data.table(cbind(R2_M1, R2_C1))
-icc_tab <- round(icc_tab[, 2:4], digits = 3)
+# Round values for icc table
+round_val <- function (x) {round(x, digits = 3)}
+icc_tab[, c("mean", "lower", "upper") :=
+                lapply(.SD, round_val), 
+                .SDcols = c(2:4)]
 
 capture.output(r2_tab, file = "./outputs/03B_r2-table.txt")
 capture.output(icc_tab, file = "./outputs/03B_icc-table.txt")

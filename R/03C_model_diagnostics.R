@@ -81,48 +81,48 @@ print(object.size(quadratic_model), units = "MB")
 # Diagnosis
 # -------------------
 # Observed y outcomes vs posterior predicted outcomes
-dens_overlay <- brms::pp_check(quad_model, type = "dens_overlay", nsamples = 100)
+dens_overlay <- brms::pp_check(quadratic_model, type = "dens_overlay", nsamples = 100)
 #brms::pp_check(base_model, type = 'ecdf_overlay')
 
 
 # Error scatter for y
-error <- brms::pp_check(quad_model, type = 'error_scatter_avg', nsamples = 100)
+error <- brms::pp_check(quadratic_model, type = 'error_scatter_avg', nsamples = 100)
 
 
 # Parameter value around posterior distribution (arrange for quad parameters)
-speed1 <- brms::pp_check(quad_model, x = 'Zspeed^2', 
+speed1 <- brms::pp_check(quadratic_model, x = 'Zspeed^2', 
                         type = 'stat', stat = 'mean', nsamples = 100)
-space1 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate^2', 
+space1 <- brms::pp_check(quadratic_model, x = 'Zspace_covered_rate^2', 
                          type = 'stat', stat = 'mean', nsamples = 100)
-guard1 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard^2', 
+guard1 <- brms::pp_check(quadratic_model, x = 'Zprox_mid_guard^2', 
                          type = 'stat', stat = 'mean',  nsamples = 100)
-hook1 <- brms::pp_check(quad_model, x = 'Zhook_start_time^2',
+hook1 <- brms::pp_check(quadratic_model, x = 'Zhook_start_time^2',
                         type = 'stat', stat = 'mean',  nsamples = 100)
-survspeed1 <- brms::pp_check(quad_model, x = 'Zsurv_speed^2',
+survspeed1 <- brms::pp_check(quadratic_model, x = 'Zsurv_speed^2',
                              type = 'stat', stat = 'mean',  nsamples = 100)
-survspace1 <- brms::pp_check(quad_model, x = 'Zsurv_space_covered_rate^2',
+survspace1 <- brms::pp_check(quadratic_model, x = 'Zsurv_space_covered_rate^2',
                              type = 'stat', stat = 'mean',  nsamples = 100)
 
 
 # residual vs covariate plots
-speed2 <- brms::pp_check(quad_model, x = 'Zspeed^2', 
+speed2 <- brms::pp_check(quadratic_model, x = 'Zspeed^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-space2 <- brms::pp_check(quad_model, x = 'Zspace_covered_rate^2', 
+space2 <- brms::pp_check(quadratic_model, x = 'Zspace_covered_rate^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-guard2 <- brms::pp_check(quad_model, x = 'Zprox_mid_guard^2', 
+guard2 <- brms::pp_check(quadratic_model, x = 'Zprox_mid_guard^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-hook2 <-  brms::pp_check(quad_model, x = 'Zhook_start_time^2',
+hook2 <-  brms::pp_check(quadratic_model, x = 'Zhook_start_time^2',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspeed2 <- brms::pp_check(quad_model, x = 'Zsurv_speed^2',
+survspeed2 <- brms::pp_check(quadratic_model, x = 'Zsurv_speed^2',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspace2 <- brms::pp_check(quad_model, x = 'Zsurv_space_covered_rate^2',
+survspace2 <- brms::pp_check(quadratic_model, x = 'Zsurv_space_covered_rate^2',
                type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 
 # Trace plots and parameter distributions
-#plot(quad_model)
-trace1 <- mcmc_plot(quad_model, type = "trace")
-dens1 <- mcmc_plot(quad_model, type = "dens")
+#plot(quadratic_model)
+trace1 <- mcmc_plot(quadratic_model, type = "trace")
+dens1 <- mcmc_plot(quadratic_model, type = "dens")
 
 
 # Investigate overdispersion
