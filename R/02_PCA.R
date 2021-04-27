@@ -39,7 +39,7 @@ library(ggpubr)
 game_data <- fread("./data/02_merged-data.csv")
 
 # Select column to be analyzed
-full_Zmatrix <- game_data[, c(68:71, 73, 74, 76:79)]
+full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 78:79)]
 
 names(full_Zmatrix)
 # Change variable names
@@ -50,13 +50,13 @@ setnames(full_Zmatrix, "Zcloset_open", "closets opened")
 setnames(full_Zmatrix, "Zhit_special_count", "special attacks")
 setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")
 setnames(full_Zmatrix, "Zpallet_destroyed", "pallets destroyed")
-setnames(full_Zmatrix, "Zchase_per_second", "number of chases")
 setnames(full_Zmatrix, "Zdamage_generator", "generators damaged")
 setnames(full_Zmatrix, "Zhook_start_time", "time before 1st capture")
 
 #setnames(full_Zmatrix, "Zhit_close_count", "attacks while carrying")
 #setnames(full_Zmatrix, "Zhook_count", "prey hooked count")
 #setnames(full_Zmatrix, "Zprey_pickedup", "prey pickedup")
+#setnames(full_Zmatrix, "Zchase_per_second", "number of chases")
 # =========================================================================
 # =========================================================================
 
@@ -188,8 +188,8 @@ PCA_fullZ_biplot12 <- fviz_pca_biplot(PCA_fullZ,
         plot.margin = margin(0.1, 0.5, 0.2, 0.3, "cm"))
 
 PCA_fullZ_biplot12 <- ggpubr::ggpar(PCA_fullZ_biplot12,
-                                  xlab = "\nPC1 (19.2% of explained variance)",
-                                  ylab = "PC2 (17.5% of explained variance)\n",
+                                  xlab = "\nPC1 (21.0% of explained variance)",
+                                  ylab = "PC2 (15.3% of explained variance)\n",
                                   title = "",
                                   font.x = c(15, "plain"),
                                   font.y = c(15, "plain"))
@@ -221,8 +221,8 @@ PCA_fullZ_biplot23 <- fviz_pca_biplot(PCA_fullZ,
         plot.margin = margin(0.1, 0.5, 0.2, 0.5, "cm"))
 
 PCA_fullZ_biplot23 <- ggpubr::ggpar(PCA_fullZ_biplot23,
-                                  xlab = "\nPC2 (17.5% of explained variance)",
-                                  ylab = "PC3 (12.8% of explained variance)\n",
+                                  xlab = "\nPC2 (15.3% of explained variance)",
+                                  ylab = "PC3 (13.8% of explained variance)\n",
                                   title = "",
                                   font.x = c(15, "plain"),
                                   font.y = c(15, "plain"))
@@ -234,7 +234,7 @@ PCA_fullZ_biplot23 <- ggpubr::ggpar(PCA_fullZ_biplot23,
 
 
 # =========================================================================
-# 8. Calculate variables having highest loading
+# 8. Calculate variables having highest loading (Table SI)
 # =========================================================================
 contrib_table <- round(var_fullZ$contrib, digits = 2)
 corr_table <- round(var_fullZ$cor, digits = 2)
@@ -248,9 +248,9 @@ corr_table <- round(var_fullZ$cor, digits = 2)
 # =========================================================================
 # 9. Extract PCA scores and add them to the table
 # =========================================================================
-individuals <- get_pca_ind(PCA_fullZ)
-individuals$coord
-game_data <- cbind(game_data, individuals$coord)
+#individuals <- get_pca_ind(PCA_fullZ)
+#individuals$coord
+#game_data <- cbind(game_data, individuals$coord)
 # =========================================================================
 # =========================================================================
 
