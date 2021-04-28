@@ -78,57 +78,57 @@ error <- brms::pp_check(mv_model, type = 'error_scatter_avg', nsamples = 100)
 # Parameter value around posterior distribution
 speed1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                          resp = "Zsqrtspeed",
-                         type = 'stat', stat = 'mean', nsamples = 1000)
+                         type = 'stat', stat = 'mean', nsamples = 100)
 speed2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                          resp = "Zsqrtspacecoveredrate",
-                         type = 'stat', stat = 'mean', nsamples = 1000)
+                         type = 'stat', stat = 'mean', nsamples = 100)
 speed3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                          resp = "Zsqrtproxmidguard",
-                         type = 'stat', stat = 'mean',  nsamples = 1000)
+                         type = 'stat', stat = 'mean',  nsamples = 100)
 speed4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
                          resp = "Zsqrthookstarttime",
-                         type = 'stat', stat = 'mean',  nsamples = 1000)
+                         type = 'stat', stat = 'mean',  nsamples = 100)
 
 space1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
                              resp = "Zsqrtspeed",
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
+                             type = 'stat', stat = 'mean',  nsamples = 100)
 space2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
                              resp = "Zsqrtspacecoveredrate",
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
+                             type = 'stat', stat = 'mean',  nsamples = 100)
 space3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
                              resp = "Zsqrtproxmidguard",
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
+                             type = 'stat', stat = 'mean',  nsamples = 100)
 space4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
                              resp = "Zsqrthookstarttime",
-                             type = 'stat', stat = 'mean',  nsamples = 1000)
+                             type = 'stat', stat = 'mean',  nsamples = 100)
 
 
 # residual vs covariate plots
 speed1.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                            resp = "Zsqrtspeed",
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
 speed2.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
                            resp = "Zsqrtspacecoveredrate", 
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
 speed3.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                            resp = "Zsqrtproxmidguard",
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
 speed4.1 <-  brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
                             resp = "Zsqrthookstarttime",
-                         type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                         type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 space1.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
                            resp = "Zsqrtspeed",
-                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                           type = 'error_scatter_avg_vs_x', nsamples = 100)
 space2.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
                            resp = "Zsqrtspacecoveredrate", 
-                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                           type = 'error_scatter_avg_vs_x', nsamples = 100)
 space3.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
                            resp = "Zsqrtproxmidguard",
-                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                           type = 'error_scatter_avg_vs_x', nsamples = 100)
 space4.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
                            resp = "Zsqrthookstarttime",
-                           type = 'error_scatter_avg_vs_x', nsamples = 1000)
+                           type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 
 # Trace plots and parameter distributions

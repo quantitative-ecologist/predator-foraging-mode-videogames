@@ -16,26 +16,22 @@
 
 
 # =======================================================================
-# 1. Set working directory, load libraries, and export dataset
+# 1. Load libraries, and export dataset
 # =======================================================================
-# personal computer onedrive UQAM Montiglio lab
-setwd("C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs")
 
 # Import libraries
 library(data.table)
+library(brms)
 library(ggplot2)
+library(corrmorant)
 library(ggcorrplot)
 library(ggpubr)
-library(MCMCglmm)
 
 # Load data
-load("03A_multivariate_ranef.rda")
-load("03A_IDcorr_list.rda")
-load("03A_multivariate-model1.rda")
+load("./outputs/03A_multivariate-model.rda")
+#load("03A_icc-table.RDS")
+#load("03A_multivariate-model.rda")
 
-# Character variables to factor variables
-char_as_factor <- names(ranef_table)[sapply(ranef_table, is.character)] # extract columns that are characters
-ranef_table[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_factor] # columns as factors
 # =======================================================================
 # =======================================================================
 
@@ -47,32 +43,140 @@ ranef_table[, (char_as_factor) := lapply(.SD, as.factor), .SDcols = char_as_fact
 # 2. Prepare the tables
 # =======================================================================
 
-# Random effects table
-# ------------------------------------------
+# Extract correlation samples
+correlations <- data.table(posterior_samples(mv_model)[,c(25:42, 51:56)])
 
-# Create variables for the plot groupings
-#ranef_table[, type := c(rep("Agreement", 9),
-#                        rep("Adjusted", 9)
-#                        )
-#           ]
+# Create table with mean icc and credibility interval
+cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char", "space~guard_char", 
+                                "speed~hook_char", "space~hook_char", "guard~hook_char",
+                                "speed~space_map", "speed~guard_map", "space~guard_map", 
+                                "speed~hook_map", "space~hook_map", "guard~hook_map",
+                                "speed~space_id", "speed~guard_id", "space~guard_id", 
+                                "speed~hook_id", "space~hook_id", "guard~hook_id",
+                                "speed~space_res", "speed~guard_res", "space~guard_res", 
+                                "speed~hook_res", "space~hook_res", "guard~hook_res"),
+                      mean = as.numeric(correlations[, lapply(.SD, mean),
+                                                  .SDcols = c(1:24)]),
+                      rbind(coda::HPDinterval(as.mcmc(ran_var[,1]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,2]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,3]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,4]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,5]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,6]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,7]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,8]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,9]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,10]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,11]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,12]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,13]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,14]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,15]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,16]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,17]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,18]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,19]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,20]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,21]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,22]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,23]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,24]), 0.95)
+                            )
+                       )
+cor_tab[, ranef_variable := c(rep("character", 6),
+                              rep("map", 6),
+                              rep("id", 6),
+                              rep("resid", 6))]
 
-#ranef_table[, random_effect := c(rep("Player ID", 3),
-#                                 rep("Environment", 3),
-#                                 rep("Avatar", 3)
-#                                 )
-#            , by = type]
 
-#ranef_table[, variable := rep(c("Speed",
-#                                "Space",
-#                                "Guard"),
-#                              3)
-#            , by = type]
+# Individual level matrix ---
+# Extract correlation tables from the list
+among_corr <- round(IDcorr_list$among_corr, 3)
+within_corr <- round(IDcorr_list$within_corr, 3)
+
+# Assign within ID correlation values to the upper part of the among ID matrix
+among_corr[1, 2:3] <- within_corr[1, 2:3]
+among_corr[2, 3] <- within_corr[2, 3]
+
+# Modify column and row names to match variables
+colnames(among_corr) <- c("Speed", "Space", "Guard")
+rownames(among_corr) <- c("Speed", "Space", "Guard")
+
+among_corr[1, 1] <- NA
+among_corr[2, 2] <- NA
+among_corr[3, 3] <- NA
 
 
-# Create factor order
-#ranef_table[, ranef_order := factor(random_effect, levels = c("Avatar", "Environment", "Player ID"))]
-#ranef_table[, variable_order := factor(variable, levels = c("Speed", "Space", "Guard"))]
-# ------------------------------------------
+
+
+
+
+
+
+
+# ----------------------------------------------------------------
+# ID
+blups_ID <- ranef(mv_model, 
+      groups = "mirrors_id")
+
+# row index (ID name) as a column
+speed_ID <- data.table(blups_ID$mirrors_id[,,1], keep.rownames = TRUE)[]
+space_ID <- data.table(blups_ID$mirrors_id[,,2], keep.rownames = TRUE)[]
+guard_ID <- data.table(blups_ID$mirrors_id[,,3], keep.rownames = TRUE)[]
+hook_ID <- data.table(blups_ID$mirrors_id[,,4], keep.rownames = TRUE)[]
+# ----------------------------------------------------------------
+
+
+# ----------------------------------------------------------------
+# map
+blups_map <- ranef(mv_model, 
+      groups = "map_name")
+
+# row index (map name) as a column
+speed_map <- data.table(blups_map$mirrors_id[,,1], keep.rownames = TRUE)[]
+space_map <- data.table(blups_map$mirrors_id[,,2], keep.rownames = TRUE)[]
+guard_map <- data.table(blups_map$mirrors_id[,,3], keep.rownames = TRUE)[]
+hook_map <- data.table(blups_map$mirrors_id[,,4], keep.rownames = TRUE)[]
+# ----------------------------------------------------------------
+
+
+# ----------------------------------------------------------------
+# avatar
+blups_avatar <- ranef(mv_model, 
+      groups = "character_name")
+
+# row index (ID name) as a column
+speed <- data.table(test$mirrors_id[,,1], keep.rownames = TRUE)[]
+space <- data.table(test$mirrors_id[,,2], keep.rownames = TRUE)[]
+guard <- data.table(test$mirrors_id[,,3], keep.rownames = TRUE)[]
+hook <- data.table(test$mirrors_id[,,4], keep.rownames = TRUE)[]
+# ----------------------------------------------------------------
+
+
+# ----------------------------------------------------------------
+# resid
+#blups_ID <- ranef(mv_model, 
+#      groups = "mirrors_id")
+#
+## row index (ID name) as a column
+#speed <- data.table(test$mirrors_id[,,1], keep.rownames = TRUE)[]
+#space <- data.table(test$mirrors_id[,,2], keep.rownames = TRUE)[]
+#guard <- data.table(test$mirrors_id[,,3], keep.rownames = TRUE)[]
+#hook <- data.table(test$mirrors_id[,,4], keep.rownames = TRUE)[]
+# ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
