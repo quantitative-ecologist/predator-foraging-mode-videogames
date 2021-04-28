@@ -22,15 +22,12 @@
 # Import libraries
 library(data.table)
 library(brms)
-library(ggplot2)
-library(corrmorant)
-library(ggcorrplot)
-library(ggpubr)
+library(corrplot)
+library(export)
 
 # Load data
 load("./outputs/03A_multivariate-model.rda")
-#load("03A_icc-table.RDS")
-#load("03A_multivariate-model.rda")
+load("./outputs/03A_icc-table.RDS")
 
 # =======================================================================
 # =======================================================================
@@ -46,7 +43,10 @@ load("./outputs/03A_multivariate-model.rda")
 # Extract correlation samples
 correlations <- data.table(posterior_samples(mv_model)[,c(25:42, 51:56)])
 
-# Create table with mean icc and credibility interval
+# Create table with mean icc and credibility intervals
+lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
+upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
+
 cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char", "space~guard_char", 
                                 "speed~hook_char", "space~hook_char", "guard~hook_char",
                                 "speed~space_map", "speed~guard_map", "space~guard_map", 
@@ -57,31 +57,10 @@ cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char", "space~g
                                 "speed~hook_res", "space~hook_res", "guard~hook_res"),
                       mean = as.numeric(correlations[, lapply(.SD, mean),
                                                   .SDcols = c(1:24)]),
-                      rbind(coda::HPDinterval(as.mcmc(ran_var[,1]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,2]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,3]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,4]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,5]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,6]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,7]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,8]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,9]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,10]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,11]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,12]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,13]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,14]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,15]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,16]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,17]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,18]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,19]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,20]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,21]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,22]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,23]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,24]), 0.95)
-                            )
+                      lower = as.numeric(correlations[, lapply(.SD, lower_interval),
+                                                  .SDcols = c(1:24)]),
+                      upper = as.numeric(correlations[, lapply(.SD, upper_interval),
+                                                  .SDcols = c(1:24)])
                        )
 cor_tab[, ranef_variable := c(rep("character", 6),
                               rep("map", 6),
@@ -89,22 +68,170 @@ cor_tab[, ranef_variable := c(rep("character", 6),
                               rep("resid", 6))]
 
 
-# Individual level matrix ---
-# Extract correlation tables from the list
-among_corr <- round(IDcorr_list$among_corr, 3)
-within_corr <- round(IDcorr_list$within_corr, 3)
+# ---------------------------------------------------
+# ID and residual correlation matrix
+# ---------------------------------------------------
+id_cor <- cor_tab[ranef_variable %in% c("id", "resid"), .(group, mean)]
 
-# Assign within ID correlation values to the upper part of the among ID matrix
-among_corr[1, 2:3] <- within_corr[1, 2:3]
-among_corr[2, 3] <- within_corr[2, 3]
+speed <- c(
+      as.numeric(icc_tab[1,2]),
+      as.numeric(id_cor[1,2]),
+      as.numeric(id_cor[2,2]),
+      as.numeric(id_cor[4,2])
+)
 
-# Modify column and row names to match variables
-colnames(among_corr) <- c("Speed", "Space", "Guard")
-rownames(among_corr) <- c("Speed", "Space", "Guard")
+space <- c(
+      as.numeric(id_cor[7,2]),
+      as.numeric(icc_tab[2,2]),
+      as.numeric(id_cor[3,2]),
+      as.numeric(id_cor[5,2])
+)
 
-among_corr[1, 1] <- NA
-among_corr[2, 2] <- NA
-among_corr[3, 3] <- NA
+ambush <- c(
+      as.numeric(id_cor[8,2]),
+      as.numeric(id_cor[9,2]),
+      as.numeric(icc_tab[3,2]),
+      as.numeric(id_cor[6,2])
+)
+
+time <- c(
+      as.numeric(id_cor[10,2]),
+      as.numeric(id_cor[11,2]),
+      as.numeric(id_cor[12,2]),
+      as.numeric(icc_tab[4,2])
+)
+
+
+id_cor_matrix <- cbind(speed, space, ambush, time)
+rownames(id_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+colnames(id_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+# ---------------------------------------------------
+
+
+# ---------------------------------------------------
+# Maps correlation matrix
+# ---------------------------------------------------
+map_cor <- cor_tab[ranef_variable %in% "map", .(group, mean)]
+
+speed <- c(
+      as.numeric(icc_tab[5,2]),
+      as.numeric(map_cor[1,2]),
+      as.numeric(map_cor[2,2]),
+      as.numeric(map_cor[4,2])
+)
+
+space <- c(
+      NA,
+      as.numeric(icc_tab[6,2]),
+      as.numeric(map_cor[3,2]),
+      as.numeric(map_cor[5,2])
+)
+
+ambush <- c(
+      NA,
+      NA,
+      as.numeric(icc_tab[7,2]),
+      as.numeric(map_cor[6,2])
+)
+
+time <- c(
+      NA,
+      NA,
+      NA,
+      as.numeric(icc_tab[8,2])
+)
+
+
+map_cor_matrix <- cbind(speed, space, ambush, time)
+rownames(map_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+colnames(map_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+# ---------------------------------------------------
+
+
+# ---------------------------------------------------
+# Avatars correlation matrix
+# ---------------------------------------------------
+char_cor <- cor_tab[ranef_variable %in% "character", .(group, mean)]
+
+speed <- c(
+      as.numeric(icc_tab[9,2]),
+      as.numeric(char_cor[1,2]),
+      as.numeric(char_cor[2,2]),
+      as.numeric(char_cor[4,2])
+)
+
+space <- c(
+      NA,
+      as.numeric(icc_tab[10,2]),
+      as.numeric(char_cor[3,2]),
+      as.numeric(char_cor[5,2])
+)
+
+ambush <- c(
+      NA,
+      NA,
+      as.numeric(icc_tab[11,2]),
+      as.numeric(char_cor[6,2])
+)
+
+time <- c(
+      NA,
+      NA,
+      NA,
+      as.numeric(icc_tab[12,2])
+)
+
+
+char_cor_matrix <- cbind(speed, space, ambush, time)
+rownames(char_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+colnames(char_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
+# ---------------------------------------------------
+# =======================================================================
+# =======================================================================
+
+
+
+
+
+# =======================================================================
+# 3. Create different correlation plots
+# =======================================================================
+
+corrplot(id_cor_matrix, type = "full", method = "ellipse", 
+                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+                        tl.cex = 1.1, tl.srt = 45, number.digits = 3,
+                        addCoef.col = "black", 
+                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
+                        mar = c(0,0,0,0))
+graph2ppt(file = "./outputs/04_figure1.pptx", 
+          width = 10, height = 6)
+
+corrplot(map_cor_matrix, type = "lower", method = "ellipse", 
+                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+                        tl.cex = 1.1, tl.srt = 45, number.digits = 3,
+                        addCoef.col = "black", 
+                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
+                        mar = c(0,0,0,0))
+graph2ppt(file = "./outputs/04_figure1.pptx", 
+          width = 10, height = 6, append = TRUE)
+
+corrplot(char_cor_matrix, type = "lower", method = "ellipse", 
+                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+                        tl.cex = 1.1, tl.srt = 45, number.digits = 3,
+                        addCoef.col = "black", 
+                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
+                        mar = c(0,0,0,0))
+graph2ppt(file = "./outputs/04_figure1.pptx", 
+          width = 10, height = 6, append = TRUE)
+
+# =======================================================================
+# =======================================================================
+
+
+
+
+
+
 
 
 
@@ -115,430 +242,29 @@ among_corr[3, 3] <- NA
 
 
 # ----------------------------------------------------------------
-# ID
-blups_ID <- ranef(mv_model, 
-      groups = "mirrors_id")
-
-# row index (ID name) as a column
-speed_ID <- data.table(blups_ID$mirrors_id[,,1], keep.rownames = TRUE)[]
-space_ID <- data.table(blups_ID$mirrors_id[,,2], keep.rownames = TRUE)[]
-guard_ID <- data.table(blups_ID$mirrors_id[,,3], keep.rownames = TRUE)[]
-hook_ID <- data.table(blups_ID$mirrors_id[,,4], keep.rownames = TRUE)[]
-# ----------------------------------------------------------------
-
-
+# If I want to look at specific BLUP values
 # ----------------------------------------------------------------
 # map
-blups_map <- ranef(mv_model, 
-      groups = "map_name")
-
-# row index (map name) as a column
-speed_map <- data.table(blups_map$mirrors_id[,,1], keep.rownames = TRUE)[]
-space_map <- data.table(blups_map$mirrors_id[,,2], keep.rownames = TRUE)[]
-guard_map <- data.table(blups_map$mirrors_id[,,3], keep.rownames = TRUE)[]
-hook_map <- data.table(blups_map$mirrors_id[,,4], keep.rownames = TRUE)[]
-# ----------------------------------------------------------------
-
-
-# ----------------------------------------------------------------
-# avatar
-blups_avatar <- ranef(mv_model, 
-      groups = "character_name")
-
-# row index (ID name) as a column
-speed <- data.table(test$mirrors_id[,,1], keep.rownames = TRUE)[]
-space <- data.table(test$mirrors_id[,,2], keep.rownames = TRUE)[]
-guard <- data.table(test$mirrors_id[,,3], keep.rownames = TRUE)[]
-hook <- data.table(test$mirrors_id[,,4], keep.rownames = TRUE)[]
-# ----------------------------------------------------------------
-
-
-# ----------------------------------------------------------------
-# resid
-#blups_ID <- ranef(mv_model, 
-#      groups = "mirrors_id")
+# ------------------------------
+#blups_map <- ranef(mv_model, 
+#      groups = "map_name")
+#
+## row index (map name) as a column
+#speed_map <- data.table(blups_map$map_name[,,1], keep.rownames = TRUE)[]
+#space_map <- data.table(blups_map$map_name[,,2], keep.rownames = TRUE)[]
+#guard_map <- data.table(blups_map$map_name[,,3], keep.rownames = TRUE)[]
+#hook_map <- data.table(blups_map$map_name[,,4], keep.rownames = TRUE)[]
+#
+#
+## avatar
+## ------------------------------
+#blups_avatar <- ranef(mv_model, 
+#      groups = "character_name")
 #
 ## row index (ID name) as a column
-#speed <- data.table(test$mirrors_id[,,1], keep.rownames = TRUE)[]
-#space <- data.table(test$mirrors_id[,,2], keep.rownames = TRUE)[]
-#guard <- data.table(test$mirrors_id[,,3], keep.rownames = TRUE)[]
-#hook <- data.table(test$mirrors_id[,,4], keep.rownames = TRUE)[]
+#speed <- data.table(blups_avatar$character_name[,,1], keep.rownames = TRUE)[]
+#space <- data.table(blups_avatar$character_name[,,2], keep.rownames = TRUE)[]
+#guard <- data.table(blups_avatar$character_name[,,3], keep.rownames = TRUE)[]
+#hook <- data.table(blups_avatar$character_name[,,4], keep.rownames = TRUE)[]
 # ----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 2.a table for correlation matrixes #1
-# ------------------------------------------
-
-# Individual level matrix ---
-# Extract correlation tables from the list
-among_corr <- round(IDcorr_list$among_corr, 3)
-within_corr <- round(IDcorr_list$within_corr, 3)
-
-# Assign within ID correlation values to the upper part of the among ID matrix
-among_corr[1, 2:3] <- within_corr[1, 2:3]
-among_corr[2, 3] <- within_corr[2, 3]
-
-# Modify column and row names to match variables
-colnames(among_corr) <- c("Speed", "Space", "Guard")
-rownames(among_corr) <- c("Speed", "Space", "Guard")
-
-among_corr[1, 1] <- NA
-among_corr[2, 2] <- NA
-among_corr[3, 3] <- NA
-
-
-# Environmental level matrix ---
-env_corr <- round(IDcorr_list$env_corr, 3)
-# Modify column and row names to match variables
-colnames(env_corr) <- c("Speed", "Space", "Guard")
-rownames(env_corr) <- c("Speed", "Space", "Guard")
-
-#env_corr[1, 1] <- as.numeric(ranef_table[4, 2])
-#env_corr[2, 2] <- as.numeric(ranef_table[5, 2])
-#env_corr[3, 3] <- as.numeric(ranef_table[6, 2])
-env_corr[1, 1] <- NA
-env_corr[2, 2] <- NA
-env_corr[3, 3] <- NA
-#env_corr[1, 2] <- NA
-#env_corr[1, 3] <- NA
-#env_corr[2, 3] <- NA
-
-
-# ------------------------------------------
-
-
-
-# 2.b table for correlation matrixes #2
-# ------------------------------------------
-corr_table <- as.data.table(among_corr[2:3])
-corr_table <- rbind(corr_table, as.data.table(among_corr[3, 2]))
-corr_table <- rbind(corr_table, as.data.table(among_corr[1, 2]))
-corr_table <- rbind(corr_table, as.data.table(among_corr[1:2, 3]))
-
-corr_table[, ID_level := as.factor(c("among_ID",
-                                     "among_ID", 
-                                     "among_ID", 
-                                     "within_ID", 
-                                     "within_ID", 
-                                     "within_ID"))]
-
-setnames(corr_table, "V1", "correlation")
-
-# Confidence intervals for the correlations
-among_int <- as.data.table(HPDinterval(posterior.cor(ModMV1$VCV[, 1:9]))) # among
-among_int <- among_int[c(2, 3, 6),]
-
-within_int <- as.data.table(HPDinterval(posterior.cor(ModMV1$VCV[, 28:36]))) # within
-within_int <- within_int[c(2, 3, 6),]
-
-# Bind tables together to have final table
-int <- rbind(among_int, within_int)
-corr_table <- cbind(corr_table, int)
-corr_table[, group := as.factor(rep(c("Speed~Space",
-                                      "Speed~Guard",
-                                      "Space~Guard"), 2))]
-
-# Order the factor
-corr_table[, group_ordered := factor(group, levels = c("Speed~Space",
-                                                       "Speed~Guard",
-                                                       "Space~Guard"))]
-
-
-# Bind tables together to have final table (french version)
-# int <- rbind(among_int, within_int)
-# corr_table <- cbind(corr_table, int)
-# corr_table[, group := as.factor(rep(c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"), 2))]
-# # Order the factor
-# corr_table[, group_ordered := factor(group, levels = c("Vitesse~Espace", "Vitesse~Garde", "Espace~Garde"))]
-# ------------------------------------------
-
-
-
-# 2.c table for correlation matrixes #3 
-# (including environmental correlations for plot #3)
-# ------------------------------------------
-env_table <- as.data.table(env_corr[2:3])
-env_table <- rbind(env_table, as.data.table(env_corr[3,2]))
-setnames(env_table, "V1", "correlation")
-env_table[, ID_level := as.factor("among_env")]
-among_envCI <- as.data.table(IDcorr_list$env_corrCI[c(2,3,6),]) # among env.
-
-env_table <- cbind(env_table, among_envCI)
-env_table[, group := as.factor(c("Speed~Space",
-                                 "Speed~Guard",
-                                 "Space~Guard"))]
-env_table[, group_ordered := factor(group, levels = c("Speed~Space", 
-                                                      "Speed~Guard", 
-                                                      "Space~Guard"))]
-# merge with the corr_table created above to have corr_table2
-corr_table2 <- rbind(corr_table, env_table)
-# ------------------------------------------
-# =======================================================================
-# =======================================================================
-
-
-
-
-
-# =======================================================================
-# 3. Prepare some plot options
-# =======================================================================
-# Colorblind friendly palettes
-# The palette with grey:
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-# The palette with black:
-cbp2 <- c("#000000", "#E69F00", "#56B4E9", "#009E73",
-          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-
-
-# Dodge the position of dots and error bars
-pd <- position_dodge(0.5)
-# =======================================================================
-# =======================================================================
-
-
-
-
-
-# ======================================================================
-# 4. Generate final figure
-# ======================================================================
-
-# Repeatabilities (ICC) plot
-#rpt_plot <- ggplot() +
-#              geom_pointrange(data = ranef_table[type == "Agreement"],
-#                              mapping = aes(x = ranef_order,
-#                                            y = rpt.V1,
-#                                            ymin = lower,
-#                                            ymax = upper,
-#                                            shape = variable_order), 
-#                              position = pd,
-#                              size = 0.7) +
-#                              geom_hline(yintercept = 0, linetype = "dashed") +
-#              scale_y_continuous(breaks = seq(0, 0.5, 0.10),
-#                                 limits = c(0, 0.4)) +
-#              ylab("\nRepeatability (ICC) ± 95% CI") +
-#              xlab("") +
-#              scale_shape_manual(values = c(16, 17, 15), # legend shape and labels
-#                                 labels = c("Speed",
-#                                            "Space",
-#                                            "Guard")) +
-#              theme(axis.text.x = element_text(face = "plain", size = 14,
-#                                        color = "black", vjust = -2),
-#                    axis.text.y = element_text(face = "plain", size = 14,
-#                                   color = "black"),
-#                    axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-#                    axis.ticks = element_line(size = 0.90, color = "black"), # axis ticks width
-#                    axis.title = element_text(size = 14, face = "plain"), # axis titles size
-#                    axis.line = element_line(size = 0.95),
-#                    legend.position = "top",
-#                    legend.title = element_blank(),
-#                    legend.key = element_blank(),
-#                    legend.text = element_text(size = 11),
-#                    panel.grid.major.y = element_blank(),
-#                    panel.background = element_blank()) + coord_flip()
-                    #plot.margin = unit(c(2.5, 0.1, 0.5, 0.5), "lines")) + coord_flip()
-# ---------------------------------------------------------------------
-
-# ID correlations plot 1
-IDcorr_plot <- ggcorrplot(among_corr[, 3:1], # [,3:1] switches diagonal direction
-                          method = "square",
-                          lab = TRUE,
-                          lab_size = 5,
-                          digits = 3,
-                          outline.color = "black",
-                          colors = c("#0072B2", "white", "#D55E00")) +
-               xlab("") +
-               ylab("") +
-               theme(axis.text.x = element_text(face = "plain",
-                                                size = 14,
-                                                color = "black",
-                                                hjust = 0.5, vjust = 85, angle = 0), 
-                                                #hjust = 0.5, vjust = 142, angle = 0
-                    axis.text.y = element_text(face = "plain",
-                                               size = 14,
-                                               color = "black"),
-#axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-#axis.ticks = element_line(size = 0.90, 
-#                          color = "black"), # axis ticks width
-#axis.line = element_line(size = 0.95),
-                    axis.line = element_blank(),
-                    panel.grid.major.y = element_blank(),
-                    panel.grid.minor.y = element_blank(),
-                    panel.grid.major.x = element_blank(),
-                    panel.grid.minor.x = element_blank(),
-                    panel.background = element_blank(),
-                    legend.text = element_text(size = 12, face = "plain"),
-                    legend.title = element_text(size = 12, face = "plain"))
-                    #plot.margin = unit(c(2.5, 0.1, 0.5, 0.5), "lines"))
-
-# Environmental correlations plot 1
-ENVcorr_plot <- ggcorrplot(env_corr[, 3:1], # [,3:1] switches diagonal direction
-                          method = "square",
-                          lab = TRUE,
-                          lab_size = 5,
-                          digits = 3,
-                          outline.color = "black",
-                          colors = c("#0072B2", "white", "#D55E00")) +
-               xlab("") +
-               ylab("") +
-               theme(axis.text.x = element_text(face = "plain",
-                                                size = 14,
-                                                color = "black",
-                                                hjust = 0.5, vjust = 85, angle = 0), 
-                                                #hjust = 0.5, vjust = 142, angle = 0
-                    axis.text.y = element_text(face = "plain",
-                                               size = 14,
-                                               color = "black"),
-#axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-#axis.ticks = element_line(size = 0.90, 
-#                          color = "black"), # axis ticks width
-#axis.line = element_line(size = 0.95),
-                    axis.line = element_blank(),
-                    panel.grid.major.y = element_blank(),
-                    panel.grid.minor.y = element_blank(),
-                    panel.grid.major.x = element_blank(),
-                    panel.grid.minor.x = element_blank(),
-                    panel.background = element_blank(),
-                    legend.text = element_text(size = 12, face = "plain"),
-                    legend.title = element_text(size = 12, face = "plain"))
-                    #plot.margin = unit(c(2.5, 0.1, 0.5, 0.5), "lines"))
-
-
-# ---------------------------------------------------------------------
-
-# ID Correlations plot 2
-IDcorr_plot2 <- ggplot() +
-              geom_pointrange(data = corr_table,
-                              mapping = aes(x = group_ordered,
-                                            y = correlation,
-                                            ymin = lower,
-                                            ymax = upper,
-                                            color = ID_level),
-                              position = pd,
-                              size = 0.7, shape = 16) +
-              geom_hline(yintercept = 0, linetype = "dashed") +
-              scale_y_continuous(breaks = seq(-0.80, 0.20, 0.20),
-                                 limits = c(-0.80, 0.20)) +
-              scale_color_manual(values = cbp1[c(6, 7)],
-                                 labels = c("Among ID", "Within ID")) +
-              ylab("\nCorrelation ± 95% CI") +
-              xlab("") +
-               theme(axis.text.x = element_text(face = "plain",
-                                                size = 14,
-                                                color = "black",
-                                                vjust = -2),
-                    axis.text.y = element_text(face = "plain",
-                                               size = 14,
-                                               color = "black"),
-                    axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-                    axis.ticks = element_line(size = 0.90,
-                                              color = "black"), # axis ticks width
-                    axis.line = element_line(size = 0.95),
-                    axis.title = element_text(size = 14, face = "plain"),
-                    panel.grid.major.y = element_blank(),
-                    panel.grid.minor.y = element_blank(),
-                    panel.grid.major.x = element_blank(),
-                    panel.grid.minor.x = element_blank(),
-                    panel.background = element_blank(),
-                    legend.title = element_blank(),
-                    legend.position = "top",
-                    legend.key = element_blank(),
-                    legend.text = element_text(size = 11)) + coord_flip()
-#                    plot.margin = unit(c(2.5, 0.5, 0.5, 0.6), "lines")) + coord_flip()
-# ---------------------------------------------------------------------
-
-
-# ID Correlations plot 3
-IDcorr_plot3 <- ggplot() +
-              geom_pointrange(data = corr_table2,
-                              mapping = aes(x = group_ordered,
-                                            y = correlation,
-                                            ymin = lower,
-                                            ymax = upper,
-                                            color = ID_level),
-                              position = pd,
-                              size = 0.7, shape = 16) +
-              geom_hline(yintercept = 0, linetype = "dashed") +
-              #scale_y_continuous(breaks = seq(-0.80, 0.20, 0.20),
-              #                   limits = c(-0.80, 0.20)) +
-              scale_color_manual(values = cbp1[c(6, 7, 4)],
-                                 labels = c("Among-ID", "Within-ID", "Among-ENV")) +
-              ylab("\nCorrelation ± 95% CI") +
-              xlab("") +
-               theme(axis.text.x = element_text(face = "plain",
-                                                size = 14,
-                                                color = "black",
-                                                vjust = -2),
-                    axis.text.y = element_text(face = "plain",
-                                               size = 14,
-                                               color = "black"),
-                    axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
-                    axis.ticks = element_line(size = 0.90,
-                                              color = "black"), # axis ticks width
-                    axis.line = element_line(size = 0.95),
-                    axis.title = element_text(size = 14, face = "plain"),
-                    panel.grid.major.y = element_blank(),
-                    panel.grid.minor.y = element_blank(),
-                    panel.grid.major.x = element_blank(),
-                    panel.grid.minor.x = element_blank(),
-                    panel.background = element_blank(),
-                    legend.title = element_blank(),
-                    legend.position = "top",
-                    legend.key = element_blank(),
-                    legend.text = element_text(size = 11)) + coord_flip()
-#                    plot.margin = unit(c(2.5, 0.5, 0.5, 0.6), "lines")) + coord_flip()
-# ---------------------------------------------------------------------
-
-
-# Make arrangements on the figure
-ModMV1.1_figure <- ggarrange(IDcorr_plot, NULL, ENVcorr_plot,
-                           labels = c("(a)", "", "(b)"),
-                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.45), 
-                           common.legend = TRUE, legend = "right")
-
-# Save and export figure
-ggexport(ModMV1.1_figure, filename = "03A_multivariate_model-plot1.tiff",
-         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
-
-
-ggexport(IDcorr_plot3, filename = "05A_multivariate_model-plot2.tiff",
-         width = 2500, height = 2500, res = 450)
-
-
-
-# Combine both plots and annotate with labels
-#ModMV1_figure <- ggarrange(rpt_plot, NULL, IDcorr_plot,
-#                           labels = c("(a)", "", "(b)"),
-#                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.5))
-# Save and export figure
-#ggexport(ModMV1_figure, filename = "06A_ModMV1-plot.tiff",
-#         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
-#
-
-#ModMV1_figure2 <- ggarrange(rpt_plot, NULL, IDcorr_plot2,
-#                           labels = c("(a)", "", "(b)"),
-#                           ncol = 3, nrow = 1, widths = c(1.45, 0.5, 1.5))
-#
-
-# Save and export figure
-#ggexport(ModMV1_figure2, filename = "06A_ModMV1_second-plot.tiff",
-#         width = 4655, height = 1900, res = 450) # more res = bigger plot zoom
-# End of script --------------------------------------------------------
-
+# ----------------------------------------------------------------
