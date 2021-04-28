@@ -324,7 +324,7 @@ guard <- ggplot(guard_newdat) +
                         fill = "#3CBC75FF") +
             scale_y_continuous(breaks = seq(0, 1, .25),
                                limits = c(0, 1)) +
-            xlab("\nAmbush") +
+            xlab("\nTime in ambush") +
             ylab("") +
             custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
@@ -714,7 +714,7 @@ quad_guard <- ggplot(guard_newdat) +
                             fill = "#3CBC75FF") +
                 scale_y_continuous(breaks = seq(0, 1, .25),
                                    limits = c(0, 1)) +
-                xlab("\nAmbush") +
+                xlab("\nTime in ambush") +
                 ylab("") +
                 custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
