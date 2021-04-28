@@ -396,7 +396,8 @@ hook <- ggplot(hook_newdat) +
                         fill = "#3CBC75FF") +
             scale_y_continuous(breaks = seq(0, 1, .25),
                                limits = c(0, 1)) +
-            xlab("\nTime for 1st capture") +
+            xlab(expression(
+              paste("Time for ", 1^st, "capture", sep = ""))) +
             ylab("") +
             custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # =======================================================================
@@ -719,7 +720,10 @@ quad_guard <- ggplot(guard_newdat) +
                 custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
-
+expression(paste(
+  "Surface area concentration (",
+  mu, m^2, "/", m^3,
+  ")", sep="")))
 # -----------------------------------
 # Predator time before 1st capture
 # -----------------------------------
@@ -811,7 +815,8 @@ quad_hook <- ggplot(hook_newdat) +
                         fill = "#3CBC75FF") +
             scale_y_continuous(breaks = seq(0, 1, .25),
                                limits = c(0, 1)) +
-            xlab("\nTime for 1st capture") +
+            xlab(expression(
+              paste("Time for ", 1^st, "capture", sep=""))) +
             ylab("") +
             custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 
