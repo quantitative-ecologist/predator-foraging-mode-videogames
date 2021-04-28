@@ -68,12 +68,27 @@ We performed all statistical analyses using the R software (version 4.0.2, R Cor
 We first parametrized a multivariate Bayesian mixed model to quantify adjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as fixed effects. We square-root transformed the four hunting behaviours ("y1" = speed, "y2" = space, "y3" = guard, "y4" = time) to achieve normality and then defined each as having Gaussian distribution. All traits were then standardized to mean and unit variance (z-scores). The model was parametrized as (see ‘Parametrization of the multivariate mixed models’ in Supporting information for details):
 
 $\begin{aligned}
-\[
-y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}prey space + id_{0y1,i} + map_{0y1,i} + avatar_{0y1,i} \\
+\[y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}prey space + id_{0y1,i} + map_{0y1,i} + avatar_{0y1,i} \\
 y2_{ij} = \beta_{0y2} + \beta_{1y2}prey speed + \beta_{2y2}prey space + id_{0y2,i} + map_{0y2,i} + avatar_{0y2,i} \\
-y3_{ij} = \beta_{0y3} + \beta_{1y3}prey speed + \beta_{2y3}prey space + id_{0y3,i} + map_{0y3,i} + avatar_{0y3,i}
-\]
+y3_{ij} = \beta_{0y3} + \beta_{1y3}prey speed + \beta_{2y3}prey space + id_{0y3,i} + map_{0y3,i} + avatar_{0y3,i}\]
 $\end{aligned}
+
+
+
+
+$$y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}prey space + id_{0y1,i} + map_{0y1,i} + avatar_{0y1,i}$$
+$$y2_{ij} = \beta_{0y2} + \beta_{1y2}prey speed + \beta_{2y2}prey space + id_{0y2,i} + map_{0y2,i} + avatar_{0y2,i}$$
+$$y3_{ij} = \beta_{0y3} + \beta_{1y3}prey speed + \beta_{2y3}prey space + id_{0y3,i} + map_{0y3,i} + avatar_{0y3,i}$$
+
+
+
+
+# Results
+
+```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs. Each correlation is computed using the BLUPs of the random effect of interest from the multivariate model. For each panel, the ICC of the trait is displayed on the diagonal** **A)** Among-individual and residual behavioural correlations. **B)** Among-environment behavioural correlations.", echo = FALSE}
+knitr::include_graphics(here::here("manuscript", "04_figure1.png"))
+```
+
 
 
 
