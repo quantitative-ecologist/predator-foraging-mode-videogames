@@ -65,13 +65,16 @@ We quantified the travel speed (meter/sec.) of prey and their rate of space cove
 We performed all statistical analyses using the R software (version 4.0.2, R Core Team, 2020) on a remote computer cluster (Cedar, Compute Canada, https://docs.computecanada.ca/wiki/Cedar) running on CentOS Linux 7. All models were fitted using the R package "brms" version 2.14.4 [@burknerBrmsPackageBayesian2017].
 
 ### (i)	Variation in hunting mode
-We first parametrized a multivariate Bayesian mixed model to quantify adjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as linear fixed effects. We square-root transformed the four hunting behaviours ("y1" = speed, "y2" = space, "y3" = time in ambush, "y4" = time 1^st^ capture) to achieve normality and then defined each as having Gaussian distribution. All traits were then standardized to mean and unit variance (z-scores). The model was parametrized as (see section ‘Parametrization of the multivariate mixed models’ in the Supporting information for details):
+We first parametrized a multivariate Bayesian mixed model to quantify adjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as linear fixed effects. We square-root transformed the four hunting behaviours ($y1$ = speed, $y2$ = space, $y3$ = time in ambush, $y4$ = time 1^st^ capture) to achieve normality and then defined each as having Gaussian distribution. All traits were then standardized to mean and unit variance (z-scores). The model was parametrized as (see section ‘Parametrization of the multivariate mixed models’ in the Supporting information for details):
 
-$$y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}\text{prey space} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i} + \varepsilon_{0y1,ij}$$
-$$y2_{ij} = \beta_{0y2} + \beta_{1y2}\text{prey speed} + \beta_{2y2}\text{prey space} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i} + \varepsilon_{0y2,ij}$$
-$$y3_{ij} = \beta_{0y3} + \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i} + \varepsilon_{0y3,ij}$$
-$$y4_{ij} = \beta_{0y4} + \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i} + \varepsilon_{0y4,ij}$$
-
+$$
+\begin{aligned}
+y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}\text{prey space} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i} + \varepsilon_{0y1,ij} \\
+y2_{ij} = \beta_{0y2} + \beta_{1y2}\text{prey speed} + \beta_{2y2}\text{prey space} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i} + \varepsilon_{0y2,ij} \\
+y3_{ij} = \beta_{0y3} + \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i} + \varepsilon_{0y3,ij} \\
+y4_{ij} = \beta_{0y4} + \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i} + \varepsilon_{0y4,ij}
+\end{aligned}
+$$
 where *i* indexes individual players and *j* the recorded match. Player ID ($id_{0y,i}$), the game environment ($env_{0y,i}$), the predator avatar ($avatar_{0y,i}$), and the residuals ($\varepsilon_{0y,i}$) are respectively random intercepts (among- individual, environment, and avatar variance) and residuals (within-individual variance) assumed to follow a multivariate Gaussian distribution, with their associated variance-covariance matrixes ($\Omega_{id}$, $\Omega_{env}$, $\Omega_{avatar}$, $\Omega_{\varepsilon}$) (refer to equations S1-S4 in Supporting information). We extracted among- individual, environment, avatar, and residual within-individual behavioural correlations from the variance-covariance matrixes by dividing the random effect covariances with the square root of the product of the random effect variances, for each combination of behaviours (following equation 7c-d in Dingemanse & Dochtermann, 2013).
 
 Following @nakagawaRepeatabilityGaussianNonGaussian2010, we calculated each hunting trait’s adjusted repeatability estimate (intra-class correlation coefficient, ICC) for the player ID, the game environment, and the predator avatar by dividing the variance associated with the random effect by the total phenotypic variance (ex. $ICC_{id0,y1} = V_{id0,y1} / (V_{id0,y1} + V_{env0,y1} + V_{avatar0,y1} + V_{\varepsilon0,y1})$). We computed the 95% credibility intervals for each repeatability estimate using the highest posterior density intervals.
@@ -103,22 +106,27 @@ logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i}) \\
 &+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
 &+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
 &+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
-&+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\textit{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\textit{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{10,\textit{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\textit{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{12,\textit{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\textit{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{14,\textit{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
+&+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{14,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
 &+ \varepsilon_{0,ij}
 \end{aligned}
 $$
-where $\frac{1}{2} \gamma_{n,pred}$ are the quadratic terms for the predator traits ($x_{i}$), $\frac{1}{2} \gamma_{n,prey}$ are the quadratic terms for the prey traits ($x'_{i}$), $\gamma_{n,pred}$ are the interaction terms for the predator behaviours, and $\gamma_{n, \textit{pred, prey}}$ are the interactions terms between predator and prey behaviours.
+where $\frac{1}{2} \gamma_{n,pred}$ are the quadratic terms for the predator traits ($x_{i}$), $\frac{1}{2} \gamma_{n,prey}$ are the quadratic terms for the prey traits ($x'_{i}$), $\gamma_{n,pred}$ are the interaction terms for the predator behaviours, and $\gamma_{n, \text{pred prey}}$ are the interactions terms between predator and prey behaviours.
 
-The reported estimates are partial coefficients which are the effect of the character on performance while holding the other characters constant. We then calculated the models’ ICCs following Nakagawa, Johnson, & Schielzeth’s (2017). For each model parameter, we computed the 95% credibility intervals using the highest posterior density intervals. We assumed the fixed effects and the ICC's reached statistical significance when the 95% credibility intervals did not overlap zero 
+The reported estimates are partial coefficients which are the effect of the behaviour on hunting success while holding the other behaviours constant. We calculated the models’ ICCs following @nakagawaCoefficientDeterminationR22017. For each model parameter, we computed the 95% credibility intervals using the highest posterior density intervals. We assumed the fixed effects and the ICCs reached statistical significance when the 95% credibility intervals did not overlap zero [@Nakagawa.Cuthill2007].
+
 
 # Results
 
+## (a) Variation in hunting behaviour
+### (i) Repeatability of hunting behaviour
+As we predicted, we found moderate among-individual differences in average travel speed ($ICC_{id}$, average speed [95% CI] = 0.280 [0.254, 0.304]) and average proportion of time spent in ambush position ($ICC_{id}$, time in ambush [95% CI] = 0.322 [0.301, 0.342]), while the time before a capture differend mildly among individuals ($ICC_{id}$, time 1^st^ capture [95% CI] = 0.102 [0.091, 0.114]). Among-individual differences in the average rate of space covered were very weak ($ICC_{id}$, space covered [95% CI] = 0.051 [0.044, 0.057]) (Fig. 2a).
 
+Predators did not change their travel speed ($ICC_{env}$, average speed [95% CI] = 0.002 [0.001, 0.003]) or proportion of time spent in ambush position ($ICC_{env}$, time in ambush [95% CI] = 0.002 [0.001, 0.003]) with the game environment, whereas the rate of space covered and time before a first capture differed mildly among game environments ($ICC_{env}$, space covered [95% CI] = 0.065 [0.036, 0.097]) ($ICC_{env}$, time 1^st^ capture [95% CI] = 0.055 [0.029, 0.082]) (Fig. 2b). Finally, predators displayed only mild or weak differences in the four hunting behaviours among the various predator avatars they played with ($ICC_{avatar}$, average speed [95% CI] = 0.091 [0.042, 0.153], $ICC_{avatar}$, space covered [95% CI] = 0.025 [0.010, 0.046], $ICC_{avatar}$, time in ambush [95% CI] = 0.034 [0.012, 0.064], $ICC_{avatar}$, time 1^st^ capture [95% CI] = 0.021 [0.008, 0.039]).
 
-```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs. Each correlation is computed using the BLUPs of the random effect of interest from the multivariate model. For each panel, the ICC of the trait is displayed on the diagonal** **A)** Among-individual and residual behavioural correlations. **B)** Among-environment behavioural correlations.", echo = FALSE}
+```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs.** We ran the model on a sample of 70 831 matches from 2 171 players who played in 27 different game environments, using different 15 avatars. The sample size of each parameter’s posterior distribution is 4000. Each correlation is computed using the BLUPs of the random effect of interest. For each panel, the ICC of the trait is displayed on the diagonal **A)** The left panel shows among-individual behavioural correlations on the lower off-diagonal, and residual within-individual behavioural correlations on the upper off-diagonal. **B)** The right panel displays among-environment behavioural correlations on the lower off-diagonal. The hunting behaviour names were abbreviated for simplicity", echo = FALSE}
 knitr::include_graphics(here::here("manuscript", "04_figure1.png"))
 ```
 
