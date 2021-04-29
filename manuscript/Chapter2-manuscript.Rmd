@@ -112,8 +112,11 @@ logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i}) \\
 $$
 where $\frac{1}{2} \gamma_{n,pred}$ are the quadratic terms for the predator traits ($x_{i}$), $\frac{1}{2} \gamma_{n,prey}$ are the quadratic terms for the prey traits ($x'_{i}$), $\gamma_{n,pred}$ are the interaction terms for the predator behaviours, and $\gamma_{n, \textit{pred, prey}}$ are the interactions terms between predator and prey behaviours.
 
+The reported estimates are partial coefficients which are the effect of the character on performance while holding the other characters constant. We then calculated the models’ ICCs following Nakagawa, Johnson, & Schielzeth’s (2017). For each model parameter, we computed the 95% credibility intervals using the highest posterior density intervals. We assumed the fixed effects and the ICC's reached statistical significance when the 95% credibility intervals did not overlap zero 
 
 # Results
+
+
 
 ```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs. Each correlation is computed using the BLUPs of the random effect of interest from the multivariate model. For each panel, the ICC of the trait is displayed on the diagonal** **A)** Among-individual and residual behavioural correlations. **B)** Among-environment behavioural correlations.", echo = FALSE}
 knitr::include_graphics(here::here("manuscript", "04_figure1.png"))
