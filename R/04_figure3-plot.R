@@ -168,7 +168,8 @@ speed <- ggplot(speed_newdat) +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-8, 4, 4),
-                     limits = c(-8, 4.8)) +
+                     limits = c(-8, 4.8),
+                     labels = scaleFUN) +
   xlab("\nSpeed") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
@@ -246,6 +247,7 @@ space <- ggplot(space_newdat) +
               fill = "#3CBC75FF") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
+  scale_x_continuous(labels = scaleFUN) +
   xlab("\nSpace") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
@@ -515,7 +517,8 @@ quad_speed <- ggplot(speed_newdat) +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-8, 4, 4),
-                     limits = c(-8, 4.8)) +
+                     limits = c(-8, 4.8), 
+                     labels = scaleFUN) +
   xlab("\nSpeed") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
