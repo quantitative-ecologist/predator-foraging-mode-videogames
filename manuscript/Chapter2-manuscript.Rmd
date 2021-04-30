@@ -126,8 +126,8 @@ As we predicted, we found moderate among-individual differences in average trave
 
 Contrary to out predictions, predators did not differ in their average travel speed ($ICC_{env}$, average speed [95% CI] = 0.002 [0.001, 0.003]) and proportion of time spent in ambush position ($ICC_{env}$, time in ambush [95% CI] = 0.002 [0.001, 0.003]) according to the game environment. However, we detected small differences in the average rate of space covered and time before a first capture among the game environments ($ICC_{env}$, space covered [95% CI] = 0.065 [0.036, 0.097]) ($ICC_{env}$, time 1^st^ capture [95% CI] = 0.055 [0.029, 0.082]) (Fig. 2b). Finally, predators displayed small or weak differences among the predator avatars they played with for the four hunting behaviours ($ICC_{avatar}$, average speed [95% CI] = 0.091 [0.042, 0.153], $ICC_{avatar}$, space covered [95% CI] = 0.025 [0.010, 0.046], $ICC_{avatar}$, time in ambush [95% CI] = 0.034 [0.012, 0.064], $ICC_{avatar}$, time 1^st^ capture [95% CI] = 0.021 [0.008, 0.039]).
 
-```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs.** We ran the model on a sample of 70 831 matches from 2 171 players who played in 27 different game environments, using different 15 avatars. The sample size of each parameter’s posterior distribution is 4000. Each correlation is computed using the BLUPs of the random effect of interest. For each panel, the ICC of the trait is displayed on the diagonal **A)** The left panel shows among-individual behavioural correlations on the lower off-diagonal, and residual within-individual behavioural correlations on the upper off-diagonal. **B)** The right panel displays among-environment behavioural correlations on the lower off-diagonal. The hunting behaviour names were abbreviated for simplicity", echo = FALSE}
-knitr::include_graphics(here::here("manuscript", "04_figure2.png"))
+```{r Figure 2, fig.cap = "**Figure 2. Correlations between combinations of hunting behaviours and their ICCs.** We ran the model on a sample of 70 831 matches from 2 171 players who played in 27 different game environments, using different 15 avatars. The sample size of each parameter’s posterior distribution is 4000. Each correlation is computed using the BLUPs of the random effect of interest. For each panel, the ICC of the trait is displayed on the diagonal. Black and gray circles are negative and positive correlations respectively. **A)** The left panel shows among-individual behavioural correlations on the lower off-diagonal, and residual within-individual behavioural correlations on the upper off-diagonal. **B)** The right panel displays among-environment behavioural correlations on the lower off-diagonal. The hunting behaviour names were abbreviated for simplicity", echo = FALSE}
+knitr::include_graphics(here::here("manuscript", "04_figure2_black.png"))
 ```
 
 ### (ii) Correlations between hunting behaviours
@@ -146,11 +146,11 @@ As we expected, the predators’ average travel speed and proportion of time spe
 
 ### (ii) Quadratic effect of hunting behaviour
 
-```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** The probability of capturing all four prey is on the y axis for all panels, and the standardized hunting behaviour is on the x axis. The black dashed lines represent 95% credibility intervals for the predicted values, and the green band represents the 95% prediction intervals for each trait value. **(a)**, **(b)**, **(c)** Linear relationship. **(d)**, **(e)**, **(f)** Quadratic relationship.", echo = FALSE}
-knitr::include_graphics(here::here("manuscript", "04_figure3.png"))
+```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** The probability of capturing all four prey is on the y axis for all panels, and the standardized hunting behaviour is on the x axis. The black dashed lines represent 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals for each trait value. **(a)**, **(b)**, **(c)** Linear relationship. **(d)**, **(e)**, **(f)** Quadratic relationship.", echo = FALSE}
+knitr::include_graphics(here::here("manuscript", "04_figure3_black.png"))
 ```
 
-
+(8 pages double spaced left for AmNat)
 
 
 \newpage

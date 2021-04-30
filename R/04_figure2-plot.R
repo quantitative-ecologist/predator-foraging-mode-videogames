@@ -200,6 +200,9 @@ colnames(char_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
 # 3. Create different correlation plots and save in figure 2
 # =======================================================================
 
+# --------------------------------------------------
+# Version with colors
+# --------------------------------------------------
 corrplot(id_cor_matrix, type = "full", method = "ellipse", 
                         cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
                         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
@@ -226,10 +229,37 @@ corrplot(char_cor_matrix, type = "lower", method = "ellipse",
                         mar = c(0,0,0,0))
 graph2ppt(file = "./outputs/04_figure2.pptx", 
           width = 10, height = 6, append = TRUE)
+# --------------------------------------------------
+# --------------------------------------------------
+
+
+
+# --------------------------------------------------
+# Black and gray version
+# --------------------------------------------------
+corrplot(id_cor_matrix, type = "full", method = "ellipse", 
+         cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
+         addCoef.col = "#7e7c7c", 
+         col = c("black", "lightgray"), 
+         mar = c(0,0,0,0))
+graph2ppt(file = "./outputs/04_figure2.pptx", 
+          width = 10, height = 6, append = TRUE)
+
+corrplot(map_cor_matrix, type = "full", method = "ellipse", 
+         cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
+         addCoef.col = "#7e7c7c", 
+         col = c("black", "lightgray"), 
+         mar = c(0,0,0,0))
+graph2ppt(file = "./outputs/04_figure2.pptx", 
+          width = 10, height = 6, append = TRUE)
+
+# --------------------------------------------------
+# --------------------------------------------------
 
 # =======================================================================
 # =======================================================================
-
 
 
 

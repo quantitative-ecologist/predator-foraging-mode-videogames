@@ -32,7 +32,7 @@ data <- fread("./data/02_merged-data.csv",
                          "Zprox_mid_guard", "Zspace_covered_rate",
                          "Zsurv_speed", "Zhook_start_time",
                          "Zsurv_space_covered_rate"),
-                         stringsAsFactors = TRUE)
+              stringsAsFactors = TRUE)
 
 # Load both models
 load("./outputs/03B_hunting_success_base-model.rda")
@@ -61,7 +61,7 @@ custom_theme <- theme(axis.text.x = element_text(face = "plain",
                       axis.title = element_text(size = 14, 
                                                 face = "plain"), # axis titles size
                       axis.line = element_line(size = 0.95),
-                    #  plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
+                      #  plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
                       legend.position = "none",
                       panel.grid = element_blank(),
                       panel.background = element_blank())
@@ -82,7 +82,6 @@ data[, prop_captures := hunting_success/4]
 
 # add two digits to all x axes
 scaleFUN <- function(x) sprintf("%.1f", x)
-
 # =======================================================================
 # =======================================================================
 
@@ -125,9 +124,9 @@ speed_y <- speed_mm%*%fixef(base_model)
 
 speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(base_model), speed_mm))
 speed_tvar <- speed_pvar + 
-              #summary(base_model)$spec_pars[1] +
-              VarCorr(base_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(base_model)$map_name$sd[1]^2
+  #summary(base_model)$spec_pars[1] +
+  VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 speed_newdat <- data.table(
@@ -153,7 +152,7 @@ speed <- ggplot(speed_newdat) +
   #             color = "black") +
   geom_line(aes(x = speed, y = speed_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = speed, y = speed_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -168,7 +167,7 @@ speed <- ggplot(speed_newdat) +
                   ymin = speed_tlo.Estimate,
                   ymax = speed_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-8, 4, 4),
@@ -205,9 +204,9 @@ space_y <- space_mm%*%fixef(base_model)
 # Confidence intervals
 space_pvar <- diag(space_mm %*% tcrossprod(vcov(base_model), space_mm))
 space_tvar <- space_pvar + 
-              #VarCorr(base_model)$obs$sd[1] + 
-              VarCorr(base_model)$mirrors_id$sd[1] + 
-              VarCorr(base_model)$map_name$sd[1]
+  #VarCorr(base_model)$obs$sd[1] + 
+  VarCorr(base_model)$mirrors_id$sd[1] + 
+  VarCorr(base_model)$map_name$sd[1]
 
 # Generate table
 space_newdat <- data.table(
@@ -233,7 +232,7 @@ space <- ggplot(space_newdat) +
   #               color = "black") +
   geom_line(aes(x = space, y = space_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = space, y = space_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -248,7 +247,7 @@ space <- ggplot(space_newdat) +
                   ymin = space_tlo.Estimate,
                   ymax = space_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(labels = scaleFUN) +
@@ -283,9 +282,9 @@ guard_y <- guard_mm%*%fixef(base_model)
 # Confidence intervals
 guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(base_model), guard_mm))
 guard_tvar <- guard_pvar + 
-              #VarCorr(base_model)$obs$sd[1] + 
-              VarCorr(base_model)$mirrors_id$sd[1] + 
-              VarCorr(base_model)$map_name$sd[1]
+  #VarCorr(base_model)$obs$sd[1] + 
+  VarCorr(base_model)$mirrors_id$sd[1] + 
+  VarCorr(base_model)$map_name$sd[1]
 
 # Generate table
 guard_newdat <- data.table(
@@ -311,7 +310,7 @@ guard <- ggplot(guard_newdat) +
   #              color = "black") +
   geom_line(aes(x = guard, y = guard_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = guard, y = guard_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -326,12 +325,12 @@ guard <- ggplot(guard_newdat) +
                   ymin = guard_tlo.Estimate,
                   ymax = guard_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(0, 7.5, 2.5),
                      limits = c(-1.2, 7.5)) +
-xlab("\nTime in ambush") +
+  xlab("\nTime in ambush") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
@@ -362,9 +361,9 @@ hook_y <- hook_mm%*%fixef(base_model)
 # Confidence intervals
 hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(base_model), hook_mm))
 hook_tvar <- hook_pvar + 
-              VarCorr(base_model)$obs$sd[1]^2 + 
-              VarCorr(base_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(base_model)$map_name$sd[1]^2
+  VarCorr(base_model)$obs$sd[1]^2 + 
+  VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 hook_newdat <- data.table(
@@ -385,7 +384,7 @@ hook_newdat <- data.table(
 hook <- ggplot(hook_newdat) +
   geom_line(aes(x = hook, y = hook_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = hook, y = hook_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -400,7 +399,7 @@ hook <- ggplot(hook_newdat) +
                   ymin = hook_tlo.Estimate,
                   ymax = hook_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
@@ -420,8 +419,6 @@ hook <- ggplot(hook_newdat) +
 # 4. Fixed effects plots for the quadratic model
 # =======================================================================
 
-# add two digits to all x axes
-scaleFUN <- function(x) sprintf("%.1f", x)
 
 # -----------------------------------
 # Predator average movement speed
@@ -437,45 +434,45 @@ speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 speed_mm <- model.matrix(~ 
-                          # Quadratic terms
-                          I(speed^2) +
-                          I(space^2) +
-                          I(guard^2) +
-                          I(hook^2) +
-                          I(surv_speed^2) +
-                          I(surv_space^2) +
-                          # Linear terms
-                          speed +
-                          space +
-                          guard +
-                          hook +
-                          surv_speed +
-                          surv_space +
-                          # Predator trait covariances
-                          speed : space +
-                          speed : guard +
-                          space : guard +
-                          speed : hook +
-                          space : hook +
-                          guard : hook +
-                          # Predator-prey trait covariances
-                          speed : surv_speed +
-                          speed : surv_space +
-                          space : surv_speed +
-                          space : surv_space +
-                          guard : surv_speed +
-                          guard : surv_space +
-                          hook : surv_speed +
-                          hook : surv_space, speed_dat)
+                           # Quadratic terms
+                           I(speed^2) +
+                           I(space^2) +
+                           I(guard^2) +
+                           I(hook^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
+                           # Linear terms
+                           speed +
+                           space +
+                           guard +
+                           hook +
+                           surv_speed +
+                           surv_space +
+                           # Predator trait covariances
+                           speed : space +
+                           speed : guard +
+                           space : guard +
+                           speed : hook +
+                           space : hook +
+                           guard : hook +
+                           # Predator-prey trait covariances
+                           speed : surv_speed +
+                           speed : surv_space +
+                           space : surv_speed +
+                           space : surv_space +
+                           guard : surv_speed +
+                           guard : surv_space +
+                           hook : surv_speed +
+                           hook : surv_space, speed_dat)
 # Compute fitted values
 speed_y <- speed_mm%*%fixef(quadratic_model)
 
 # Confidence intervals
 speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(quadratic_model), speed_mm))
 speed_tvar <- speed_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1]^2 + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(quadratic_model)$map_name$sd[1]^2
+  VarCorr(quadratic_model)$obs$sd[1]^2 + 
+  VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 speed_newdat <- data.table(
@@ -502,7 +499,7 @@ quad_speed <- ggplot(speed_newdat) +
   #                 color = "black") +
   geom_line(aes(x = speed, y = speed_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = speed, y = speed_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -517,7 +514,7 @@ quad_speed <- ggplot(speed_newdat) +
                   ymin = speed_tlo.Estimate,
                   ymax = speed_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-8, 4, 4),
@@ -543,45 +540,45 @@ space_dat <- data.table(speed      = mean(data$Zspeed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 space_mm <- model.matrix(~ 
-                          # Quadratic terms
-                          I(speed^2) +
-                          I(space^2) +
-                          I(guard^2) +
-                          I(hook^2) +
-                          I(surv_speed^2) +
-                          I(surv_space^2) +
-                          # Linear terms
-                          speed +
-                          space +
-                          guard +
-                          hook +
-                          surv_speed +
-                          surv_space +
-                          # Predator trait covariances
-                          speed : space +
-                          speed : guard +
-                          space : guard +
-                          speed : hook +
-                          space : hook +
-                          guard : hook +
-                          # Predator-prey trait covariances
-                          speed : surv_speed +
-                          speed : surv_space +
-                          space : surv_speed +
-                          space : surv_space +
-                          guard : surv_speed +
-                          guard : surv_space +
-                          hook : surv_speed +
-                          hook : surv_space, space_dat)
+                           # Quadratic terms
+                           I(speed^2) +
+                           I(space^2) +
+                           I(guard^2) +
+                           I(hook^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
+                           # Linear terms
+                           speed +
+                           space +
+                           guard +
+                           hook +
+                           surv_speed +
+                           surv_space +
+                           # Predator trait covariances
+                           speed : space +
+                           speed : guard +
+                           space : guard +
+                           speed : hook +
+                           space : hook +
+                           guard : hook +
+                           # Predator-prey trait covariances
+                           speed : surv_speed +
+                           speed : surv_space +
+                           space : surv_speed +
+                           space : surv_space +
+                           guard : surv_speed +
+                           guard : surv_space +
+                           hook : surv_speed +
+                           hook : surv_space, space_dat)
 # Compute fitted values
 space_y <- space_mm%*%fixef(quadratic_model)
 
 # Confidence intervals
 space_pvar <- diag(space_mm %*% tcrossprod(vcov(quadratic_model), space_mm))
 space_tvar <- space_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1]^2 + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(quadratic_model)$map_name$sd[1]^2
+  VarCorr(quadratic_model)$obs$sd[1]^2 + 
+  VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 space_newdat <- data.table(
@@ -608,7 +605,7 @@ quad_space <- ggplot(space_newdat) +
   #               color = "black") +
   geom_line(aes(x = space, y = space_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = space, y = space_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -623,7 +620,7 @@ quad_space <- ggplot(space_newdat) +
                   ymin = space_tlo.Estimate,
                   ymax = space_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(labels = scaleFUN) +
@@ -647,45 +644,45 @@ guard_dat <- data.table(speed      = mean(data$Zspeed),
                         surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 guard_mm <- model.matrix(~ 
-                          # Quadratic terms
-                          I(speed^2) +
-                          I(space^2) +
-                          I(guard^2) +
-                          I(hook^2) +
-                          I(surv_speed^2) +
-                          I(surv_space^2) +
-                          # Linear terms
-                          speed +
-                          space +
-                          guard +
-                          hook +
-                          surv_speed +
-                          surv_space +
-                          # Predator trait covariances
-                          speed : space +
-                          speed : guard +
-                          space : guard +
-                          speed : hook +
-                          space : hook +
-                          guard : hook +
-                          # Predator-prey trait covariances
-                          speed : surv_speed +
-                          speed : surv_space +
-                          space : surv_speed +
-                          space : surv_space +
-                          guard : surv_speed +
-                          guard : surv_space +
-                          hook : surv_speed +
-                          hook : surv_space, guard_dat)
+                           # Quadratic terms
+                           I(speed^2) +
+                           I(space^2) +
+                           I(guard^2) +
+                           I(hook^2) +
+                           I(surv_speed^2) +
+                           I(surv_space^2) +
+                           # Linear terms
+                           speed +
+                           space +
+                           guard +
+                           hook +
+                           surv_speed +
+                           surv_space +
+                           # Predator trait covariances
+                           speed : space +
+                           speed : guard +
+                           space : guard +
+                           speed : hook +
+                           space : hook +
+                           guard : hook +
+                           # Predator-prey trait covariances
+                           speed : surv_speed +
+                           speed : surv_space +
+                           space : surv_speed +
+                           space : surv_space +
+                           guard : surv_speed +
+                           guard : surv_space +
+                           hook : surv_speed +
+                           hook : surv_space, guard_dat)
 # Compute fitted values
 guard_y <- guard_mm%*%fixef(quadratic_model)
 
 # Confidence intervals
 guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(quadratic_model), guard_mm))
 guard_tvar <- guard_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1]^2 + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(quadratic_model)$map_name$sd[1]^2
+  VarCorr(quadratic_model)$obs$sd[1]^2 + 
+  VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 guard_newdat <- data.table(
@@ -712,7 +709,7 @@ quad_guard <- ggplot(guard_newdat) +
   #              color = "black") +
   geom_line(aes(x = guard, y = guard_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = guard, y = guard_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -727,7 +724,7 @@ quad_guard <- ggplot(guard_newdat) +
                   ymin = guard_tlo.Estimate,
                   ymax = guard_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(0, 7.5, 2.5),
@@ -788,9 +785,9 @@ hook_y <- hook_mm%*%fixef(quadratic_model)
 # Confidence intervals
 hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(quadratic_model), hook_mm))
 hook_tvar <- hook_pvar + 
-              VarCorr(quadratic_model)$obs$sd[1]^2 + 
-              VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
-              VarCorr(quadratic_model)$map_name$sd[1]^2
+  VarCorr(quadratic_model)$obs$sd[1]^2 + 
+  VarCorr(quadratic_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(quadratic_model)$map_name$sd[1]^2
 
 # Generate table
 hook_newdat <- data.table(
@@ -811,7 +808,7 @@ hook_newdat <- data.table(
 quad_hook <- ggplot(hook_newdat) +
   geom_line(aes(x = hook, y = hook_y.Estimate),
             size = 1.5,
-            color = "#3CBC75FF") +
+            color = "darkgray") +
   geom_line(aes(x = hook, y = hook_plo.Estimate),
             linetype = "dashed",
             size = 1,
@@ -826,7 +823,7 @@ quad_hook <- ggplot(hook_newdat) +
                   ymin = hook_tlo.Estimate,
                   ymax = hook_thi.Estimate),
               alpha = 0.2,
-              fill = "#3CBC75FF") +
+              fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
                      limits = c(0, 1)) +
   scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
@@ -873,7 +870,7 @@ panel_plot <- annotate_figure(panel_plot,
                                                size = 14,
                                                hjust = 1.7, vjust = 2.1))
 
-ggexport(panel_plot, filename = "./outputs/04_figure3.png",
+ggexport(panel_plot, filename = "./outputs/04_figure3_black.png",
          width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
 # =======================================================================
 # =======================================================================
