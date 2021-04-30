@@ -37,7 +37,6 @@ data <- fread("./data/02_merged-data.csv",
 # Load both models
 load("./outputs/03B_hunting_success_base-model.rda")
 load("./outputs/03C_hunting_success_quadratic-model.rda")
-load("./outputs/03C_hunting_success_quadratic-model1.rda")
 # =======================================================================
 # =======================================================================
 
@@ -143,36 +142,36 @@ speed_newdat <- data.table(
 
 # Plot for predator speed
 speed <- ggplot(speed_newdat) +
-          #geom_point(data = data,
-          #             aes(x = Zspeed, y = prop_captures),
-          #             shape = 16, 
-          #             alpha = 0.1, 
-          #             color = "black") +
-            geom_line(aes(x = speed, y = speed_y.Estimate),
-                      size = 1.5,
-                      color = "#3CBC75FF") +
-            geom_line(aes(x = speed, y = speed_plo.Estimate),
-                      linetype = "dashed",
-                      size = 1,
-                      color = "black") +
-            geom_line(data = speed_newdat,
-                      aes(x = speed, y = speed_phi.Estimate),
-                      linetype = "dashed",
-                      size = 1, 
-                      color = "black") +
-            geom_ribbon(data = speed_newdat,
-                        aes(x = speed,
-                            ymin = speed_tlo.Estimate,
-                            ymax = speed_thi.Estimate),
-                        alpha = 0.2,
-                        fill = "#3CBC75FF") +
-            scale_y_continuous(breaks = seq(0, 1, .25),
-                               limits = c(0, 1)) +
-            scale_x_continuous(breaks = seq(-8, 4, 4),
-                               limits = c(-8, 4.8)) +
-            xlab("\nSpeed") +
-            ylab("") +
-            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+  #geom_point(data = data,
+  #             aes(x = Zspeed, y = prop_captures),
+  #             shape = 16, 
+  #             alpha = 0.1, 
+  #             color = "black") +
+  geom_line(aes(x = speed, y = speed_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = speed, y = speed_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = speed_newdat,
+            aes(x = speed, y = speed_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = speed_newdat,
+              aes(x = speed,
+                  ymin = speed_tlo.Estimate,
+                  ymax = speed_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(-8, 4, 4),
+                     limits = c(-8, 4.8)) +
+  xlab("\nSpeed") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 # -----------------------------------
 
 
@@ -222,34 +221,34 @@ space_newdat <- data.table(
 
 # Plot for predator space
 space <- ggplot(space_newdat) +
-        #  geom_point(data = data[Zspace_covered_rate <= 5],
-        #               aes(x = Zspace_covered_rate, y = prop_captures),
-        #               shape = 16, 
-        #               alpha = 0.1, 
-        #               color = "black") +
-          geom_line(aes(x = space, y = space_y.Estimate),
-                    size = 1.5,
-                    color = "#3CBC75FF") +
-          geom_line(aes(x = space, y = space_plo.Estimate),
-                    linetype = "dashed",
-                    size = 1,
-                    color = "black") +
-          geom_line(data = space_newdat,
-                    aes(x = space, y = space_phi.Estimate),
-                    linetype = "dashed",
-                    size = 1, 
-                    color = "black") +
-          geom_ribbon(data = space_newdat,
-                      aes(x = space,
-                          ymin = space_tlo.Estimate,
-                          ymax = space_thi.Estimate),
-                      alpha = 0.2,
-                      fill = "#3CBC75FF") +
-          scale_y_continuous(breaks = seq(0, 1, .25),
-                             limits = c(0, 1)) +
-          xlab("\nSpace") +
-          ylab("") +
-          custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  #  geom_point(data = data[Zspace_covered_rate <= 5],
+  #               aes(x = Zspace_covered_rate, y = prop_captures),
+  #               shape = 16, 
+  #               alpha = 0.1, 
+  #               color = "black") +
+  geom_line(aes(x = space, y = space_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = space, y = space_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = space_newdat,
+            aes(x = space, y = space_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = space_newdat,
+              aes(x = space,
+                  ymin = space_tlo.Estimate,
+                  ymax = space_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  xlab("\nSpace") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
 
@@ -299,34 +298,36 @@ guard_newdat <- data.table(
 
 # Plot for predator guard
 guard <- ggplot(guard_newdat) +
-         #   geom_point(data = data[Zprox_mid_guard <= 7],
-         #              aes(x = Zprox_mid_guard, y = prop_captures),
-         #              shape = 16, 
-         #              alpha = 0.1, 
-         #              color = "black") +
-            geom_line(aes(x = guard, y = guard_y.Estimate),
-                      size = 1.5,
-                      color = "#3CBC75FF") +
-            geom_line(aes(x = guard, y = guard_plo.Estimate),
-                      linetype = "dashed",
-                      size = 1,
-                      color = "black") +
-            geom_line(data = guard_newdat,
-                      aes(x = guard, y = guard_phi.Estimate),
-                      linetype = "dashed",
-                      size = 1, 
-                      color = "black") +
-            geom_ribbon(data = guard_newdat,
-                        aes(x = guard, 
-                            ymin = guard_tlo.Estimate,
-                            ymax = guard_thi.Estimate),
-                        alpha = 0.2,
-                        fill = "#3CBC75FF") +
-            scale_y_continuous(breaks = seq(0, 1, .25),
-                               limits = c(0, 1)) +
-            xlab("\nTime in ambush") +
-            ylab("") +
-            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  #   geom_point(data = data[Zprox_mid_guard <= 7],
+  #              aes(x = Zprox_mid_guard, y = prop_captures),
+  #              shape = 16, 
+  #              alpha = 0.1, 
+  #              color = "black") +
+  geom_line(aes(x = guard, y = guard_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = guard, y = guard_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = guard_newdat,
+            aes(x = guard, y = guard_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = guard_newdat,
+              aes(x = guard, 
+                  ymin = guard_tlo.Estimate,
+                  ymax = guard_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 7.5, 2.5),
+                     limits = c(-1.2, 7.5)) +
+xlab("\nTime in ambush") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
 
@@ -376,30 +377,32 @@ hook_newdat <- data.table(
 
 # Plot for predator guard
 hook <- ggplot(hook_newdat) +
-            geom_line(aes(x = hook, y = hook_y.Estimate),
-                      size = 1.5,
-                      color = "#3CBC75FF") +
-            geom_line(aes(x = hook, y = hook_plo.Estimate),
-                      linetype = "dashed",
-                      size = 1,
-                      color = "black") +
-            geom_line(data = hook_newdat,
-                      aes(x = hook, y = hook_phi.Estimate),
-                      linetype = "dashed",
-                      size = 1, 
-                      color = "black") +
-            geom_ribbon(data = hook_newdat,
-                        aes(x = hook, 
-                            ymin = hook_tlo.Estimate,
-                            ymax = hook_thi.Estimate),
-                        alpha = 0.2,
-                        fill = "#3CBC75FF") +
-            scale_y_continuous(breaks = seq(0, 1, .25),
-                               limits = c(0, 1)) +
-            xlab(expression(
-              paste("Time for ", 1^st, "capture", sep = ""))) +
-            ylab("") +
-            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  geom_line(aes(x = hook, y = hook_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = hook, y = hook_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = hook_newdat,
+            aes(x = hook, y = hook_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = hook_newdat,
+              aes(x = hook, 
+                  ymin = hook_tlo.Estimate,
+                  ymax = hook_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
+                     limits = c(-1.5, 4.5)) +
+  xlab(expression(
+    paste("Time for ", 1^st, "capture", sep = ""))) +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # =======================================================================
 # =======================================================================
 
@@ -410,6 +413,10 @@ hook <- ggplot(hook_newdat) +
 # =======================================================================
 # 4. Fixed effects plots for the quadratic model
 # =======================================================================
+
+# add two digits to all x axes
+scaleFUN <- function(x) sprintf("%.1f", x)
+
 # -----------------------------------
 # Predator average movement speed
 # -----------------------------------
@@ -482,36 +489,36 @@ speed_newdat <- data.table(
 
 # Plot for predator speed^2
 quad_speed <- ggplot(speed_newdat) +
-            #    geom_point(data = data,
-            #                 aes(x = Zspeed, y = prop_captures),
-            #                 shape = 16, 
-            #                 alpha = 0.1, 
-            #                 color = "black") +
-                  geom_line(aes(x = speed, y = speed_y.Estimate),
-                            size = 1.5,
-                            color = "#3CBC75FF") +
-                  geom_line(aes(x = speed, y = speed_plo.Estimate),
-                            linetype = "dashed",
-                            size = 1,
-                            color = "black") +
-                  geom_line(data = speed_newdat,
-                            aes(x = speed, y = speed_phi.Estimate),
-                            linetype = "dashed",
-                            size = 1, 
-                            color = "black") +
-                  geom_ribbon(data = speed_newdat,
-                              aes(x = speed,
-                                  ymin = speed_tlo.Estimate,
-                                  ymax = speed_thi.Estimate),
-                              alpha = 0.2,
-                              fill = "#3CBC75FF") +
-                  scale_y_continuous(breaks = seq(0, 1, .25),
-                                     limits = c(0, 1)) +
-                  scale_x_continuous(breaks = seq(-8, 4, 4),
-                                     limits = c(-8, 4.8)) +
-                  xlab("\nSpeed") +
-                  ylab("") +
-                  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+  #    geom_point(data = data,
+  #                 aes(x = Zspeed, y = prop_captures),
+  #                 shape = 16, 
+  #                 alpha = 0.1, 
+  #                 color = "black") +
+  geom_line(aes(x = speed, y = speed_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = speed, y = speed_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = speed_newdat,
+            aes(x = speed, y = speed_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = speed_newdat,
+              aes(x = speed,
+                  ymin = speed_tlo.Estimate,
+                  ymax = speed_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(-8, 4, 4),
+                     limits = c(-8, 4.8)) +
+  xlab("\nSpeed") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 # -----------------------------------
 
 
@@ -587,34 +594,35 @@ space_newdat <- data.table(
 
 # Plot for predator space^2
 quad_space <- ggplot(space_newdat) +
-            #    geom_point(data = data[Zspace_covered_rate <= 5],
-            #               aes(x = Zspace_covered_rate, y = prop_captures),
-            #               shape = 16, 
-            #               alpha = 0.1, 
-            #               color = "black") +
-                geom_line(aes(x = space, y = space_y.Estimate),
-                          size = 1.5,
-                          color = "#3CBC75FF") +
-                geom_line(aes(x = space, y = space_plo.Estimate),
-                          linetype = "dashed",
-                          size = 1,
-                          color = "black") +
-                geom_line(data = space_newdat,
-                          aes(x = space, y = space_phi.Estimate),
-                          linetype = "dashed",
-                          size = 1, 
-                          color = "black") +
-                geom_ribbon(data = space_newdat,
-                            aes(x = space,
-                                ymin = space_tlo.Estimate,
-                                ymax = space_thi.Estimate),
-                            alpha = 0.2,
-                            fill = "#3CBC75FF") +
-                 scale_y_continuous(breaks = seq(0, 1, .25),
-                                    limits = c(0, 1)) +
-                xlab("\nSpace") +
-                ylab("") +
-                custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  #    geom_point(data = data[Zspace_covered_rate <= 5],
+  #               aes(x = Zspace_covered_rate, y = prop_captures),
+  #               shape = 16, 
+  #               alpha = 0.1, 
+  #               color = "black") +
+  geom_line(aes(x = space, y = space_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = space, y = space_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = space_newdat,
+            aes(x = space, y = space_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = space_newdat,
+              aes(x = space,
+                  ymin = space_tlo.Estimate,
+                  ymax = space_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(labels = scaleFUN) +
+  xlab("\nSpace") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
 
@@ -690,40 +698,39 @@ guard_newdat <- data.table(
 
 # Plot for predator guard^2
 quad_guard <- ggplot(guard_newdat) +
-             #   geom_point(data = data[Zprox_mid_guard <= 7],
-             #              aes(x = Zprox_mid_guard, y = prop_captures),
-             #              shape = 16, 
-             #              alpha = 0.1, 
-             #              color = "black") +
-                geom_line(aes(x = guard, y = guard_y.Estimate),
-                          size = 1.5,
-                          color = "#3CBC75FF") +
-                geom_line(aes(x = guard, y = guard_plo.Estimate),
-                          linetype = "dashed",
-                          size = 1,
-                          color = "black") +
-                geom_line(data = guard_newdat,
-                          aes(x = guard, y = guard_phi.Estimate),
-                          linetype = "dashed",
-                          size = 1, 
-                          color = "black") +
-                geom_ribbon(data = guard_newdat,
-                            aes(x = guard,
-                                ymin = guard_tlo.Estimate,
-                                ymax = guard_thi.Estimate),
-                            alpha = 0.2,
-                            fill = "#3CBC75FF") +
-                scale_y_continuous(breaks = seq(0, 1, .25),
-                                   limits = c(0, 1)) +
-                xlab("\nTime in ambush") +
-                ylab("") +
-                custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  #   geom_point(data = data[Zprox_mid_guard <= 7],
+  #              aes(x = Zprox_mid_guard, y = prop_captures),
+  #              shape = 16, 
+  #              alpha = 0.1, 
+  #              color = "black") +
+  geom_line(aes(x = guard, y = guard_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = guard, y = guard_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = guard_newdat,
+            aes(x = guard, y = guard_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = guard_newdat,
+              aes(x = guard,
+                  ymin = guard_tlo.Estimate,
+                  ymax = guard_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 7.5, 2.5),
+                     limits = c(-1.2, 7.5)) +
+  xlab("\nTime in ambush") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 # -----------------------------------
 
-expression(paste(
-  "Surface area concentration (",
-  mu, m^2, "/", m^3,
-  ")", sep="")))
+
 # -----------------------------------
 # Predator time before 1st capture
 # -----------------------------------
@@ -795,30 +802,32 @@ hook_newdat <- data.table(
 
 # Plot for predator guard
 quad_hook <- ggplot(hook_newdat) +
-            geom_line(aes(x = hook, y = hook_y.Estimate),
-                      size = 1.5,
-                      color = "#3CBC75FF") +
-            geom_line(aes(x = hook, y = hook_plo.Estimate),
-                      linetype = "dashed",
-                      size = 1,
-                      color = "black") +
-            geom_line(data = hook_newdat,
-                      aes(x = hook, y = hook_phi.Estimate),
-                      linetype = "dashed",
-                      size = 1, 
-                      color = "black") +
-            geom_ribbon(data = hook_newdat,
-                        aes(x = hook, 
-                            ymin = hook_tlo.Estimate,
-                            ymax = hook_thi.Estimate),
-                        alpha = 0.2,
-                        fill = "#3CBC75FF") +
-            scale_y_continuous(breaks = seq(0, 1, .25),
-                               limits = c(0, 1)) +
-            xlab(expression(
-              paste("Time for ", 1^st, "capture", sep=""))) +
-            ylab("") +
-            custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+  geom_line(aes(x = hook, y = hook_y.Estimate),
+            size = 1.5,
+            color = "#3CBC75FF") +
+  geom_line(aes(x = hook, y = hook_plo.Estimate),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = hook_newdat,
+            aes(x = hook, y = hook_phi.Estimate),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(data = hook_newdat,
+              aes(x = hook, 
+                  ymin = hook_tlo.Estimate,
+                  ymax = hook_thi.Estimate),
+              alpha = 0.2,
+              fill = "#3CBC75FF") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
+                     limits = c(-1.5, 4.5)) +
+  xlab(expression(
+    paste("Time for ", 1^st, "capture", sep=""))) +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 
 # =======================================================================
 # =======================================================================
@@ -857,7 +866,7 @@ panel_plot <- annotate_figure(panel_plot,
                                                size = 14,
                                                hjust = 1.7, vjust = 2.1))
 
-ggexport(panel_plot, filename = "./outputs/04_figure3.tiff",
+ggexport(panel_plot, filename = "./outputs/04_figure3.png",
          width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
 # =======================================================================
 # =======================================================================
