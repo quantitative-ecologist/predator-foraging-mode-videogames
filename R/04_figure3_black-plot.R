@@ -50,15 +50,15 @@ load("./outputs/03C_hunting_success_quadratic-model.rda")
 
 # Set custom theme for plots
 custom_theme <- theme(axis.text.x = element_text(face = "plain", 
-                                                 size = 14,
+                                                 size = 15,
                                                  color = "black"), # axis tick numbers size
                       axis.text.y = element_text(face = "plain", 
-                                                 size = 14,
+                                                 size = 15,
                                                  color = "black"),
                       axis.ticks.length = unit(.15, "cm"), # axis ticks lenght
                       axis.ticks = element_line(size = 0.90, 
                                                 color = "black"), # axis ticks width
-                      axis.title = element_text(size = 14, 
+                      axis.title = element_text(size = 15, 
                                                 face = "plain"), # axis titles size
                       axis.line = element_line(size = 0.95),
                       #  plot.margin = unit(c(2, 1.2, 2, 2), "lines"),
@@ -855,19 +855,19 @@ panel_plot <- ggarrange(speed,
                         ncol = 4, nrow = 2,
                         widths = c(2.8, 2.5, 2.5, 2.5),
                         heights = c(2.8, 2.8, 2.8, 2.8),
-                        labels = c("(a)", "(b)", "(c)", "(d)",
-                                   "(d)", "(e)", "(f)", "(g)"))
+                        labels = c("(A)", "(B)", "(C)", "(D)",
+                                   "(E)", "(F)", "(G)", "(H)"))
 # Upper y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
                                                rot = 90,
-                                               size = 14,
-                                               hjust = -1.23, vjust = 0.5)) #-0.6
+                                               size = 15,
+                                               hjust = -1.00, vjust = 0.5)) #-1.23 with police size = 14
 # lower y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
                                                rot = 90,
-                                               size = 14,
+                                               size = 15,
                                                hjust = 1.7, vjust = 2.1))
 
 ggexport(panel_plot, filename = "./outputs/04_figure3_black.png",

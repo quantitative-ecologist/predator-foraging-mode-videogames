@@ -142,13 +142,18 @@ As we expected, the predators’ average travel speed and proportion of time spe
 
 ## (b) Effect of hunting behaviour on prey capture
 
-### (i) Linear effect of hunting behaviour
+### (i) Relationship between predator behaviour and hunting success
 
-### (ii) Quadratic effect of hunting behaviour
-
-```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** The probability of capturing all four prey is on the y axis for all panels, and the standardized hunting behaviour is on the x axis. The black dashed lines represent 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals for each trait value. **(a)**, **(b)**, **(c)** Linear relationship. **(d)**, **(e)**, **(f)** Quadratic relationship.", echo = FALSE}
+```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** The probability of capturing all four prey is on the y axis for all panels, and the standardized hunting behaviour is on the x axis. The black dashed lines represent 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals for each trait value. We ran the model on a sample of 70 831 matches from 2 171 players who played in 27 different game environments. The sample size of each parameter’s posterior distribution is x. **(a)**, **(b)**, **(c)** Linear relationship. **(d)**, **(e)**, **(f)** Quadratic relationship.", echo = FALSE}
 knitr::include_graphics(here::here("manuscript", "04_figure3_black.png"))
 ```
+
+### (ii) Correlated effects of predator and prey behaviour on predator hunting success
+
+```{r Figure 4, fig.cap = "**Figure 4. Correlated effect of predator and prey behaviour on predator hunting success.** We ran the model on a sample of 70 831 matches from 2 171 players who played in 27 different game environments. The sample size of each parameter’s posterior distribution is x. **A)** Predator speed and. **B)** Predator and prey. **C)** blabla. **D)** blabla. **E)** blabla. **F)** blabla. EXPLAIN TRAIT Abbreviations", echo = FALSE}
+knitr::include_graphics(here::here("manuscript", "04_figure4.png"))
+```
+
 
 (8 pages double spaced left for AmNat)
 
