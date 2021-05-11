@@ -37,9 +37,8 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.cs
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
-                         "Zsurv_speed", "Zhook_start_time",
-                         "Zsurv_space_covered_rate"),
-                         stringsAsFactors = TRUE)
+                         "Zhook_start_time"),
+              stringsAsFactors = TRUE)
 
 # Add observation-level random effect
 data$obs <- 1:nrow(data)
@@ -65,8 +64,6 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         Zspace_covered_rate +
                                         Zprox_mid_guard +
                                         Zhook_start_time +
-                                        Zsurv_speed +
-                                        Zsurv_space_covered_rate +
                                         (1 | map_name) +
                                         (1 | mirrors_id) +
                                         (1 | obs))
@@ -93,23 +90,23 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 system.time(base_model <- brm(formula = model_formula,
                               family = binomial(link = "logit"),
                               warmup = 3000, 
-                              iter = 153000,
+                              iter = 103000,
                               thin = 100,
                               chains = 4, 
                               inits = "0", 
                               threads = threading(10),
                               backend = "cmdstanr",
-                              seed = 20210414,
+                              seed = 20210510,
                               prior = priors,
                               control = list(adapt_delta = 0.95),
                               data = data))
 
-save(base_model, file = "03B_hunting_success_base_model.rda")
+saveRDS(base_model, file = "03B_hunting_success_base-model1.rds")
 
 
 # Save session info for reproducibility
-session <- sessionInfo()
-capture.output(session, file = "03B_sessioninfo.txt")
+#session <- sessionInfo()
+#capture.output(session, file = "03B_sessioninfo.txt")
 
 # =======================================================================
 # =======================================================================
