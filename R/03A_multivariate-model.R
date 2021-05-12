@@ -30,7 +30,7 @@ library(brms)
 library(parallel)
 
 # import dataset
-data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
+data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data.csv",
               select = c("mirrors_id", "match_id", "character_name",
                          "map_name", "hunting_success", "sqrtspeed", 
                          "sqrtspace_covered_rate", "sqrtprox_mid_guard",

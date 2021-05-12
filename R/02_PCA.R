@@ -36,7 +36,7 @@ library(ggpubr)
 # =========================================================================
 # Full centered data matrix
 # Load original data
-game_data <- fread("./data/02_merged-data.csv")
+game_data <- fread("./data/merged-data.csv")
 
 # Select column to be analyzed
 full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 78:79)]

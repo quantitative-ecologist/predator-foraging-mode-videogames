@@ -33,7 +33,7 @@ library(cmdstanr)
 #setwd("/home/maxime11/projects/def-monti/maxime11/scripts")
 
 # Load dataset
-data <- fread("/home/maxime11/projects/def-monti/maxime11/data/02_merged-data.csv",
+data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",

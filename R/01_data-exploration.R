@@ -21,7 +21,7 @@ library(cowplot)
 library(lattice)
 
 # import the merged dataset
-data <- fread("./data/02_merged-data.csv",
+data <- fread("./data/merged-data.csv",
               stringsAsFactors = TRUE)
 
 # =======================================================================

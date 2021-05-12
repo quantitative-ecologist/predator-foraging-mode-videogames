@@ -24,7 +24,7 @@ library(bayesplot)
 library(broom.helpers)
 
 # Load dataset
-data <- fread("./data/02_merged-data.csv",
+data <- fread("./data/merged-data.csv",
               select = c("mirrors_id", "match_id", "character_name",
                          "map_name", "hunting_success", "sqrtspeed", 
                          "sqrtprox_mid_guard", "sqrtspace_covered_rate",

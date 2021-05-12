@@ -4,12 +4,13 @@
 .Ruserdata
 >>>>>>> parent of f4a7c7b (no base_model in git because file too large)
 outputs/03A_multivariate-model.rda
-outputs/03B_hunting_success_base-model1.rda
+outputs/03B_hunting_success_base-model1.rds
 outputs/03B_hunting_success_base-model2.rda
 outputs/03C_hunting_success_quadratic-model.rda
 outputs/03C_hunting_success_quadratic-model1.rda
 outputs/base_beta-model.rda
 data/02_merged-data.csv
+data/merged-data.csv
 tests
 tests/test.R
 tests/test.sh

@@ -26,7 +26,7 @@ library(ggpubr)
 #library(tidyr)
 
 # Load dataset
-data <- fread("./data/02_merged-data.csv",
+data <- fread("./data/merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
@@ -35,7 +35,7 @@ data <- fread("./data/02_merged-data.csv",
               stringsAsFactors = TRUE)
 
 # Load both models
-load("./outputs/03B_hunting_success_base-model.rda")
+load("./outputs/03B_hunting_success_base-model1.rda")
 load("./outputs/03C_hunting_success_quadratic-model.rda")
 # =======================================================================
 # =======================================================================

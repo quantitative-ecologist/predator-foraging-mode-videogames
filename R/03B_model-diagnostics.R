@@ -24,7 +24,7 @@ library(rstan)
 library(bayesplot)
 
 # Load dataset
-data <- fread("./data/02_merged-data.csv",
+data <- fread("./data/merged-data.csv",
               select = c("mirrors_id", "match_id", 
                          "map_name", "hunting_success", "Zspeed", 
                          "Zprox_mid_guard", "Zspace_covered_rate",
