@@ -9,8 +9,8 @@ outputs/03B_hunting_success_base-model2.rda
 outputs/03C_hunting_success_quadratic-model.rda
 outputs/03C_hunting_success_quadratic-model1.rda
 outputs/base_beta-model.rda
-data/02_merged-data.csv
 data/merged-data.csv
+data/clean_map-data.csv
 tests
 tests/test.R
 tests/test.sh
@@ -19,4 +19,3 @@ tests/beta-binom_base.R
 tests/beta-binom_base.sh
 tests/beta-binom_quad.R
 tests/beta-binom_quad.sh
-outputs/03B_hunting_success_quadratic_model1.rda
