@@ -102,16 +102,17 @@ speed_dat <- data.table(speed      = seq(min(data$Zspeed),
                                          length.out = 100),
                         space      = mean(data$Zspace_covered_rate),
                         guard      = mean(data$Zprox_mid_guard),
-                        hook       = mean(data$Zhook_start_time),
-                        surv_speed = mean(data$Zsurv_speed),
-                        surv_space = mean(data$Zsurv_space_covered_rate))
+                        hook       = mean(data$Zhook_start_time))
+                      #  surv_speed = mean(data$Zsurv_speed),
+                      #  surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 speed_mm <- model.matrix(~ speed + 
                            space + 
                            guard + 
-                           hook +
-                           surv_speed + 
-                           surv_space, speed_dat)
+                           hook,
+                           #surv_speed + 
+                           #surv_space, 
+                           speed_dat)
 # Compute fitted values
 speed_y <- speed_mm%*%fixef(base_model)
 
@@ -134,8 +135,8 @@ speed_newdat <- data.table(
   space = speed_dat$space,
   guard = speed_dat$guard,
   hook = speed_dat$hook,
-  surv_speed = speed_dat$surv_speed,
-  surv_space = speed_dat$surv_space,
+#  surv_speed = speed_dat$surv_speed,
+#  surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
   speed_plo = plogis(speed_y - 1.96 * sqrt(speed_pvar)),
   speed_phi = plogis(speed_y + 1.96 * sqrt(speed_pvar)),
@@ -188,16 +189,17 @@ space_dat <- data.table(speed      = mean(data$Zspeed),
                                          5,
                                          length.out = 100),           
                         guard      = mean(data$Zprox_mid_guard), 
-                        hook       = mean(data$Zhook_start_time),            
-                        surv_speed = mean(data$Zsurv_speed),            
-                        surv_space = mean(data$Zsurv_space_covered_rate))
+                        hook       = mean(data$Zhook_start_time))            
+                        #surv_speed = mean(data$Zsurv_speed),            
+                        #surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 space_mm <- model.matrix(~ speed + 
                            space + 
                            guard + 
-                           hook +
-                           surv_speed + 
-                           surv_space, space_dat)
+                           hook,
+                           #surv_speed + 
+                           #surv_space, 
+                         space_dat)
 # Compute fitted values
 space_y <- space_mm%*%fixef(base_model)
 
@@ -214,8 +216,8 @@ space_newdat <- data.table(
   space = space_dat$space,
   guard = space_dat$guard,
   hook = space_dat$hook,
-  surv_speed = space_dat$surv_speed,
-  surv_space = space_dat$surv_space,
+#  surv_speed = space_dat$surv_speed,
+#  surv_space = space_dat$surv_space,
   space_y = plogis(space_y),
   space_plo = plogis(space_y - 1.96 * sqrt(space_pvar)),
   space_phi = plogis(space_y + 1.96 * sqrt(space_pvar)),
@@ -266,16 +268,17 @@ guard_dat <- data.table(speed      = mean(data$Zspeed),
                         guard      = seq(min(data$Zprox_mid_guard), 
                                          7,
                                          length.out = 100),
-                        hook       = mean(data$Zhook_start_time),
-                        surv_speed = mean(data$Zsurv_speed),
-                        surv_space = mean(data$Zsurv_space_covered_rate))
+                        hook       = mean(data$Zhook_start_time))
+                        #surv_speed = mean(data$Zsurv_speed),
+                        #surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 guard_mm <- model.matrix(~ speed +
                            space +
                            guard +
-                           hook +
-                           surv_speed +
-                           surv_space, guard_dat)
+                           hook,
+                          # surv_speed +
+                          # surv_space, 
+                           guard_dat)
 # Compute fitted values
 guard_y <- guard_mm%*%fixef(base_model)
 
@@ -292,8 +295,8 @@ guard_newdat <- data.table(
   space = guard_dat$space,
   guard = guard_dat$guard,
   hook = guard_dat$hook,
-  surv_speed = guard_dat$surv_speed,
-  surv_space = guard_dat$surv_space,
+#  surv_speed = guard_dat$surv_speed,
+#  surv_space = guard_dat$surv_space,
   guard_y = plogis(guard_y),
   guard_plo = plogis(guard_y - 1.96 * sqrt(guard_pvar)),
   guard_phi = plogis(guard_y + 1.96 * sqrt(guard_pvar)),
@@ -345,16 +348,17 @@ hook_dat <- data.table(speed      = mean(data$Zspeed),
                        guard      = mean(data$Zprox_mid_guard),
                        hook       = seq(min(data$Zhook_start_time),
                                         max(data$Zhook_start_time),
-                                        length.out = 100),
-                       surv_speed = mean(data$Zsurv_speed),
-                       surv_space = mean(data$Zsurv_space_covered_rate))
+                                        length.out = 100))
+                      # surv_speed = mean(data$Zsurv_speed),
+                      # surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 hook_mm <- model.matrix(~ speed +
                           space +
                           guard +
-                          hook +
-                          surv_speed +
-                          surv_space, hook_dat)
+                          hook,
+                         # surv_speed +
+                         # surv_space, 
+                        hook_dat)
 # Compute fitted values
 hook_y <- hook_mm%*%fixef(base_model)
 
@@ -371,8 +375,8 @@ hook_newdat <- data.table(
   space = hook_dat$space,
   guard = hook_dat$guard,
   hook = hook_dat$hook,
-  surv_speed = hook_dat$surv_speed,
-  surv_space = hook_dat$surv_space,
+#  surv_speed = hook_dat$surv_speed,
+#  surv_space = hook_dat$surv_space,
   hook_y = plogis(hook_y),
   hook_plo = plogis(hook_y - 1.96 * sqrt(hook_pvar)),
   hook_phi = plogis(hook_y + 1.96 * sqrt(hook_pvar)),
