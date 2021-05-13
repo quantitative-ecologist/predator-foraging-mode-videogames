@@ -5,9 +5,10 @@
 ############################################################################
 
 # Code to run the linear hunting success analysis
-# This script was run on Calcul Canada's supercomputer Beluga
+# This script was run on Calcul Canada's Cedar supercomputer
 
-# This model quantifies the relationship between hunting behaviour and hunting success. Hunting success = number of prey captured.
+# This model quantifies the relationship between hunting behaviour and hunting success. 
+# Hunting success = number of prey captured.
 
 # Contact: maxime.fraser.franco@hotmail.com
 # Département des Sciences Biologiques, UQAM, Montréal, Québec
