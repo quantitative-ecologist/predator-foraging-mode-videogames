@@ -32,8 +32,10 @@ data <- fread("./data/merged-data.csv",
                          stringsAsFactors = TRUE)
 
 # Load model
-load("./outputs/03B_hunting_success_base-model1.rda")
-base_model2 <- readRDS("./outputs/03B_hunting_success_base-model2.rds")
+base_model1 <- readRDS("./outputs/03B_hunting_success_base-model1.rds")
+load("./outputs/03B_hunting_success_base-model2.rda")
+base_model2 <- base_model
+rm(base_model)
 # =======================================================================
 # =======================================================================
 
@@ -48,15 +50,15 @@ base_model2 <- readRDS("./outputs/03B_hunting_success_base-model2.rds")
 # Based on the supplementary material 2 from Nakagawa & al. 2017
 
 # Compute the model matrixes
-mm1 <- model_get_model_matrix(base_model)
+mm1 <- model_get_model_matrix(base_model1)
 mm2 <- model_get_model_matrix(base_model2)
 
 # Variance components :
 # 1. Fixed effects variance
 # --------------------------
 # Compute variance in fitted values (Fixed effects variance)
-VarF1 <- var(as.vector(mm1%*%fixef(base_model)))
-VarF2 <- var(as.vector(mm1%*%fixef(base_model2)))
+VarF1 <- var(as.vector(mm1%*%fixef(base_model1)))
+VarF2 <- var(as.vector(mm2%*%fixef(base_model2)))
 
 # 2. Distribution-specific variance
 # --------------------------
@@ -69,13 +71,13 @@ VarDS1 <- pi^2/3
 
 # 3. Random effects variance
 # --------------------------
-VarR1 <- VarCorr(base_model)$mirrors_id$sd[1]^2 + 
-         VarCorr(base_model)$map_name$sd[1]^2
+VarR1 <- VarCorr(base_model1)$mirrors_id$sd[1]^2 + 
+         VarCorr(base_model1)$map_name$sd[1]^2
 
 VarR2 <- VarCorr(base_model2)$mirrors_id$sd[1]^2 + 
          VarCorr(base_model2)$map_name$sd[1]^2
 
-VarSE1 <- VarCorr(base_model)$obs$sd[1]^2
+VarSE1 <- VarCorr(base_model1)$obs$sd[1]^2
 VarSE2 <- VarCorr(base_model2)$obs$sd[1]^2
 
 # 4. Total variance
@@ -114,7 +116,7 @@ R2_C2 <- (VarF2 + VarR2) /
 # =======================================================================
 
 # Extract random effect standard deviations
-ran_var <- data.table(posterior_samples(base_model, 
+ran_var <- data.table(posterior_samples(base_model1, 
                   pars = c("sd_mirrors_id__Intercept",
                             "sd_map_name__Intercept",
                             "sd_obs__Intercept")))
@@ -186,7 +188,7 @@ r2_tab <- as.data.table(cbind(R2_M1, R2_C1, R2_M2, R2_C2))
 round_val <- function (x) {round(x, digits = 3)}
 icc_tab[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
-                .SDcols = c(2:4)][[, model := "model1"]]
+                .SDcols = c(2:4)][, model := "model1"]
 
 icc_tab2[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
