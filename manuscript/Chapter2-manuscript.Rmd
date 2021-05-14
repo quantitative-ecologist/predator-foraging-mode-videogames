@@ -6,6 +6,9 @@ output:
     reference_docx: Chapter2-styles.docx
 bibliography: references.bib
 csl: e-letters.csl
+
+header-includes:
+  \usepackage{amsmath}
 ---
 ###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
   
@@ -71,16 +74,12 @@ We performed all statistical analyses using the R software (version 4.0.2, R Cor
 
 ### (i)	Variation in hunting mode
 
-We first parametrized a multivariate Bayesian mixed model to quantify adjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as linear fixed effects. We square-root transformed the four hunting behaviours ($y1$ = speed, $y2$ = space, $y3$ = time in ambush, $y4$ = time 1^st^ capture) to achieve normality and then defined each as having a Gaussian distribution. All traits were then standardised to mean and unit variance (z-scores). The model was parametrized as (see section ‘Parametrisation of the multivariate mixed model’ in the Supporting information for details):
+We first parametrized a multivariate Bayesian mixed model to quantify unadjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as linear fixed effects. We square-root transformed the four hunting behaviours ($y1$ = speed, $y2$ = space, $y3$ = time in ambush, $y4$ = time 1^st^ capture) to achieve normality and then defined each as having a Gaussian distribution. All traits were then standardised to mean and unit variance (z-scores). The model was parametrized as (see section ‘Parametrisation of the multivariate mixed model’ in the Supporting information for details):
 
-$$
-\begin{aligned}
-y1_{ij} = \beta_{0y1} + \beta_{1y1}\text{prey speed} + \beta_{2y1}\text{prey space} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i} + \varepsilon_{0y1,ij} \\
-y2_{ij} = \beta_{0y2} + \beta_{1y2}\text{prey speed} + \beta_{2y2}\text{prey space} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i} + \varepsilon_{0y2,ij} \\
-y3_{ij} = \beta_{0y3} + \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i} + \varepsilon_{0y3,ij} \\
-y4_{ij} = \beta_{0y4} + \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i} + \varepsilon_{0y4,ij}
-\end{aligned}
-$$
+$$y1_{ij} = (\beta_{0y1} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i}) + \beta_{1y1}\text{prey speed} + \beta_{2y1}\text{prey space} + \varepsilon_{0y1,ij}$$
+$$y2_{ij} = (\beta_{0y2} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i}) + \beta_{1y2}\text{prey speed} + \beta_{2y2}\text{prey space} + \varepsilon_{0y2,ij}$$
+$$y3_{ij} = (\beta_{0y3} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i}) + \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + \varepsilon_{0y3,ij}$$
+$$y4_{ij} = (\beta_{0y4} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i}) + \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + \varepsilon_{0y4,ij}$$
 where *i* indexes individual players and *j* the recorded match. Player ID ($id_{0y,i}$), the game environment ($env_{0y,i}$), the predator avatar ($avatar_{0y,i}$), and the residuals ($\varepsilon_{0y,i}$) are respectively random intercepts (among- individual, environment, and avatar variance) and residuals (within-individual variance) assumed to follow a multivariate Gaussian distribution, with their associated variance-covariance matrixes ($\Omega_{id}$, $\Omega_{env}$, $\Omega_{avatar}$, $\Omega_{\varepsilon}$) (refer to equations S1-S4 in Supporting information). We extracted among- individual, environment, avatar, and residual within-individual behavioural correlations from the variance-covariance matrixes by dividing the random effect covariances with the square root of the product of the random effect variances, for each combination of behaviours (according to equation 7c-d in Dingemanse & Dochtermann, 2013).
 
 Following @nakagawaRepeatabilityGaussianNonGaussian2010, we calculated each hunting trait’s adjusted repeatability estimate (intra-class correlation coefficient, ICC) for the player ID, the game environment, and the predator avatar by dividing the variance associated with the random effect by the total phenotypic variance (ex. $ICC_{id0,y1} = V_{id0,y1} / (V_{id0,y1} + V_{env0,y1} + V_{avatar0,y1} + V_{\varepsilon0,y1})$). We computed the 95% credibility intervals for each repeatability estimate using the highest posterior density intervals.
@@ -91,14 +90,14 @@ Since predators can capture a maximum of four prey, we used the number of prey c
 
 $$
 \begin{aligned}
-logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i}) \\
-&+ \beta_{1} \text{speed}_{i} \\
-&+ \beta_{2} \text{space}_{i} \\
-&+ \beta_{3} \text{time in ambush}_{i} \\
-&+ \beta_{4} \text{time 1}^{st} \text{capture}_{i} \\
-&+ \beta_{5} \text{prey speed}_{i}* \\
-&+ \beta_{6} \text{prey space}_{i}* \\
-&+ \varepsilon_{0,ij}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} \\
+&+ \beta_{2,pred} \text{space}_{i} \\
+&+ \beta_{3,pred} \text{time in ambush}_{i} \\
+&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+& ------------ \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'}* \\
+&+ \beta_{6,prey} \text{space}_{i}^{'}* \\
 \end{aligned}
 $$
 where player ID and the game environment come from a normal distribution with estimated variance ($id_{0,i}$~$N(0, V_{id})$, $env_{0,i}$~$N(0,V_{env})$).
@@ -107,19 +106,19 @@ We built a third model within the same structure as the models above and include
 
 $$
 \begin{aligned}
-logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i}) \\
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
 &+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
-&+ \beta_{1,prey} \text{speed}_{i}^{'} + \beta_{2,prey} \text{space}_{i}^{'} \\
 &+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
-&+ \frac{1}{2} \gamma_{5,prey} \text{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \text{space}_{i}^{'2} \\
 &+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
 &+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
 &+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
+& ---------------------------------- \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'} + \beta_{6,prey} \text{space}_{i}^{'} \\
+&+ \frac{1}{2} \gamma_{5,prey} \text{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \text{space}_{i}^{'2} \\
 &+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
 &+ \gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
 &+ \gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
 &+ \gamma_{14,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
-&+ \varepsilon_{0,ij}
 \end{aligned}
 $$
 where $\frac{1}{2} \gamma_{n,pred}$ are the quadratic terms for the predator traits ($x_{i}$), $\frac{1}{2} \gamma_{n,prey}$ are the quadratic terms for the prey traits ($x'_{i}$), $\gamma_{n,pred}$ are the interaction terms between predator behaviours, and $\gamma_{n, \text{pred prey}}$ are the interactions terms between predator and prey behaviours.
@@ -174,6 +173,7 @@ According to our predictions, predators who tended to be faster were more succes
 ```{r Figure 4, fig.cap = "**Figure 4. Incluence of the predator and prey behavioural interactions on predator hunting success.** The plots' 3D surfaces show the relationship between different combinations of predator-prey behaviours and predator hunting success. We fitted the surfaces by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator and prey interaction terms. **A)** Predator speed and. **B)** Predator and prey. **C)** blabla. **D)** blabla. **E)** blabla. **F)** blabla.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure4.png"))
 ```
+
 
 # Discussion
 
