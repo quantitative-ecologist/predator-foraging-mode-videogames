@@ -33,7 +33,7 @@ data <- fread("./data/merged-data.csv",
                          stringsAsFactors = TRUE)
 
 # Load models
-quadratic_model1 <- load("./outputs/03C_hunting_success_quadratic-model1.rds")
+quadratic_model1 <- readRDS("./outputs/03C_hunting_success_quadratic-model1.rds")
 load("./outputs/03C_hunting_success_quadratic-model2.rda")
 quadratic_model2 <- quadratic_model
 rm(quadratic_model)

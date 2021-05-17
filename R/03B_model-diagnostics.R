@@ -33,7 +33,7 @@ data <- fread("./data/merged-data.csv",
                          stringsAsFactors = TRUE)
 
 # Load model
-base_model1 <- load("./outputs/03B_hunting_success_base-model1.rds")
+base_model1 <- readRDS("./outputs/03B_hunting_success_base-model1.rds")
 load("./outputs/03B_hunting_success_base-model2.rda")
 base_model2 <- base_model
 rm(base_model)
