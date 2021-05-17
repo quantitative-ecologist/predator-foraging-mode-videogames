@@ -97,7 +97,6 @@ R2_M1 <- VarF1 /
 R2_M2 <- VarF2 /
          VarT2
 
-
 # Conditional R2 (OLRE is excluded in the numerator to only account for random effects)
 R2_C1 <- (VarF1 + VarR1) / # Fixed effect variance + random effect variance
           VarT1                   # Total variance
