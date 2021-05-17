@@ -32,9 +32,12 @@ data <- fread("./data/merged-data.csv",
                          "Zsurv_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
-# Load model
-load("./outputs/03C_hunting_success_quadratic-model.rda")
-print(object.size(quadratic_model), units = "MB")
+# Load models
+quadratic_model1 <- load("./outputs/03C_hunting_success_quadratic-model1.rds")
+load("./outputs/03C_hunting_success_quadratic-model2.rda")
+quadratic_model2 <- quadratic_model
+rm(quadratic_model)
+#print(object.size(quadratic_model), units = "MB")
 
 # =======================================================================
 # =======================================================================
@@ -46,36 +49,6 @@ print(object.size(quadratic_model), units = "MB")
 # =======================================================================
 # 2. Basic model diagnostics (takes a very long time to compute)
 # =======================================================================
-
-# Define Stan functions for diagnosis of the beta-binomial model
-# -------------------
-#expose_functions(betabi_mod, vectorize = TRUE)
-#
-## define required log-lik.
-#log_lik_beta_binomial2 <- function(i, prep) {
-#  mu <- brms:::get_dpar(prep, "mu", i = i)
-#  phi <- brms:::get_dpar(prep, "phi", i = i)
-#  trials <- prep$data$vint1[i]
-#  y <- prep$data$Y[i]
-#  beta_binomial2_lpmf(y, mu, phi, trials)
-#}
-#
-## Function for posterior predict
-#posterior_predict_beta_binomial2 <- function(i, prep, ...) {
-#  mu <- brms:::get_dpar(prep, "mu", i = i)
-#  phi <- brms:::get_dpar(prep, "phi", i = i)
-#  trials <- prep$data$vint1[i]
-#  beta_binomial2_rng(mu, phi, trials)
-#}
-#
-## 
-#posterior_epred_beta_binomial2 <- function(prep) {
-#  mu <- brms:::get_dpar(prep, "mu", i = i)
-#  trials <- prep$data$vint1
-#  trials <- matrix(trials, nrow = nrow(mu), ncol = ncol(mu), byrow = TRUE)
-#  mu * trials
-#}
-# -------------------
 
 
 # Diagnosis
