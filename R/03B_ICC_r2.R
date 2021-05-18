@@ -63,7 +63,7 @@ VarF2 <- var(as.vector(mm2%*%fixef(base_model2)))
 # 2. Distribution-specific variance
 # --------------------------
 # For a binomial model with OLRE
-VarDS1 <- pi^2/3
+VarDS <- pi^2/3
 
 # For beta binomial model
 # (phi from the distribution)
@@ -83,8 +83,8 @@ VarSE2 <- VarCorr(base_model2)$obs$sd[1]^2
 # 4. Total variance
 # --------------------------
 # binomial model with OLRE
-VarT1 <- VarF1 + VarR1 + VarSE1 + VarDS1
-VarT2 <- VarF2 + VarR2 + VarSE2 + VarDS1
+VarT1 <- VarF1 + VarR1 + VarSE1 + VarDS
+VarT2 <- VarF2 + VarR2 + VarSE2 + VarDS
 
 # beta-binomial model
 #VarT1 <- VarF1 + VarR1 + VarDS1
@@ -129,11 +129,11 @@ ran_var2 <- data.table(posterior_samples(base_model2,
 # Compute variances for each random effect + VarDS
 ran_var[, c("var_id", "var_map", "var_obs") := 
           lapply(.SD, function(x) x^2),
-            .SDcols = c(1:3)][, var_DS := VarDS1]
+            .SDcols = c(1:3)][, var_DS := VarDS]
 
 ran_var2[, c("var_id", "var_map", "var_obs") := 
           lapply(.SD, function(x) x^2),
-            .SDcols = c(1:3)][, var_DS := VarDS1]
+            .SDcols = c(1:3)][, var_DS := VarDS]
 
 
 # Compute total variance            

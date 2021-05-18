@@ -35,6 +35,7 @@ data <- fread("./data/merged-data.csv",
 quadratic_model1 <- readRDS("./outputs/03C_hunting_success_quadratic-model1.rds")
 load("./outputs/03C_hunting_success_quadratic-model2.rda")
 quadratic_model2 <- quadratic_model
+rm(quadratic_model)
 
 # =======================================================================
 # =======================================================================
@@ -140,7 +141,7 @@ ran_var2[, c("var_id", "var_map", "var_obs") :=
 
 # Compute total variance            
 ran_var[, var_tot := rowSums(ran_var[, 4:7])]
-ran_var2[, var_tot := rowSums(ran_var[, 4:7])]
+ran_var2[, var_tot := rowSums(ran_var2[, 4:7])]
 
 
 # Calculate ICCs
