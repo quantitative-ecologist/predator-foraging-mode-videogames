@@ -63,7 +63,7 @@ error1 <- brms::pp_check(quadratic_model1, type = 'error_scatter_avg', nsamples 
 error2 <- brms::pp_check(quadratic_model2, type = 'error_scatter_avg', nsamples = 100)
 
 
-# Parameter value around posterior distribution (arrange for quad parameters)
+# Parameter value around posterior distribution
 stat1 <- brms::pp_check(quadratic_model1, 
                         type = 'stat', stat = 'mean', nsamples = 100)
 stat2 <- brms::pp_check(quadratic_model2, 
@@ -107,6 +107,7 @@ rhat_table_quad2 <- as.data.table(mcmc_rhat_data(rhat_vals_quad2))
 # Display tables
 rhat_table_quad1
 rhat_table_quad2
+
 
 # Effective sample sizes
 neff_vals_quad1 <- neff_ratio(quadratic_model1)

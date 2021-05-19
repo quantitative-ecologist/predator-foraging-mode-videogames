@@ -71,62 +71,52 @@ dens_overlay4 <- brms::pp_check(mv_model, resp = "Zhookstarttime",
 #brms::pp_check(mv_model, type = 'ecdf_overlay')
 
 
-# Error scatter for y
-error <- brms::pp_check(mv_model, type = 'error_scatter_avg', nsamples = 100)
+# Error scatter for predicted values
+error1 <- brms::pp_check(mv_model, resp = "Zspeed", type = 'error_scatter_avg', nsamples = 100)
+error2 <- brms::pp_check(mv_model, resp = "Zspacecoveredrate", type = 'error_scatter_avg', nsamples = 100)
+error3 <- brms::pp_check(mv_model, resp = "Zproxmidguard", type = 'error_scatter_avg', nsamples = 100)
+error4 <- brms::pp_check(mv_model, resp = "Zhookstarttime", type = 'error_scatter_avg', nsamples = 100)
 
 
 # Parameter value around posterior distribution
-speed1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+stat1 <- brms::pp_check(mv_model,  
                          resp = "Zsqrtspeed",
                          type = 'stat', stat = 'mean', nsamples = 100)
-speed2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+stat2 <- brms::pp_check(mv_model, 
                          resp = "Zsqrtspacecoveredrate",
                          type = 'stat', stat = 'mean', nsamples = 100)
-speed3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+stat3 <- brms::pp_check(mv_model, 
                          resp = "Zsqrtproxmidguard",
                          type = 'stat', stat = 'mean',  nsamples = 100)
-speed4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+stat4 <- brms::pp_check(mv_model,
                          resp = "Zsqrthookstarttime",
                          type = 'stat', stat = 'mean',  nsamples = 100)
 
-space1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
-                             resp = "Zsqrtspeed",
-                             type = 'stat', stat = 'mean',  nsamples = 100)
-space2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
-                             resp = "Zsqrtspacecoveredrate",
-                             type = 'stat', stat = 'mean',  nsamples = 100)
-space3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
-                             resp = "Zsqrtproxmidguard",
-                             type = 'stat', stat = 'mean',  nsamples = 100)
-space4 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_space_covered_rate',
-                             resp = "Zsqrthookstarttime",
-                             type = 'stat', stat = 'mean',  nsamples = 100)
 
-
-# residual vs covariate plots
-speed1.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+# Residual vs covariate plots
+speed1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                            resp = "Zsqrtspeed",
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-speed2.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+speed2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
                            resp = "Zsqrtspacecoveredrate", 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-speed3.1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
+speed3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
                            resp = "Zsqrtproxmidguard",
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-speed4.1 <-  brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
+speed4 <-  brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
                             resp = "Zsqrthookstarttime",
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
 
-space1.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
+space1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
                            resp = "Zsqrtspeed",
                            type = 'error_scatter_avg_vs_x', nsamples = 100)
-space2.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
+space2 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
                            resp = "Zsqrtspacecoveredrate", 
                            type = 'error_scatter_avg_vs_x', nsamples = 100)
-space3.1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
+space3 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
                            resp = "Zsqrtproxmidguard",
                            type = 'error_scatter_avg_vs_x', nsamples = 100)
-space4.1 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
+space4 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
                            resp = "Zsqrthookstarttime",
                            type = 'error_scatter_avg_vs_x', nsamples = 100)
 
@@ -155,104 +145,39 @@ neff_table
 
 # Export plots and tables
 # -------------------
-pp_figure1 <- ggarrange(speed1,
-                        space1,
-                        guard1,
-                        hook1,
-                        survspeed1,
-                        survspace1,
-                        ncol = 3, nrow = 2)
+#pp_figure1 <- ggarrange(speed1,
+#                        space1,
+#                        guard1,
+#                        hook1,
+#                        survspeed1,
+#                        survspace1,
+#                        ncol = 3, nrow = 2)
+#
+#ggexport(pp_figure1, filename = "03A_pp_diagnose1.tiff",
+#         width = 4500, height = 2500, res = 500) # more res = bigger plot zoom
+#
+#
+#pp_figure2 <- ggarrange(speed2,
+#                        space2,
+#                        guard2,
+#                        hook2,
+#                        survspeed2,
+#                        survspace2,
+#                        ncol = 3, nrow = 2)
+#
+#ggexport(pp_figure2, filename = "03A_pp_diagnose2.tiff",
+#         width = 5500, height = 3500, res = 500) # more res = bigger plot zoom
 
-ggexport(pp_figure1, filename = "03A_pp_diagnose1.tiff",
-         width = 4500, height = 2500, res = 500) # more res = bigger plot zoom
 
-
-pp_figure2 <- ggarrange(speed2,
-                        space2,
-                        guard2,
-                        hook2,
-                        survspeed2,
-                        survspace2,
-                        ncol = 3, nrow = 2)
-
-ggexport(pp_figure2, filename = "03A_pp_diagnose2.tiff",
-         width = 5500, height = 3500, res = 500) # more res = bigger plot zoom
-
-
-ggexport(trace1, filename = "03A_trace1.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(dens1, filename = "03A_dens1.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(trace2, filename = "03A_trace2.tiff", 
-          width = 6500, height = 3500, res = 800)
-ggexport(dens2, filename = "03A_dens2.tiff", 
-          width = 6500, height = 3500, res = 800)
+#ggexport(trace1, filename = "03A_trace1.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(dens1, filename = "03A_dens1.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(trace2, filename = "03A_trace2.tiff", 
+#          width = 6500, height = 3500, res = 800)
+#ggexport(dens2, filename = "03A_dens2.tiff", 
+#          width = 6500, height = 3500, res = 800)
 # -------------------
 
 # =======================================================================
 # =======================================================================
-
-
-
-
-
-# =======================================================================
-# 3. Assess model fit (R-squared)
-# =======================================================================
-# Calculation by hand 
-# Based on the supplementary material 2 from Nakagawa & al. 2017
-
-# Compute the model matrixes
-mm1 <- model_get_model_matrix(mv_model)
-
-# Variance components :
-# 1. Fixed effects variance
-# --------------------------
-# Compute variance in fitted values (Fixed effects variance)
-VarF1 <- var(as.vector(mm1%*%fixef(mv_model)))
-
-# 2. Distribution-specific variance
-# --------------------------
-# For binomial model with OLRE
-#VarDS <- pi^2/3
-
-# For beta binomial model
-# (phi from the distribution)
-VarDS1 <- summary(mv_model)$spec_pars[1]
-
-# 3. Random effects variance
-# --------------------------
-VarR1 <- VarCorr(mv_model)$mirrors_id$sd[1] + 
-         VarCorr(mv_model)$map_name$sd[1]
-
-#VarSE1 <- VarCorr(mv_model)$obs$sd[1]
-
-
-# 4. Total variance
-# --------------------------
-# binomial model with OLRE
-#VarT1 <- VarF1 + VarR1 + VarSE1 + VarDS
-
-# beta-binomial model
-VarT1 <- VarF1 + VarR1 + VarDS1
-
-# 5. Compute R-squared values
-# --------------------------
-# Marginal R2
-R2_M1 <- VarF1 / # Fixed effect variance
-         VarT1   # Total variance
-
-
-# Conditional R2 (OLRE is excluded in the numerator to only account for random effects)
-R2_C1 <- (VarF1 + VarR1) / # Fixed effect variance + random effect variance
-          VarT1                   # Total variance
-
-
-# Save r-squared values into a table
-r_squared <- as.data.table(cbind(R2_M1, R2_C1))
-
-capture.output(r_squared, file = "03A_r2-table.txt")
-# =======================================================================
-# =======================================================================
-
-
