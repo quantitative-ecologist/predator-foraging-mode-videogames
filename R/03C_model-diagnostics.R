@@ -50,70 +50,74 @@ rm(quadratic_model)
 # 2. Basic model diagnostics (takes a very long time to compute)
 # =======================================================================
 
-
 # Diagnosis
 # -------------------
 # Observed y outcomes vs posterior predicted outcomes
-dens_overlay <- brms::pp_check(quadratic_model, type = "dens_overlay", nsamples = 100)
+dens_overlay1 <- brms::pp_check(quadratic_model1, type = "dens_overlay", nsamples = 100)
+dens_overlay2 <- brms::pp_check(quadratic_model2, type = "dens_overlay", nsamples = 100)
 #brms::pp_check(base_model, type = 'ecdf_overlay')
 
 
-# Error scatter for y
-error <- brms::pp_check(quadratic_model, type = 'error_scatter_avg', nsamples = 100)
+# Error scatter for predicted values
+error1 <- brms::pp_check(quadratic_model1, type = 'error_scatter_avg', nsamples = 100)
+error2 <- brms::pp_check(quadratic_model2, type = 'error_scatter_avg', nsamples = 100)
 
 
 # Parameter value around posterior distribution (arrange for quad parameters)
-speed1 <- brms::pp_check(quadratic_model, x = 'Zspeed^2', 
+stat1 <- brms::pp_check(quadratic_model1, 
                         type = 'stat', stat = 'mean', nsamples = 100)
-space1 <- brms::pp_check(quadratic_model, x = 'Zspace_covered_rate^2', 
+stat2 <- brms::pp_check(quadratic_model2, 
                          type = 'stat', stat = 'mean', nsamples = 100)
-guard1 <- brms::pp_check(quadratic_model, x = 'Zprox_mid_guard^2', 
-                         type = 'stat', stat = 'mean',  nsamples = 100)
-hook1 <- brms::pp_check(quadratic_model, x = 'Zhook_start_time^2',
-                        type = 'stat', stat = 'mean',  nsamples = 100)
-survspeed1 <- brms::pp_check(quadratic_model, x = 'Zsurv_speed^2',
-                             type = 'stat', stat = 'mean',  nsamples = 100)
-survspace1 <- brms::pp_check(quadratic_model, x = 'Zsurv_space_covered_rate^2',
-                             type = 'stat', stat = 'mean',  nsamples = 100)
 
 
 # residual vs covariate plots
-speed2 <- brms::pp_check(quadratic_model, x = 'Zspeed^2', 
+speed <- brms::pp_check(quadratic_model1, x = 'Zspeed^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-space2 <- brms::pp_check(quadratic_model, x = 'Zspace_covered_rate^2', 
+space <- brms::pp_check(quadratic_model1, x = 'Zspace_covered_rate^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-guard2 <- brms::pp_check(quadratic_model, x = 'Zprox_mid_guard^2', 
+guard <- brms::pp_check(quadratic_model1, x = 'Zprox_mid_guard^2', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-hook2 <-  brms::pp_check(quadratic_model, x = 'Zhook_start_time^2',
+hook <-  brms::pp_check(quadratic_model1, x = 'Zhook_start_time^2',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspeed2 <- brms::pp_check(quadratic_model, x = 'Zsurv_speed^2',
+survspeed <- brms::pp_check(quadratic_model2, x = 'Zsurv_speed^2',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspace2 <- brms::pp_check(quadratic_model, x = 'Zsurv_space_covered_rate^2',
+survspace <- brms::pp_check(quadratic_model2, x = 'Zsurv_space_covered_rate^2',
                type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 
 # Trace plots and parameter distributions
 #plot(quadratic_model)
-trace1 <- mcmc_plot(quadratic_model, type = "trace")
-dens1 <- mcmc_plot(quadratic_model, type = "dens")
+trace1 <- mcmc_plot(quadratic_model1, type = "trace")
+dens1 <- mcmc_plot(quadratic_model1, type = "dens")
 
+trace2 <- mcmc_plot(quadratic_model2, type = "trace")
+dens2 <- mcmc_plot(quadratic_model2, type = "dens")
 
 # Investigate overdispersion
 #loo_plot <- plot(loo(quadratic_model))
 
 
 # Rhat
-rhat_vals_quad <- rhat(quadratic_model)
-rhat_table_quad <- as.data.table(mcmc_rhat_data(rhat_vals_quad))
-# Display tables
-rhat_table_quad
+rhat_vals_quad1 <- rhat(quadratic_model1)
+rhat_table_quad1 <- as.data.table(mcmc_rhat_data(rhat_vals_quad1))
 
+rhat_vals_quad2 <- rhat(quadratic_model2)
+rhat_table_quad2 <- as.data.table(mcmc_rhat_data(rhat_vals_quad2))
+
+# Display tables
+rhat_table_quad1
+rhat_table_quad2
 
 # Effective sample sizes
-neff_vals_quad <- neff_ratio(quadratic_model)
-neff_table_quad <- as.data.table(mcmc_neff_data(neff_vals_quad))
+neff_vals_quad1 <- neff_ratio(quadratic_model1)
+neff_table_quad1 <- as.data.table(mcmc_neff_data(neff_vals_quad1))
+
+neff_vals_quad2 <- neff_ratio(quadratic_model2)
+neff_table_quad2 <- as.data.table(mcmc_neff_data(neff_vals_quad2))
+
 # Display tables
-neff_table_quad
+neff_table_quad1
+neff_table_quad2
 # -------------------
 
 
