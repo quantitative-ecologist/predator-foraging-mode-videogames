@@ -53,10 +53,6 @@ setnames(full_Zmatrix, "Zpallet_destroyed", "pallets destroyed")
 setnames(full_Zmatrix, "Zdamage_generator", "generators damaged")
 setnames(full_Zmatrix, "Zhook_start_time", "time before 1st capture")
 
-#setnames(full_Zmatrix, "Zhit_close_count", "attacks while carrying")
-#setnames(full_Zmatrix, "Zhook_count", "prey hooked count")
-#setnames(full_Zmatrix, "Zprey_pickedup", "prey pickedup")
-#setnames(full_Zmatrix, "Zchase_per_second", "number of chases")
 # =========================================================================
 # =========================================================================
 
@@ -246,37 +242,7 @@ corr_table <- round(var_fullZ$cor, digits = 2)
 
 
 # =========================================================================
-# 9. Extract PCA scores and add them to the table
-# =========================================================================
-#individuals <- get_pca_ind(PCA_fullZ)
-#individuals$coord
-#game_data <- cbind(game_data, individuals$coord)
-# =========================================================================
-# =========================================================================
-
-
-
-
-
-# =========================================================================
-# 10. Save table for selection analysis using PC scores
-# =========================================================================
-#setnames(game_data, "Dim.1", "PC1")
-#setnames(game_data, "Dim.2", "PC2")
-#setnames(game_data, "Dim.3", "PC3")
-#setnames(game_data, "Dim.4", "PC4")
-#setnames(game_data, "Dim.5", "PC5")
-#fwrite(game_data[,.(mirrors_id, match_id, PC1, PC2, PC3, PC4, PC5)],
-#       "04_PCscores-data.csv", sep = ",")
-# =========================================================================
-# =========================================================================
-
-
-
-
-
-# =========================================================================
-# 11. Save plots in a PDF file or other png file****
+# 9. Save plots in a PDF file or other png file****
 # =========================================================================
 ggexport(plotlist = list(scree_plot,
                          contrib_PC1, contrib_PC2,
