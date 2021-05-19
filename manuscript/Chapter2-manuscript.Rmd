@@ -5,7 +5,7 @@ output:
   word_document:
     reference_docx: Chapter2-styles.docx
 bibliography: references.bib
-csl: e-letters.csl
+csl: american-naturalist.csl
 ---
 ###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
   
