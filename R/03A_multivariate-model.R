@@ -7,7 +7,6 @@
 # Code for a multivariate mixed-models to :
 # 1. partition the variance in predator behaviour
 # 2. quantify behavioural correlations among predator behaviours
-# 3. evaluate how predators respond to prey behaviour
 
 # Contact: maxime.fraser.franco@hotmail.com
 # Département des Sciences Biologiques, UQAM, Montréal, Québec

@@ -1,6 +1,6 @@
 #########################################################################
 
-#                       Base model diagnostics                          #
+#                       Base models diagnostics                         #
 
 #########################################################################
 
@@ -55,64 +55,68 @@ print(object.size(base_model), units = "MB")
 # Diagnosis
 # --------------------------
 # Observed y outcomes vs posterior predicted outcomes
-dens_overlay <- brms::pp_check(base_model, type = "dens_overlay", nsamples = 100)
+dens_overlay1 <- brms::pp_check(base_model1, type = "dens_overlay", nsamples = 100)
+dens_overlay2 <- brms::pp_check(base_model2, type = "dens_overlay", nsamples = 100)
 #brms::pp_check(base_model, type = 'ecdf_overlay')
 
 
-# Error scatter for y
-error <- brms::pp_check(base_model, type = 'error_scatter_avg', nsamples = 100)
+# Error scatter for predicted values
+error1 <- brms::pp_check(base_model1, type = 'error_scatter_avg', nsamples = 100)
+error2 <- brms::pp_check(base_model2, type = 'error_scatter_avg', nsamples = 100)
 
 
 # Parameter value around posterior distribution
-speed1 <- brms::pp_check(base_model, x = 'Zspeed', 
+stat1 <- brms::pp_check(base_model1, 
                         type = 'stat', stat = 'mean', nsamples = 100)
-space1 <- brms::pp_check(base_model, x = 'Zspace_covered_rate', 
+stat2 <- brms::pp_check(base_model2, 
                          type = 'stat', stat = 'mean', nsamples = 100)
-guard1 <- brms::pp_check(base_model, x = 'Zprox_mid_guard', 
-                         type = 'stat', stat = 'mean',  nsamples = 100)
-hook1 <- brms::pp_check(base_model, x = 'Zhook_start_time',
-                        type = 'stat', stat = 'mean',  nsamples = 100)
-survspeed1 <- brms::pp_check(base_model, x = 'Zsurv_speed',
-                             type = 'stat', stat = 'mean',  nsamples = 100)
-survspace1 <- brms::pp_check(base_model, x = 'Zsurv_space_covered_rate',
-                             type = 'stat', stat = 'mean',  nsamples = 100)
 
-
-# residual vs covariate plots
-speed2 <- brms::pp_check(base_model, x = 'Zspeed', 
+# Residual vs covariate plots
+speed <- brms::pp_check(base_model1, x = 'Zspeed', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-space2 <- brms::pp_check(base_model, x = 'Zspace_covered_rate', 
+space <- brms::pp_check(base_model1, x = 'Zspace_covered_rate', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-guard2 <- brms::pp_check(base_model, x = 'Zprox_mid_guard', 
+guard <- brms::pp_check(base_model1, x = 'Zprox_mid_guard', 
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-hook2 <-  brms::pp_check(base_model, x = 'Zhook_start_time',
+hook <-  brms::pp_check(base_model1, x = 'Zhook_start_time',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspeed2 <- brms::pp_check(base_model, x = 'Zsurv_speed',
+survspeed <- brms::pp_check(base_model2, x = 'Zsurv_speed',
                          type = 'error_scatter_avg_vs_x', nsamples = 100)
-survspace2 <- brms::pp_check(base_model, x = 'Zsurv_space_covered_rate',
+survspace <- brms::pp_check(base_model2, x = 'Zsurv_space_covered_rate',
                type = 'error_scatter_avg_vs_x', nsamples = 100)
 
 
 # Trace plots and parameter distributions
 #plot(base_model)
-trace1 <- mcmc_plot(base_model, type = "trace")
-dens1 <- mcmc_plot(base_model, type = "dens")
+trace1 <- mcmc_plot(base_model1, type = "trace")
+dens1 <- mcmc_plot(base_model1, type = "dens")
 
+trace2 <- mcmc_plot(base_model2, type = "trace")
+dens2 <- mcmc_plot(base_model2, type = "dens")
 
 # Investigate overdispersion
 #loo_plot <- plot(loo(base_model))
 
 
 # Rhat
-rhat_vals <- rhat(base_model)
-rhat_table <- as.data.table(mcmc_rhat_data(rhat_vals))
-# Display tables
-rhat_table
+rhat_vals1 <- rhat(base_model1)
+rhat_table1 <- as.data.table(mcmc_rhat_data(rhat_vals1))
 
+rhat_vals2 <- rhat(base_model2)
+rhat_table2 <- as.data.table(mcmc_rhat_data(rhat_vals2))
+
+# Display tables
+rhat_table1
+rhat_table2
 
 # Effective sample sizes
-neff_vals <- neff_ratio(base_model)
-neff_table <- as.data.table(mcmc_neff_data(neff_vals))
+neff_vals1 <- neff_ratio(base_model1)
+neff_table1 <- as.data.table(mcmc_neff_data(neff_vals1))
+
+neff_vals2 <- neff_ratio(base_model2)
+neff_table2 <- as.data.table(mcmc_neff_data(neff_vals2))
+
+
 # Display tables
 neff_table
 # --------------------------
@@ -123,12 +127,12 @@ neff_table
 # --------------------------
 # Export plots and tables
 # --------------------------
-#pp_figure1 <- ggarrange(speed1,
-#                        space1,
-#                        guard1,
-#                        hook1,
-#                        survspeed1,
-#                        survspace1,
+#pp_figure1 <- ggarrange(speed,
+#                        space,
+#                        guard,
+#                        hook,
+#                        survspeed,
+#                        survspace,
 #                        ncol = 3, nrow = 2)
 #
 #ggexport(pp_figure1, filename = "03B_pp_diagnose1.tiff",
