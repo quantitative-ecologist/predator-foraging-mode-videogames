@@ -171,7 +171,6 @@ According to our predictions, faster predators were more successful when they co
 knitr::include_graphics(here::here("outputs", "04_figure4.png"))
 ```
 
-
 # Discussion
 
 Our study is the first to use an online multiplayer videogame to investigate individual variation in predator foraging mode, and how predator and prey behaviour affect hunting success. We provide evidence that individuals who adopt the predator avatar display individual specialisation and flexibility in competing foraging modes (cursorial vs sit-and-wait). The expression of these foraging modes was consistent with shifts in the expression of other behaviours such as space use and the latency to a first prey capture, matching the predictions of the foraging syndrome hypothesis at the individual level. Contrary to our expectations, neither hunting behaviour nor prey capture varied among the game environments. Although we found the presence of competing foraging modes in the population, the most successful predators were those who hunted at average population values of travel speed, and those who spent an above population-average of their time ambushing prey. Lastly, we indeed found evidence for the locomotor-crossover hypothesis for some predator-prey trait combinations. However, predators were generally less successful when they competed against fast traveling prey; and those who covered space faster in the environment.
