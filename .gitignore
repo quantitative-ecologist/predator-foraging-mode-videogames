@@ -18,3 +18,4 @@ tests/beta-binom_base.R
 tests/beta-binom_base.sh
 tests/beta-binom_quad.R
 tests/beta-binom_quad.sh
+versions
