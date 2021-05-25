@@ -244,14 +244,17 @@ corr_table <- round(var_fullZ$cor, digits = 2)
 # =========================================================================
 # 9. Save plots in a PDF file or other png file****
 # =========================================================================
-ggexport(plotlist = list(scree_plot,
-                         contrib_PC1, contrib_PC2,
-                         contrib_PC3),
-         nrow = 1, ncol = 1,
-         filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
 
-ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.tiff", 
-          width = 2000, height = 1800, res = 300)
+# Ran this code once
+
+#ggexport(plotlist = list(scree_plot,
+#                         contrib_PC1, contrib_PC2,
+#                         contrib_PC3),
+#         nrow = 1, ncol = 1,
+#         filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
+
+#ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.tiff", 
+#          width = 2000, height = 1800, res = 300)
 
 
 # as one figure with the two plots
