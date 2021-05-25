@@ -45,16 +45,78 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.tiff"))
 
 <br>
 
-blabla
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(factoextra)
+library(FactoMineR)
+library(data.table)
+library(flextable)
+library(dplyr)
 
-Behaviour                    Correlation   % Variance   Correlation   % Variance
--------------------------   ------------  -----------  ------------  -----------
-Time spent ambushing         **-0.66**     **23.19**    -0.03         0.05
-Average speed                **0.75**      **29.38**     0.15         1.73
-Rate of space covered         0.00         0.00          **0.82**     **48.12**
-Closets opened               -0.06         0.21         -0.09         0.56
-Pallets destroyed             0.21         2.42         -0.08         0.43
-Generators damaged            0.46         11.17        -0.37         9.79
-Normal attacks               -0.61         19.89        -0.13         1.31
-Special attacks               0.48         12.02         0.18         2.47
-Time before 1st capture      -0.18         1.72          **0.70**     **35.55**
+game_data <- fread(here::here("data", "merged-data.csv"))
+full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 77, 79)]
+
+setnames(full_Zmatrix, "Zspeed", "average speed")
+setnames(full_Zmatrix, "Zspace_covered_rate", "rate of space covered")
+setnames(full_Zmatrix, "Zprox_mid_guard", "time spent ambushing")
+setnames(full_Zmatrix, "Zcloset_open", "closets opened")
+setnames(full_Zmatrix, "Zhit_special_count", "special attacks")
+setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")
+setnames(full_Zmatrix, "Zpallet_destroyed", "pallets destroyed")
+setnames(full_Zmatrix, "Zdamage_generator", "generators damaged")
+setnames(full_Zmatrix, "Zhook_start_time", "time before 1st capture")
+
+# Compute the PCA, save results in an object
+PCA_fullZ <- PCA(full_Zmatrix, graph = FALSE, scale.unit = FALSE)
+var_fullZ <- get_pca_var(PCA_fullZ)
+
+# Calculate variables having highest loading (Table SI)
+contrib_table <- data.table(round(var_fullZ$contrib, digits = 2), keep.rownames=TRUE)
+corr_table <- data.table(round(var_fullZ$cor, digits = 2), keep.rownames = TRUE)
+
+# Compute seperate tables based on PCs
+pc1_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc1" = corr_table$Dim.1,
+                      "variance_pc1" = contrib_table$Dim.1)
+
+pc2_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc2" = corr_table$Dim.2,
+                      "variance_pc2" = contrib_table$Dim.2)
+
+# Compute the table for Word
+my_header <- data.frame(
+  col_keys = c("variable", "correlation_pc1", "variance_pc1", 
+               "correlation_pc2", "variance_pc2"),
+  line1 = c("", rep("PC1 (% variance = 21.0)", 2), rep("PC2 (% variance = 15.3)", 2)),
+  line2 = c("Behaviour", "Correlation", "% variance", "Correlation", "% variance"),
+  stringsAsFactors = FALSE
+)
+
+cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
+  select(variable, correlation_pc1, variance_pc1,
+         correlation_pc2, variance_pc2) %>%
+  flextable(col_keys = my_header$col_keys) %>%
+  set_header_df(mapping = my_header, key = "col_keys") %>%
+  theme_booktabs() %>%
+  merge_v(part = "header") %>%
+  merge_h(part = "header") %>%
+  align(align = "center", part = "all") %>%
+  fp_text_default(font.size = 12, 
+                  font.family = "Times new roman", 
+                  font.color = "black") %>% # this is not working
+  autofit(add_w = -0.2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
