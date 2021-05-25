@@ -39,7 +39,7 @@ library(ggpubr)
 game_data <- fread("./data/merged-data.csv")
 
 # Select column to be analyzed
-full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 78:79)]
+full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 77, 79)]
 
 names(full_Zmatrix)
 # Change variable names
@@ -250,14 +250,17 @@ ggexport(plotlist = list(scree_plot,
          nrow = 1, ncol = 1,
          filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
 
+ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.tiff", 
+          width = 2000, height = 1800, res = 300)
 
-# as one figure
-PCA_figure <- ggarrange(PCA_fullZ_biplot12,
-                        PCA_fullZ_biplot23,
-                        ncol = 2, nrow = 1)
 
-ggexport(PCA_figure, filename = "./outputs/02_figureS1.tiff", 
-         width = 4000, height = 1800, res = 300)
+# as one figure with the two plots
+#PCA_figure <- ggarrange(PCA_fullZ_biplot12,
+#                        PCA_fullZ_biplot23,
+#                        ncol = 2, nrow = 1)
+
+# ggexport(PCA_figure, filename = "./outputs/02_figureS1.tiff", 
+#          width = 4000, height = 1800, res = 300)
 
 
 # End of script ==========================================================
