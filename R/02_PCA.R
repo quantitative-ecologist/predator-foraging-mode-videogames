@@ -45,7 +45,7 @@ names(full_Zmatrix)
 # Change variable names
 setnames(full_Zmatrix, "Zspeed", "average speed")
 setnames(full_Zmatrix, "Zspace_covered_rate", "rate of space covered")
-setnames(full_Zmatrix, "Zprox_mid_guard", "prey guarding")
+setnames(full_Zmatrix, "Zprox_mid_guard", "time spent ambushing")
 setnames(full_Zmatrix, "Zcloset_open", "closets opened")
 setnames(full_Zmatrix, "Zhit_special_count", "special attacks")
 setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")

@@ -1,5 +1,5 @@
 ---
-title: "Online supporting information for Analysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
+title: "Online supporting information for  \nAnalysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
 author: "Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Olivier Montiglio^1^"
 output: 
   word_document:
@@ -35,7 +35,26 @@ where the diagonals represent the random effect variances for each hunting trait
 
 # Appendix S2. Results
 
-# S2.1 Principal component analysis
+## S2.1 Principal component analysis
 
 The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 18.6% of the total variation (Fig. S1). We found that travel speed and prey guarding had the highest contribution to the first principal component (28.31% and 25.41% respectively) (Table SI), while the rate of space covered had the second highest contribution (30.48%) to the second principal component (Table SI). We excluded the number of chases from the subsequent analyses because they are used to calculate the amount of points earned in a match which is our performance proxy. Prey guarding is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not guard captured prey and individuals who guard prey are slower travelers.
 
+```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and % of explained variance on the first and second PC axes to select variables used for subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and prey guarding were the highest contributing behaviours to PC1 axis, and the rate of space covered was the highest contributing behaviour to PC2 axis.", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "02_figureS1.tiff"))
+```
+
+<br>
+
+blabla
+
+Behaviour                    Correlation   % Variance   Correlation   % Variance
+-------------------------   ------------  -----------  ------------  -----------
+Time spent ambushing         **-0.66**     **23.19**    -0.03         0.05
+Average speed                **0.75**      **29.38**     0.15         1.73
+Rate of space covered         0.00         0.00          **0.82**     **48.12**
+Closets opened               -0.06         0.21         -0.09         0.56
+Pallets destroyed             0.21         2.42         -0.08         0.43
+Generators damaged            0.46         11.17        -0.37         9.79
+Normal attacks               -0.61         19.89        -0.13         1.31
+Special attacks               0.48         12.02         0.18         2.47
+Time before 1st capture      -0.18         1.72          **0.70**     **35.55**
