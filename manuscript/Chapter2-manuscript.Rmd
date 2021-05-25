@@ -187,7 +187,7 @@ To conclude, individual variation in predator (and prey) behaviour is increasing
 
 \newpage
 # Acknowledgements:
-We thank Behaviour Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process which led to a better version of this manuscript.
+We thank Behaviour Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us to improve this manuscript.
 
 # Author contributions:
 MFF and POM conceived the study. MFF collected the data, conducted the analyses, and led the writing of the manuscript. All authors contributed to revisions and gave their final approval for the present manuscript.
