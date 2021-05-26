@@ -19,42 +19,118 @@ csl: american-naturalist.csl
 
 ## S1.1 Behavioural traits measurements
 
-We quantified average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. Similar to the open-field test for rodents (Montiglio et al., 2010), the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent guarding, circles of 9-meter radiuses were drawn around all places (the circles’ center) where the predator brought prey to be consumed. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent guarding during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent guarding.
+We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all places (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
 
 ## S1.2 Principal component analysis
 
-We computed the PCA using packages “FactoMineR” (Lê, Josse, & Husson, 2008) and “factoextra” (Kassambara & Mundt, 2017) in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) prior to running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis using the ratio of their specific cos2 multiplied by 100 with the cos2 of the principal component.
+We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) prior to running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis using the ratio of their specific cos2 multiplied by 100 with the cos2 of the principal component.
 
-## S1.3 Parametrisation of the multivariate mixed-model
+## S1.3 Parametrisation of the bayesian mixed-models
 
-For both models, we used an uninformative inverse-Wishart prior with a belief parameter (nu) set to 2.002 for the random effects and residuals variance-covariance matrixes. We ran both models for 203 000 iterations by sampling every 100 intervals (thinning) and discarded the first 3000 iterations (burn in). We ran the models four times and visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes for both multivariate MCMC models. We extracted the among- and within- individual behavioural correlations using function posterior.cor() in the MCMCglmm package. The variance-covariance matrixes were parametrized as such :
+### Multivariate mixed-model
+We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations by sampling every 40 intervals (thinning), and used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean and HDP intervals to obtain the correlation values. The variance-covariance matrixes were parametrized as :
 
-*insert equations*
-
-where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, and the proportion of time spent guarding).
+$$
+\left[
+\begin{array}{c}
+id_{0y1,i} \\ 
+id_{0y2,i} \\ 
+id_{0y3,i} \\
+id_{0y4,i}
+\end{array}\right]
+= MVN(0, \Omega_{id}) : \text{where } \Omega_{id} = 
+\left[
+\begin{array}{cccc}
+V_{id_{0y1,i}} \\
+Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} \\ 
+Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} \\
+Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4,i}} & V_{id_{0y4,i}}
+\end{array}\right]
+$$
+$$
+\left[
+\begin{array}{c}
+en_{0y1,i} \\ 
+en_{0y2,i} \\ 
+en_{0y3,i} \\
+en_{0y4,i}
+\end{array}\right]
+= MVN(0, \Omega_{en}) : \text{where } \Omega_{en} = 
+\left[
+\begin{array}{cccc}
+V_{en_{0y1,i}} \\
+Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} \\ 
+Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} \\
+Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4,i}} & V_{en_{0y4,i}}
+\end{array}\right]
+$$
+$$
+\left[
+\begin{array}{c}
+av_{0y1,i} \\ 
+av_{0y2,i} \\ 
+av_{0y3,i} \\
+av_{0y4,i}
+\end{array}\right]
+= MVN(0, \Omega_{av}) : \text{where } \Omega_{av} = 
+\left[
+\begin{array}{cccc}
+V_{av_{0y1,i}} \\
+Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} \\ 
+Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} \\
+Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4,i}} & V_{av_{0y4,i}}
+\end{array}\right]
+$$
+$$
+\left[
+\begin{array}{c}
+\varepsilon_{0y1,i} \\ 
+\varepsilon_{0y2,i} \\ 
+\varepsilon_{0y3,i} \\
+\varepsilon_{0y4,i}
+\end{array}\right]
+= MVN(0, \Omega_{\varepsilon}) : \text{where } \Omega_{\varepsilon} = 
+\left[
+\begin{array}{cccc}
+V_{\varepsilon_{0y1,i}} \\
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} \\ 
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} \\
+Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsilon_{0y4,i}} & Cov_{\varepsilon_{0y3,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y4,i}}
+\end{array}\right]
+$$
+where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
 # Appendix S2. Results
 
 ## S2.1 Principal component analysis
 
-The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 18.6% of the total variation (Fig. S1). We found that travel speed and prey guarding had the highest contribution to the first principal component (28.31% and 25.41% respectively) (Table SI), while the rate of space covered had the second highest contribution (30.48%) to the second principal component (Table SI). We excluded the number of chases from the subsequent analyses because they are used to calculate the amount of points earned in a match which is our performance proxy. Prey guarding is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not guard captured prey and individuals who guard prey are slower travelers.
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and prey guarding had the highest contribution to the first principal component (28.31% and 25.41% respectively) (Table SI), while the rate of space covered had the second highest contribution (30.48%) to the second principal component (Table SI). We excluded the number of chases from the subsequent analyses because they are used to calculate the amount of points earned in a match which is our performance proxy. Prey guarding is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not guard captured prey and individuals who guard prey are slower travelers.
 
-```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and % of explained variance on the first and second PC axes to select variables used for subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and prey guarding were the highest contributing behaviours to PC1 axis, and the rate of space covered was the highest contributing behaviour to PC2 axis.", echo = FALSE}
-knitr::include_graphics(here::here("outputs", "02_figureS1.tiff"))
+```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and % of explained variance on the first and second PC axes to select variables used for subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and time spent ambushing were the highest contributing behaviours to the PC1 axis (in bold). The rate of space covered and the time before 1st capture were the highest contributing behaviours to the PC2 axis (in bold).", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 ```
 
 <br>
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# ========================================================
+
+#               Code to produce Table SI
+
+# ========================================================
+
+# Load libraries
 library(factoextra)
 library(FactoMineR)
 library(data.table)
 library(flextable)
 library(dplyr)
 
+# Load the data
 game_data <- fread(here::here("data", "merged-data.csv"))
 full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 77, 79)]
 
+# Change variable names
 setnames(full_Zmatrix, "Zspeed", "average speed")
 setnames(full_Zmatrix, "Zspace_covered_rate", "rate of space covered")
 setnames(full_Zmatrix, "Zprox_mid_guard", "time spent ambushing")
@@ -100,16 +176,18 @@ cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
   align(align = "center", part = "all") %>%
-  fp_text_default(font.size = 12, 
-                  font.family = "Times new roman", 
-                  font.color = "black") %>% # this is not working
-  autofit(add_w = -0.2)
+  font(fontname = "Times new roman", part = "all") %>%
+  autofit(add_w = -0.1) %>%
+  bold(j = c(2, 3), i = 1:2) %>%
+  bold(j = c(4, 5), i = c(3, 9))
 
 ```
 
 
 
+# References
 
+<div id="refs"></div>
 
 
 

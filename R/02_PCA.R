@@ -253,7 +253,7 @@ corr_table <- round(var_fullZ$cor, digits = 2)
 #         nrow = 1, ncol = 1,
 #         filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
 
-#ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.tiff", 
+# ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.png",
 #          width = 2000, height = 1800, res = 300)
 
 
