@@ -32,7 +32,7 @@ We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for t
 
 $$
 \left[
-\begin{array}{c}
+\begin{array}{cccc}
 id_{0y1,i} \\ 
 id_{0y2,i} \\ 
 id_{0y3,i} \\
@@ -49,7 +49,7 @@ Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4
 $$
 $$
 \left[
-\begin{array}{c}
+\begin{array}{cccc}
 en_{0y1,i} \\ 
 en_{0y2,i} \\ 
 en_{0y3,i} \\
@@ -66,7 +66,7 @@ Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4
 $$
 $$
 \left[
-\begin{array}{c}
+\begin{array}{cccc}
 av_{0y1,i} \\ 
 av_{0y2,i} \\ 
 av_{0y3,i} \\
@@ -83,7 +83,7 @@ Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4
 $$
 $$
 \left[
-\begin{array}{c}
+\begin{array}{cccc}
 \varepsilon_{0y1,i} \\ 
 \varepsilon_{0y2,i} \\ 
 \varepsilon_{0y3,i} \\
