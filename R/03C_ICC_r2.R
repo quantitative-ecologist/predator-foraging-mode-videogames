@@ -14,7 +14,7 @@
 
 
 # =======================================================================
-# 1. Set working directory, load libraries, datasets, and models
+# 1. Load libraries, datasets, and models
 # =======================================================================
 
 # Librairies

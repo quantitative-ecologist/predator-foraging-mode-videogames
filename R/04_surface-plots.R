@@ -1,12 +1,11 @@
-
 #########################################################################
 
 #              Surface plots of hunting success analyses                #
 
 #########################################################################
 
-# Code to produce Figure 3 and 4 in Fraser Franco et al. 2021.
-# Plot interactions between predator traits and predator-prey traits of the quadratic hunting success models
+# Code to produce Figure 4 in Fraser Franco et al. 2021.
+# Plot interactions between predator and prey traits of the quadratic hunting success model 2
 
 # All graphs are saved directly from the offline webhost into my outputs
 
@@ -47,7 +46,7 @@ data <- fread("./data/merged-data.csv",
 data[, prop_captures := hunting_success/4]
 
 # Load quadratic model
-load("./outputs/03C_hunting_success_quadratic-model.rda")
+load("./outputs/03C_hunting_success_quadratic-model2.rda")
 
 # =========================================================================
 # =========================================================================
@@ -869,13 +868,4 @@ space_survspeed_plot <- plot_ly(x = ~Zsurv_speed,
                                           showlegend = FALSE)) %>%
                       hide_colorbar()
 # ----------------------------------------------------------------------
-
-
-# predator-prey
-speed_survspace_plot
-speed_preyspeed_plot
-space_survspeed_plot
-space_survspace_plot
-guard_preyspace_plot
-guard_survspeed_plot
 # End of script ========================================================

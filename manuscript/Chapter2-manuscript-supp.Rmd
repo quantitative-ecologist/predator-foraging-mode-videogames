@@ -31,72 +31,64 @@ We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoe
 We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations by sampling every 40 intervals (thinning), and used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean and HDP intervals to obtain the correlation values. The variance-covariance matrixes were parametrized as :
 
 $$
-\left[
-\begin{array}{cccc}
+\begin{bmatrix}
 id_{0y1,i} \\ 
 id_{0y2,i} \\ 
 id_{0y3,i} \\
 id_{0y4,i}
-\end{array}\right]
+\end{bmatrix}
 = MVN(0, \Omega_{id}) : \text{where } \Omega_{id} = 
-\left[
-\begin{array}{cccc}
-V_{id_{0y1,i}} \\
-Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} \\ 
-Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} \\
+\begin{bmatrix}
+V_{id_{0y1,i}} & & &  \\
+Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} & & \\
+Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} & \\
 Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4,i}} & V_{id_{0y4,i}}
-\end{array}\right]
+\end{bmatrix}
 $$
 $$
-\left[
-\begin{array}{cccc}
+\begin{bmatrix}
 en_{0y1,i} \\ 
 en_{0y2,i} \\ 
 en_{0y3,i} \\
 en_{0y4,i}
-\end{array}\right]
+\end{bmatrix}
 = MVN(0, \Omega_{en}) : \text{where } \Omega_{en} = 
-\left[
-\begin{array}{cccc}
-V_{en_{0y1,i}} \\
-Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} \\ 
-Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} \\
+\begin{bmatrix}
+V_{en_{0y1,i}} & & & \\
+Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} & & \\ 
+Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} & \\
 Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4,i}} & V_{en_{0y4,i}}
-\end{array}\right]
+\end{bmatrix}
 $$
 $$
-\left[
-\begin{array}{cccc}
+\begin{bmatrix}
 av_{0y1,i} \\ 
 av_{0y2,i} \\ 
 av_{0y3,i} \\
 av_{0y4,i}
-\end{array}\right]
+\end{bmatrix}
 = MVN(0, \Omega_{av}) : \text{where } \Omega_{av} = 
-\left[
-\begin{array}{cccc}
-V_{av_{0y1,i}} \\
-Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} \\ 
-Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} \\
+\begin{bmatrix}
+V_{av_{0y1,i}} & & & \\
+Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} & &\\ 
+Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} & \\
 Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4,i}} & V_{av_{0y4,i}}
-\end{array}\right]
+\end{bmatrix}
 $$
 $$
-\left[
-\begin{array}{cccc}
+\begin{bmatrix}
 \varepsilon_{0y1,i} \\ 
 \varepsilon_{0y2,i} \\ 
 \varepsilon_{0y3,i} \\
 \varepsilon_{0y4,i}
-\end{array}\right]
+\end{bmatrix}
 = MVN(0, \Omega_{\varepsilon}) : \text{where } \Omega_{\varepsilon} = 
-\left[
-\begin{array}{cccc}
-V_{\varepsilon_{0y1,i}} \\
-Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} \\ 
-Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} \\
+\begin{bmatrix}
+V_{\varepsilon_{0y1,i}} & & & \\
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} & & \\ 
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} & \\
 Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsilon_{0y4,i}} & Cov_{\varepsilon_{0y3,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y4,i}}
-\end{array}\right]
+\end{bmatrix}
 $$
 where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
@@ -104,9 +96,9 @@ where the diagonals represent the random effect variances for each hunting trait
 
 ## S2.1 Principal component analysis
 
-The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and prey guarding had the highest contribution to the first principal component (28.31% and 25.41% respectively) (Table SI), while the rate of space covered had the second highest contribution (30.48%) to the second principal component (Table SI). We excluded the number of chases from the subsequent analyses because they are used to calculate the amount of points earned in a match which is our performance proxy. Prey guarding is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not guard captured prey and individuals who guard prey are slower travelers.
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and time spent ambushing had the highest contribution to the first principal component (23.19% and 29.38% respectively) (Table SI), while the rate of space covered and the time before first capture had the second highest contribution (48.12% and 35.55%) to the second principal component (Table SI). Time spent ambushing is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
 
-```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and % of explained variance on the first and second PC axes to select variables used for subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and time spent ambushing were the highest contributing behaviours to the PC1 axis (in bold). The rate of space covered and the time before 1st capture were the highest contributing behaviours to the PC2 axis (in bold).", echo = FALSE}
+```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and time spent ambushing were the highest contributing behaviours to the PC1 axis (in bold). The rate of space covered and the time before first capture were the highest contributing behaviours to the PC2 axis (in bold).", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 ```
 
@@ -184,6 +176,57 @@ cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
 ```
 
 
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# ========================================================
+
+#               Code to produce Table SII
+
+# ========================================================
+
+# Load libraries
+library(factoextra)
+library(FactoMineR)
+library(data.table)
+library(flextable)
+library(dplyr)
+
+# Load the model coefficients
+
+
+# Compute seperate tables based on PCs
+pc1_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc1" = corr_table$Dim.1,
+                      "variance_pc1" = contrib_table$Dim.1)
+
+pc2_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc2" = corr_table$Dim.2,
+                      "variance_pc2" = contrib_table$Dim.2)
+
+# Compute the table for Word
+my_header <- data.frame(
+  col_keys = c("variable", "correlation_pc1", "variance_pc1", 
+               "correlation_pc2", "variance_pc2"),
+  line1 = c("", rep("PC1 (% variance = 21.0)", 2), rep("PC2 (% variance = 15.3)", 2)),
+  line2 = c("Behaviour", "Correlation", "% variance", "Correlation", "% variance"),
+  stringsAsFactors = FALSE
+)
+
+cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
+  select(variable, correlation_pc1, variance_pc1,
+         correlation_pc2, variance_pc2) %>%
+  flextable(col_keys = my_header$col_keys) %>%
+  set_header_df(mapping = my_header, key = "col_keys") %>%
+  theme_booktabs() %>%
+  merge_v(part = "header") %>%
+  merge_h(part = "header") %>%
+  align(align = "center", part = "all") %>%
+  font(fontname = "Times new roman", part = "all") %>%
+  autofit(add_w = -0.1) %>%
+  bold(j = c(2, 3), i = 1:2) %>%
+  bold(j = c(4, 5), i = c(3, 9))
+
+```
 
 # References
 
