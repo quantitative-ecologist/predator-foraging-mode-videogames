@@ -202,14 +202,14 @@ table[, "CI" := apply(cbind(Q2.5, Q97.5),
 
 table[, "CI2" := paste("(", table$CI, sep = "")]
 table[, "CI3" := paste(table$CI2, ")", sep = "")]
-table[, c(3,4,6,7) := NULL]
+table[, c(3, 4, 6, 7) := NULL]
 setnames(table, "CI3", "CI")
 
 # Compute the estimate column
 table[, Estimate := paste(table$Estimate, CI, sep = " ")][, CI := NULL]
 
 # Reorder columns
-setcolorder(table, neworder = c(3,1,2))
+setcolorder(table, neworder = c(3, 1, 2))
 
 # Change coefficient names
 coefficient1 <- list(
@@ -328,6 +328,8 @@ newtab %>%
 # ========================================================
 # ========================================================
 ```
+
+\newpage
 
 # References
 
