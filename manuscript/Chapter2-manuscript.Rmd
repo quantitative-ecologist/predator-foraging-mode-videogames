@@ -6,6 +6,9 @@ output:
     reference_docx: Chapter2-styles.docx
 bibliography: references.bib
 csl: american-naturalist.csl
+
+header-includes:
+  \usepackage{amsmath}
 ---
 ###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
   
@@ -69,12 +72,38 @@ We performed all statistical analyses using the R software (version 4.0.2, R Cor
 
 ### (i)	Variation in hunting mode
 
-We first parametrised a multivariate Bayesian mixed model to quantify unadjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed and rate of space covered as linear fixed effects. We square-root transformed the four hunting behaviours ($y1$ = speed, $y2$ = space, $y3$ = time in ambush, $y4$ = time 1^st^ capture) to achieve normality and then defined each as having a Gaussian distribution. All traits were then standardised to mean and unit variance (z-scores). We parametrised the model as (see section ‘Parametrisation of the multivariate mixed model’ in the Supporting information for details):
+We first parametrised a multivariate Bayesian mixed model to quantify unadjusted repeatability of hunting behaviour, and evaluate among-environment, among-individual (specialisation), and within-individual (flexibility) behavioural correlations. We included the predator’s population-response to prey behaviour by adding prey travel speed ($x_1$) and rate of space covered ($x_2$) as linear fixed effects. We square-root transformed the four hunting behaviours ($y1$ = speed, $y2$ = space, $y3$ = time in ambush, $y4$ = time 1^st^ capture) to achieve normality and then defined each as having a Gaussian distribution. All traits were then standardised to mean and unit variance (z-scores). We parametrised the model as (see section ‘Parametrisation of the multivariate mixed model’ in the Supporting information for details):
 
-$$y1_{ij} = (\beta_{0y1} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i}) + \beta_{1y1}\text{prey speed} + \beta_{2y1}\text{prey space} + \varepsilon_{0y1,ij}$$
-$$y2_{ij} = (\beta_{0y2} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i}) + \beta_{1y2}\text{prey speed} + \beta_{2y2}\text{prey space} + \varepsilon_{0y2,ij}$$
-$$y3_{ij} = (\beta_{0y3} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i}) + \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + \varepsilon_{0y3,ij}$$
-$$y4_{ij} = (\beta_{0y4} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i}) + \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + \varepsilon_{0y4,ij}$$
+
+\[
+%I need to manually create tables in word to insert the equations and add equation number
+\begin{align}
+y1_{ij} &= \text{ } (\beta_{0y1} + id_{0y1,i} + env_{0y1,i} + avatar_{0y1,i}) \\ 
+&\text{ } + \text{ } \beta_{1y1} x_1 + \beta_{2y1} x_2 + \varepsilon_{0y1,ij}
+\end{align}
+\]
+
+\[
+\begin{align}
+y2_{ij} &= \text{ } (\beta_{0y2} + id_{0y2,i} + env_{0y2,i} + avatar_{0y2,i}) \\
+& \text{ } + \text{ } \beta_{1y2} x_1 + \beta_{2y2} x_2 + \varepsilon_{0y2,ij}
+\end{align}
+\]
+
+\[
+\begin{align}
+y3_{ij} &= \text{ } (\beta_{0y3} + id_{0y3,i} + env_{0y3,i} + avatar_{0y3,i}) \\
+&\text{ }  + \text{ } \beta_{1y3}\text{prey speed} + \beta_{2y3}\text{prey space} + \varepsilon_{0y3,ij}
+\end{align}
+\]
+
+\[
+\begin{align}
+y4_{ij} &= \text{ } (\beta_{0y4} + id_{0y4,i} + env_{0y4,i} + avatar_{0y4,i}) \\
+&\text{ } + \text{ } \beta_{1y4}\text{prey speed} + \beta_{2y4}\text{prey space} + \varepsilon_{0y4,ij}
+\end{align}
+\]
+
 where *i* indexes individual players and *j* the recorded match. Player ID ($id_{0y,i}$), the game environment ($env_{0y,i}$), the predator avatar ($avatar_{0y,i}$), and the residuals ($\varepsilon_{0y,i}$) are, respectively, random intercepts (among- individual, environment, and avatar variance) and residuals (within-individual variance) assumed to follow a multivariate Gaussian distribution, with their associated variance-covariance matrixes ($\Omega_{id}$, $\Omega_{env}$, $\Omega_{avatar}$, $\Omega_{\varepsilon}$) (refer to equations S1-S4 in Supporting information). For each combination of behaviours, we extracted from our variance-covariance matrices the behavioural correlations among- individuals, environments, and avatars, as well as within-individual (residual) behavioural correlations by dividing the random effect covariances by the square root of the product of the random effect variances (according to equation 7c-d in Dingemanse and Dochtermann, 2013).
 
 Following @nakagawaRepeatabilityGaussianNonGaussian2010, we calculated each hunting trait’s adjusted repeatability estimate (intra-class correlation coefficient, ICC) for the player ID, the game environment, and the predator avatar by dividing the variance associated with the random effect by the total phenotypic variance (ex. $ICC_{id0,y1} = V_{id0,y1} / (V_{id0,y1} + V_{env0,y1} + V_{avatar0,y1} + V_{\varepsilon0,y1})$). We computed the 95% credible intervals for each repeatability estimate using the highest posterior density intervals.
@@ -83,39 +112,12 @@ Following @nakagawaRepeatabilityGaussianNonGaussian2010, we calculated each hunt
 
 Since predators can capture a maximum of four prey, we used the number of prey captured per total number of prey in a match (four) as a binomial response variable ($\omega_{ij}$ ~ $Binom(max_{ij}, P_{ij})$). We first quantified the linear relationship between hunting success and predator behaviour by fitting a binomial Bayesian generalized linear mixed model (glmm) with a logit link function. The model fits a linear function where we could estimate if hunting success increased or decreased with increasing hunting behaviour scores. We fitted the mean probability of capturing four prey ($P_{ij}$) for individual *i* on its *j* match as a function of its travel speed, rate of space covered, proportion of time spent in an ambush position, and proportion of time before the first capture (upper part of equation 5). We computed a second model to account for variation explained by prey behaviour. We thus added prey travel speed and their rate of space covered in the model equation (lower part of equation 5). Both models had random intercepts for the predator player’s ID ($id_{0,i}$) and the game environment ($env_{0,i}$) to partition the variance in hunting success explained by differences among players and environments where matches occurred. We included an observation-level random effect to account for overdispersion [@harrisonComparisonObservationlevelRandom2015] and compared the models to a beta-binomial model to verify that the estimates were robust. Trait values were standardised to mean and unit variance (z-scores). The models were fitted as:
 
-$$
-\begin{aligned}
-logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
-&+ \beta_{1,pred} \text{speed}_{i} \\
-&+ \beta_{2,pred} \text{space}_{i} \\
-&+ \beta_{3,pred} \text{time in ambush}_{i} \\
-&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
-& ------------ \\
-&+ \beta_{5,prey} \text{speed}_{i}^{'} \\
-&+ \beta_{6,prey} \text{space}_{i}^{'} \\
-\end{aligned}
-$$
+
 where player ID and the game environment come from a normal distribution with estimated variance ($id_{0,i}$~$N(0, V_{id})$, $env_{0,i}$~$N(0,V_{env})$).
 
 We built a third model with the same structure as the first model and included quadratic terms to determine whether the relationships between hunting success and predator behaviour are concave or convex. Concave gradients suggest that individuals at the extremes of the trait distribution perform poorly while the opposite is true when the gradient is convex [@brodieVisualizingQuantifyingNatural1995]. We also added interaction terms for each combination of predator traits to estimate correlated effects on hunting success. Lastly, we computed a fourth model that included quadratic terms for prey behaviour, and interaction terms between predator and prey behaviours to test if predators perform better against prey with the opposite locomotor tendency (locomotor crossover). This model was built within the same structure as the third model. All trait values were standardised to mean of 0 and unit variance (z-scores). The models had the following structure:
 
-$$
-\begin{aligned}
-logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
-&+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
-&+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
-&+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
-&+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
-&+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
-& ---------------------------------- \\
-&+ \beta_{5,prey} \text{speed}_{i}^{'} + \beta_{6,prey} \text{space}_{i}^{'} \\
-&+ \frac{1}{2} \gamma_{5,prey} \text{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \text{space}_{i}^{'2} \\
-&+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
-&+ \gamma_{14,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
-\end{aligned}
-$$
+
 where the upper part of the equation shows the third model which includes quadratic and interactions terms for predator behaviour only, and the lower part the fourth model accounting for quadratic and interactions terms for predator and prey behaviour. $\frac{1}{2} \gamma_{n,pred}$ are the quadratic terms for the predator traits ($x_{i}$), $\frac{1}{2} \gamma_{n,prey}$ are the quadratic terms for the prey traits ($x'_{i}$), $\gamma_{n,pred}$ are the interaction terms between predator behaviours, and $\gamma_{n, \text{pred prey}}$ are the interactions terms between predator and prey behaviours.
 
 The reported estimates are partial coefficients which are the effect of the behaviour on hunting success while holding the other behaviours constant. We calculated the models’ ICCs following @nakagawaCoefficientDeterminationR22017. For each model parameter, we computed the 95% credibility intervals using the highest posterior density intervals. We assumed the fixed effects and the ICCs reached statistical significance when the 95% credible intervals did not overlap zero [@Nakagawa.Cuthill2007].
@@ -146,24 +148,178 @@ At the environment-level, predators who were faster in certain environments spen
 
 ### (i) Linear relationships between predator/prey behaviour and predator hunting success
 
-Predator behaviour alone explained 12.7% of the variation in prey capture ($R_{marginal}^2$ = 0.127). Travel speed ($\beta_{1} \text{speed}$ [95% CI] = 0.07 [0.05, 0.08]) and time spent ambushing ($\beta_{3} \text{time in ambush}$ [95% CI] = 0.38 [0.37, 0.40]) were positively related to prey capture, suggesting that faster predators and ambush predators captured more prey (Fig. 3A, C). Predators who covered space at a faster rate captured fewer prey (Fig. 3B, $\beta_{2} \text{space}$ [95% CI] = -0.40 [-0.42, -0.38]) (Fig. 3B). Predators that required more time to capture their first prey had a lower probability of capturing all four prey $\beta_{4} \text{time 1}^{st} \text{capture}$ [95% CI] = -0.66 [-0.67, -0.64] (Fig. 4D). The probability of capturing all prey barely varied among game environments ($ICC_{env0}$ [95% CI] = 0.005 [0.002, 0.008]). Differences among individuals were low ($ICC_{id0}$ [95% CI] = 0.067 [0.060, 0.074]).
+Predator behaviour alone explained 12.7% of the variation in prey capture ($R_{marginal}^2$ = 0.127). Travel speed and time spent ambushing were positively related to prey capture (Table I), suggesting that faster predators and ambush predators captured more prey (Fig. 3A, C). Predators who covered space at a faster rate captured fewer prey (Table I) (Fig. 3B). Predators that required more time to capture their first prey had a lower probability of capturing all four prey (Table I) (Fig. 4D). The probability of capturing all prey barely varied among game environments ($ICC_{env0}$ [95% CI] = 0.005 [0.002, 0.008]). Differences among individuals were low ($ICC_{id0}$ [95% CI] = 0.067 [0.060, 0.074]).
 
-By adding prey behaviour, the model explained 18.1% of the variation in prey capture ($R_{marginal}^2$ = 0.181). Predators who competed against prey that were cursorial had a significantly lower probability of capturing all prey ($\beta_{5} \text{prey speed}$ [95% CI] = -0.20 [-0.22, -0.19]). Prey who were faster at covering space in the environment significantly reduced the probability of capturing all prey for the predator ($\beta_{6} \text{prey speed}$ [95% CI] = -0.63 [-0.65, -0.61]). All the model parameter values are reported in Table *SX* in Supporting information.
+By adding prey behaviour, the model explained 18.1% of the variation in prey capture ($R_{marginal}^2$ = 0.181). Predators who competed against prey that were cursorial had a significantly lower probability of capturing all prey (Table I). Prey who were faster at covering space in the environment significantly reduced the predators' probability of capturing all prey (Table I).
+
+\newpage
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# ========================================================
+
+#               Code to produce Table SII
+
+# ========================================================
+
+# Load libraries
+library(data.table)
+library(flextable)
+library(dplyr)
+
+
+# ========================================================
+# Prepare the table
+# ========================================================
+
+# Load the coefficient table
+table <- readRDS(here::here("outputs", "05_hunting_success_coef-table.rds"))
+
+# Compute the CI column
+table[, "CI" := apply(cbind(Q2.5, Q97.5),
+                      1, function(x) paste(sort(x), collapse = ", "))]
+
+table[, "CI2" := paste("(", table$CI, sep = "")]
+table[, "CI3" := paste(table$CI2, ")", sep = "")]
+table[, c(3, 4, 6, 7) := NULL]
+setnames(table, "CI3", "CI")
+
+# Compute the estimate column
+table[, Estimate := paste(table$Estimate, CI, sep = " ")][, CI := NULL]
+
+# Reorder columns
+setcolorder(table, neworder = c(3, 1, 2))
+
+# Change coefficient names
+coefficient1 <- list(
+  "intercept",
+  "speed",
+  "space",
+  "ambush",
+  "time",
+  "prey speed",
+  "prey space",
+  "speed",
+  "space",
+  "ambush",
+  "time",
+  "speed:space",
+  "speed:ambush",
+  "speed:time",
+  "space:ambush",
+  "space:time",
+  "ambush:time",
+  "prey speed",
+  "prey space",
+  "speed:prey speed",
+  "speed:prey space",
+  "space:prey space",
+  "space:prey space",
+  "ambush:prey speed",
+  "ambush:prey space",
+  "time:prey speed",
+  "time:prey space"
+)
+
+table[, coefficient := coefficient1]
+
+# ========================================================
+# ========================================================
+
+
+
+# ========================================================
+#               Reshape the table for Word
+# ========================================================
+
+# Trait names
+newtab <- table[2:7, 2]
+
+# Predator trait interactions names
+newtab <- rbind(newtab, table[12:17, 2])
+
+# Pred-Prey interactions names
+newtab <- rbind(newtab, table[20:27, 2])
+
+# linear estimates
+estimate1 <- c(table[2,3], table[3,3],
+               table[4,3], table[5,3],
+               table[6,3], table[7,3],
+               rep("-", 14))
+
+# Quadratic estimates
+estimate2 <- c(table[8,3], table[9,3],
+               table[10,3], table[11,3],
+               table[18,3], table[19,3],
+               rep("-", 14))
+
+# Predator trait interactions estimates
+estimate3 <- c(rep("-", 6), 
+               table[12,3], table[13,3],
+               table[14,3], table[15,3],
+               table[16,3], table[17,3],
+               rep("-", 8))
+
+# Pred-prey interactions estimates 
+estimate4 <- c(rep("-", 12), 
+               table[20,3], table[21,3],
+               table[22,3], table[23,3],
+               table[24,3], table[25,3],
+               table[26,3], table[27,3])
+
+# Bind estimates
+newtab <- cbind(newtab, estimate1 = estimate1,
+                estimate2 = estimate2,
+                estimate3 = estimate3,
+                estimate4 = estimate4)
+
+# ========================================================
+# ========================================================
+
+
+
+# ========================================================
+# Compute the table for Word
+# ========================================================
+
+my_header1 <- data.frame(
+  col_keys = c("coefficient", "estimate1",
+               "estimate2", "estimate3", "estimate4"),
+  line1 = c(" ", "Linear (95% CI)", 
+            "Quadratic (95% CI)", "Pred Interaction (95% CI)",
+            "Pred-prey Interaction (95% CI)"),
+  stringsAsFactors = FALSE
+)
+
+newtab %>%
+  select(coefficient, estimate1, estimate2,
+         estimate3, estimate4) %>%
+  flextable(col_keys = my_header1$col_keys) %>%
+  set_header_df(mapping = my_header1, key = "col_keys") %>%
+  theme_booktabs() %>%
+  merge_v(part = "header") %>%
+  merge_h(part = "header") %>%
+  align(align = "center", part = "all") %>%
+  font(fontname = "Times new roman", part = "all") %>%
+  fontsize(size = 10, part = "all") %>%
+  autofit() %>% 
+  align(align = "left", part = "body", j = 1)
+# ========================================================
+# ========================================================
+```
 
 ### (ii) Quadratic relationships between predator/prey behaviour and predator hunting success
 
-The model that included quadratic and interaction terms for predator behaviour did not significantly increase explained variance in prey capture ($R_{marginal}^2$ = 0.149). However, we observed significant concave relationships for travel speed ($\frac{1}{2} \gamma_{1,pred} \text{speed}^{2}$ [95% CI] = -0.11 [-0.12, -0.10]) and time in ambush ($\frac{1}{2} \gamma_{3,pred} \text{time in ambush}^{2}$ [95% CI] = -0.12 [-0.13, -0.11]) (Fig. 3E, G), suggesting that hunting success was low at extreme behavioural values. There was a significant convex relationship between prey capture and space coverage (Fig. 3F) ($\frac{1}{2} \gamma_{2,pred} \text{space}^{2}$ [95% CI] = 0.09 [0.08, 0.10]), and the shape of the quadratic function relating prey capture to time before the first prey is captured was almost the same as the linear function ($\frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}^{2}$ [95% CI] = 0.13 [0.12, 0.14]) (Fig. 3H). The probability of capturing all prey was still similar among game environments ($ICC_{env0}$ [95% CI] = 0.010 [0.005, 0.016]), and varied slightly among individual players ($ICC_{id0}$ [95% CI] = 0.072 [0.064, 0.079].
+The model that included quadratic and interaction terms for predator behaviour did not significantly increase explained variance in prey capture ($R_{marginal}^2$ = 0.149). However, we observed significant concave relationships for travel speed and time spent ambushing (Table I), suggesting that hunting success was low at extreme behavioural values (Fig. 3E, G). There was a significant convex relationship between prey capture and space coverage (Table I) (Fig. 3F), and the shape of the quadratic function relating prey capture to time before the first prey is captured was almost the same as the linear function (Fig. 3H). The probability of capturing all prey was still similar among game environments ($ICC_{env0}$ [95% CI] = 0.010 [0.005, 0.016]), and varied slightly among individual players ($ICC_{id0}$ [95% CI] = 0.072 [0.064, 0.079].
 
-The model that included quadratic and interaction terms for predator and prey behaviour had the highest explanatory power ($R_{marginal}^2$ = 0.212). Prey capture by predators as a function of prey speed and prey rate of space covered was described by concave relationships
-($\frac{1}{2} \gamma_{5,prey} \text{speed}^{2}$ [95% CI] = -0.07 [-0.08, -0.07], $\frac{1}{2} \gamma_{6,prey} \text{space}^{2}$ [95% CI] = -0.10 [-0.11, -0.08]), thus, predators had a higher probability of capturing all prey during a match when they competed against prey who expressed average population values of these traits. See Table *SX* (Supporting information) for all the quadratic model parameter values.
+The model that included quadratic and interaction terms for predator and prey behaviour had the highest explanatory power ($R_{marginal}^2$ = 0.212). Prey capture by predators as a function of prey speed and prey rate of space covered was described by concave relationships (Table I), thus, predators had a higher probability of capturing all prey during a match when they competed against prey who expressed average population values of these traits.
 
-```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** Hunting success (i.e. the probability of capturing four prey) is on the y axis for all panels, and the standardised hunting behaviour is on the x axis. The black dashed lines represent the 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals (variance in fixed effects + variance in random effects). Both models were run on the same sample of 70 831 matches played by 2 171 players across 27 different game environments. The sample size of each parameter’s posterior distribution is 6000 for the base model, and 4000 for the quadratic model. **(A)**, **(B)**, **(B)** Linear functions. **(D)**, **(E)**, **(F)** Quadratic functions.", echo = FALSE}
+```{r Figure 3, fig.cap = "**Figure 3. Effect of predator hunting behaviour on prey capture.** Hunting success (i.e. the probability of capturing four prey) is on the y axis for all panels, and the standardised hunting behaviour is on the x axis. The black dashed lines represent the 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals (variance in fixed effects + variance in random effects). Both models were run on the same sample of 70 831 matches played by 2 171 players across 27 different game environments. The sample size of each parameter’s posterior distribution is 6000 for the base model, and 4000 for the quadratic model. **(A)**, **(B)**, **(C)** Linear functions. **(D)**, **(E)**, **(F)** Quadratic functions.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure3.png"))
 ```
 
 ### (iii) Effect of the predator-prey behavioural interaction on predator hunting success
 
-According to our predictions, faster predators were more successful when they competed against sedentary prey ($\gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'}$ [95% CI] = -0.09 [-0.11, -0.07]) (Fig. 4A). Predators had higher hunting success for the whole range of values of space covered when they competed against slower-moving prey ($\gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'}$ [95% CI] = -0.05 [-0.06, -0.03]) (Fig. 4C). Contrary to our expectations, the most successful predators where those who covered space at a slow rate when they competed against prey that were slower at covering space in the environment ($\gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'}$ [95% CI] = 0.10 [0.07, 0.12]) (Fig. 4D). However, those who covered space at the fastest rate where more successful against prey that were the slowest at covering space (Fig. 4D). There were no significant interactions between predator and prey travel speed ($\gamma_{7,\text{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'}$[95% CI] = -0.01 [-0.03, 0.00]) (Fig. 4B). Lastly, for the whole range of time spent ambushing prey, predators had generally higher success against slower moving prey and prey that covered less space in the environment, although the interaction with prey space covered was not significant ($\gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'}$ [95% CI] = -0.06 [-0.07, -0.04], $\gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'}$ [95% CI] = -0.01 [-0.03, 0.01]) (Fig 4E-F). See table *SX* (Supporting information) for all the interaction parameter values.
+According to our predictions, faster predators were more successful when they competed against sedentary prey (Fig. 4A). Predators had higher hunting success for the whole range of values of space covered when they competed against slower-moving prey (Fig. 4C). Contrary to our expectations, the most successful predators where those who covered space at a slow rate when they competed against prey that were slower at covering space in the environment (Fig. 4D). However, those who covered space at the fastest rate where more successful against prey that were the slowest at covering space (Fig. 4D). There were no significant interactions between predator and prey travel speed (Fig. 4B). Lastly, for the whole range of time spent ambushing prey, predators had generally higher success against slower moving prey and prey that covered less space in the environment (Fig 4E-F), although the interaction with prey space covered was not significant (Table I).
 
 ```{r Figure 4, fig.cap = "**Figure 4. Incluence of the predator and prey behavioural interactions on predator hunting success.** The plots' 3D surfaces show the relationship between different combinations of predator-prey behaviours and predator hunting success. We fitted the surfaces by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator and prey interaction terms. **A)** Predator travel speed and prey space coverage. **B)** Predator and prey travel speed. **C)** Predator space coverage and prey travel speed. **D)** Predator and prey space coverage. **E)** Predator time spent ambushing and prey space coverage. **F)** Predator time spent ambushing and prey travel speed.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure4.png"))
@@ -171,7 +327,7 @@ knitr::include_graphics(here::here("outputs", "04_figure4.png"))
 
 # Discussion
 
-Our study is the first to use an online multiplayer videogame to investigate individual variation in predator foraging mode, and how predator and prey behaviour affect hunting success. We provide evidence that individuals who adopt the predator avatar display individual specialisation and flexibility in competing foraging modes (cursorial vs sit-and-wait). The expression of these foraging modes was consistent with shifts in the expression of other behaviours such as space use and the latency to first prey capture, matching the predictions of the foraging syndrome hypothesis at the individual level. Contrary to our expectations, neither hunting behaviour nor prey capture varied among the game environments. Although we found the presence of competing foraging modes in the population, the most successful predators were those who hunted at average population values of travel speed, and those who spent an above population-average of their time ambushing prey. Lastly, we indeed found evidence for the locomotor-crossover hypothesis for some predator-prey trait combinations. However, predators were generally less successful when they competed against fast traveling prey and those who covered space faster in the environment.
+Our study is the first to use an online multiplayer videogame to investigate individual variation in predator foraging mode, and how predator and prey behaviour affect hunting success. We provide evidence that individuals who adopt the predator avatar display individual specialisation and flexibility in competing foraging modes (cursorial vs sit-and-wait). The expression of these foraging modes was consistent with shifts in the expression of other behaviours such as space use and the latency to first prey capture, matching the predictions of the foraging syndrome hypothesis at the individual level. Contrary to our expectations, neither hunting behaviour nor prey capture varied among the game environments. Even if we found the presence of competing foraging modes in the population, the most successful predators were those who hunted at average population values of travel speed, and those who spent an above population-average of their time ambushing prey. Lastly, we indeed found evidence for the locomotor-crossover hypothesis for some predator-prey trait combinations. However, predators were generally less successful when they competed against fast traveling prey and those who covered space faster in the environment.
 
 Our analyses revealed that predators differed in their average travel speed and in their proportion of time spent ambushing prey. These behaviours were negatively correlated at the among-individual level, suggesting that individuals may specialise as either cursorial or ambush predators. Cursorial predators displayed a shorter latency to first prey capture compared to ambush predators. These results are similar to those of @mcgheeReciprocalBehavioralPlasticity2013, who found that fast moving northern pike (*Esox lucius*) were quicker to launch their initial attack. Interestingly, we found that hunting success decreased significantly with increasing latency to first capture, but did not strongly interact with time spent ambushing to affect hunting success. Globally, the most successful predators were those who moved at average population values of travel speed, while spending at least an above average of their time ambushing prey.
 
@@ -181,9 +337,9 @@ Predators also displayed flexibility in their foraging mode, where individuals s
 
 An unexpected result in our study was that predator hunting mode did not change as a function of the environment. This contrasts with studies showing that predators exploit habitat characteristics such as vegetation density to choose their hunting strategies [@jamesEffectsHabitatComplexity1994; @Warfe.Barmuta2004; @wasiolkaBehaviouralResponsesLizard2009]. A potential explanation is that habitat structure may have instead affected prey behaviour, for instance, by altering their perception of predation risk or fear [@Heithaus.etal2009; @gaynorLandscapesFearSpatial2019]. Features of heterogeneous habitats can sometimes exert stronger predator cues, leading prey to avoid these habitats, or alter their activity to reduce predation risks [@preisserPredatorHuntingMode2007]. Prey individuals in *DBD* might differ in the way they respond to these habitat changes, as some could have increased activity in heterogeneous habitats by exploiting refuges, thus, negating the effect of the environment on the predator's hunting strategy [@Savino.Stein1989; @Warfe.Barmuta2004]. This could also explain why hunting success was similar among game environments. Predators can also alter their hunting behaviour at larger scales according to prey behaviour (as we have found), but seek prey accessibility at finer scales by killing them in specific areas in a given habitat [@hopcraftPlanningSuccessSerengeti2005]. We will need to investigate kill sites in the environment to see if these habitat scale-dependent effects on hunting behaviour occur in *DBD*. Taken together, our observations emphasize the importance of quantifying the interactions between environmental and individual-level factors of predators and prey to better understand trophic interactions.
 
-We are among the first ecologists [Cere et al. accepted; @Barbe.etal2020] to propose the use of online multiplayer videogames to investigate how ecological mechanisms shape the dynamics of trophic interactions. Although we are persuaded that videogames are poised to play a central role in testing ecological hypotheses, as they reduce financial, statistical or logistical hurdles associated with empirical research while providing complex and ecologically-relevant datasets, they are not a panacea and they come with their own biases. For instance, player behaviour may not properly reflect behavioural decisions made by real-life organisms in the wild, as the player cannot "die" [@oultramVirtualPlaguesRealworld2013]. Hence, individuals may take greater risks in a videogame compared to real predators [@lofgrenUntappedPotentialVirtual2007; @oultramVirtualPlaguesRealworld2013]. In addition, although *DBD* provides an interesting system to investigate predator-prey interactions, prey density is fixed at four players, which prevents the modelling of predator functional responses. Lastly, single predator systems such as this game may not reflect natural systems where multiple predator species compete for the same prey. In light of these potential biases, researchers should interpret results from online videogames with care, and should aim to test specific ecological hypotheses when using virtual systems.
+We are among the first ecologists [Cere et al. accepted; @Barbe.etal2020] to propose the use of online multiplayer videogames to investigate how ecological mechanisms shape the dynamics of trophic interactions. Although we are persuaded that videogames are poised to play a central role in testing ecological hypotheses, as they reduce financial, statistical or logistical hurdles associated with empirical research while providing complex and ecologically-relevant datasets, they are not a panacea and they come with their own biases. For instance, player behaviour may not properly reflect behavioural decisions made by real-life organisms in the wild, as the player cannot "die" [@oultramVirtualPlaguesRealworld2013]. Hence, individuals may take greater risks in a videogame compared to real predators [@lofgrenUntappedPotentialVirtual2007; @oultramVirtualPlaguesRealworld2013]. Moreover, while *DBD* provides an interesting system to investigate predator-prey interactions, prey density is fixed at four players, which prevents the modelling of predator functional responses. Lastly, single predator systems such as this game may not reflect natural systems where multiple predator species compete for the same prey. In light of these potential biases, researchers should interpret results from online videogames with care, and should aim to test specific ecological hypotheses when using virtual systems.
 
-To conclude, individual variation in predator (and prey) behaviour is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015; @toscanoPersonalityForagingBehavior2016; @Moran.etal2017]. Although our study is essentially descriptive, as it is the first to investigate individual variation in foraging behaviour using the *Dead by Daylight* system, we showed that individuals differed in contrasting hunting strategies that align with those used by wild predators. These hunting modes varied among- and within- individuals along correlated behaviours (foraging syndrome hypothesis), and our results suggest that predator-prey locomotor-crossovers may promote the coexistence of different predator and prey behavioural types. We are confident that further studies using online videogames will provide valuable ecological insight for behavioural and community ecologists.
+To conclude, individual variation in predator (and prey) behaviour is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015; @toscanoPersonalityForagingBehavior2016; @Moran.etal2017]. Albeit our study being essentially descriptive, as it is the first to investigate individual variation in foraging behaviour using the *Dead by Daylight* system, we showed that individuals differed in contrasting hunting strategies that align with those used by wild predators. These hunting modes varied among- and within- individuals along correlated behaviours (foraging syndrome hypothesis), and our results suggest that predator-prey locomotor-crossovers may promote the coexistence of different predator and prey behavioural types. We are confident that further studies using online videogames will provide valuable ecological insight for behavioural and community ecologists.
 
 \newpage
 # Acknowledgements:

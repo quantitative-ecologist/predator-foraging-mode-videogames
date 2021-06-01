@@ -6,6 +6,9 @@ output:
     reference_docx: Chapter2-styles.docx
 bibliography: references.bib
 csl: american-naturalist.csl
+
+header-includes:
+  \usepackage{amsmath}
 ---
 
 ###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
@@ -92,6 +95,65 @@ Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsil
 $$
 where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
+
+
+$$
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} \\
+&+ \beta_{2,pred} \text{space}_{i} \\
+&+ \beta_{3,pred} \text{time in ambush}_{i} \\
+&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+\tag{eq. 1}
+$$
+
+
+$$
+\begin{align}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} \\
+&+ \beta_{2,pred} \text{space}_{i} \\
+&+ \beta_{3,pred} \text{time in ambush}_{i} \\
+&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'} \\
+&+ \beta_{6,prey} \text{space}_{i}^{'} \\
+\tag{eq. S2}
+\end{align}
+$$
+
+
+
+
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
+&+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
+&+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
+&+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
+$$
+
+
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
+&+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
+&+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
+&+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'} + \beta_{6,prey} \text{space}_{i}^{'} \\
+&+ \frac{1}{2} \gamma_{5,prey} \text{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \text{space}_{i}^{'2} \\
+&+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{14,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
+\end{aligned}
+$$
+
+
+
+
 # Appendix S2. Results
 
 ## S2.1 Principal component analysis
@@ -174,160 +236,7 @@ cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
 
 ```
 
-\newpage
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
-# ========================================================
-
-#               Code to produce Table SII
-
-# ========================================================
-
-# Load libraries
-library(data.table)
-library(flextable)
-library(dplyr)
-
-
-# ========================================================
-# Prepare the table
-# ========================================================
-
-# Load the coefficient table
-table <- readRDS(here::here("outputs", "05_hunting_success_coef-table.rds"))
-
-# Compute the CI column
-table[, "CI" := apply(cbind(Q2.5, Q97.5),
-                      1, function(x) paste(sort(x), collapse = ", "))]
-
-table[, "CI2" := paste("(", table$CI, sep = "")]
-table[, "CI3" := paste(table$CI2, ")", sep = "")]
-table[, c(3, 4, 6, 7) := NULL]
-setnames(table, "CI3", "CI")
-
-# Compute the estimate column
-table[, Estimate := paste(table$Estimate, CI, sep = " ")][, CI := NULL]
-
-# Reorder columns
-setcolorder(table, neworder = c(3, 1, 2))
-
-# Change coefficient names
-coefficient1 <- list(
-  "intercept",
-  "speed",
-  "space",
-  "ambush",
-  "time",
-  "prey speed",
-  "prey space",
-  "speed",
-  "space",
-  "ambush",
-  "time",
-  "speed:space",
-  "speed:ambush",
-  "speed:time",
-  "space:ambush",
-  "space:time",
-  "ambush:time",
-  "prey speed",
-  "prey space",
-  "speed:prey speed",
-  "speed:prey space",
-  "space:prey space",
-  "space:prey space",
-  "ambush:prey speed",
-  "ambush:prey space",
-  "time:prey speed",
-  "time:prey space"
-)
-
-table[, coefficient := coefficient1]
-
-# ========================================================
-# ========================================================
-
-
-
-# ========================================================
-#               Reshape the table for Word
-# ========================================================
-
-# Trait names
-newtab <- table[2:7, 2]
-
-# Predator trait interactions names
-newtab <- rbind(newtab, table[12:17, 2])
-
-# Pred-Prey interactions names
-newtab <- rbind(newtab, table[20:27, 2])
-
-# linear estimates
-estimate1 <- c(table[2,3], table[3,3],
-               table[4,3], table[5,3],
-               table[6,3], table[7,3],
-               rep("-", 14))
-
-# Quadratic estimates
-estimate2 <- c(table[8,3], table[9,3],
-               table[10,3], table[11,3],
-               table[18,3], table[19,3],
-               rep("-", 14))
-
-# Predator trait interactions estimates
-estimate3 <- c(rep("-", 6), 
-               table[12,3], table[13,3],
-               table[14,3], table[15,3],
-               table[16,3], table[17,3],
-               rep("-", 8))
-
-# Pred-prey interactions estimates 
-estimate4 <- c(rep("-", 12), 
-               table[20,3], table[21,3],
-               table[22,3], table[23,3],
-               table[24,3], table[25,3],
-               table[26,3], table[27,3])
-
-# Bind estimates
-newtab <- cbind(newtab, estimate1 = estimate1,
-                estimate2 = estimate2,
-                estimate3 = estimate3,
-                estimate4 = estimate4)
-
-# ========================================================
-# ========================================================
-
-
-
-# ========================================================
-# Compute the table for Word
-# ========================================================
-
-my_header1 <- data.frame(
-  col_keys = c("coefficient", "estimate1",
-               "estimate2", "estimate3", "estimate4"),
-  line1 = c(" ", "Linear (95% CI)", 
-            "Quadratic (95% CI)", "Pred Interaction (95% CI)",
-            "Pred-prey Interaction (95% CI)"),
-  stringsAsFactors = FALSE
-)
-
-newtab %>%
-  select(coefficient, estimate1, estimate2,
-         estimate3, estimate4) %>%
-  flextable(col_keys = my_header1$col_keys) %>%
-  set_header_df(mapping = my_header1, key = "col_keys") %>%
-  theme_booktabs() %>%
-  merge_v(part = "header") %>%
-  merge_h(part = "header") %>%
-  align(align = "center", part = "all") %>%
-  font(fontname = "Times new roman", part = "all") %>%
-  fontsize(size = 10, part = "all") %>%
-  autofit() %>% 
-  align(align = "left", part = "body", j = 1)
-# ========================================================
-# ========================================================
-```
 
 \newpage
 
