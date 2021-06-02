@@ -302,7 +302,9 @@ newtab %>%
   font(fontname = "Times new roman", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   autofit() %>% 
-  align(align = "left", part = "body", j = 1)
+  align(align = "left", part = "body", j = 1) %>%
+  height(height = .3) %>%
+  hrule(rule = "exact")
 # ========================================================
 # ========================================================
 ```

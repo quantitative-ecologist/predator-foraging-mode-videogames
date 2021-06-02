@@ -1,29 +1,24 @@
 ---
 title: "Analysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
-author: "Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Olivier Montiglio^1^"
 output: 
   pdf_document:
+    latex_engine: xelatex
     fig_caption: true
 fontsize: 11pt
 bibliography: references.bib
 csl: american-naturalist.csl
-latex_engine: xelatex
 header-includes:
    - \usepackage{lineno}\linenumbers                    # add line number for the whole document
    - \usepackage{amsmath}                               # equations
    - \usepackage{setspace}\doublespacing                # double space the document
-   - \usepackage[labelfont=bf]{caption}                 # for the figure label
+   - \usepackage[labelfont=bf]{caption}                 # bold figure label
+   - \captionsetup{singlelinecheck = false}             # left-align figure label
    - \usepackage{sectsty}\allsectionsfont{\centering}   # center all section headers (can safely ignore warning)
+   - \usepackage{graphicx}
 ---
-###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
-  
-###### ^1^Correspondence: Pavillon des Sciences Biologiques (SB) SB-1805, 141 Avenue du Président-Kennedy, Montréal (Québec), Canada, H2X 1Y4
-
-###### ^1^Corresponding author: maxime(dot)fraser(dot)franco(at)hotmail.com
 
 \newpage
 ### Abstract {.unnumbered}
-This is my abstract paragraph
 
 Keywords: individual variation, hunting success, foraging mode, hunting tactics, predator-prey behaviour, online videogames
 
@@ -46,7 +41,7 @@ We used the online multiplayer videogame *Dead by Daylight* (*DBD*) as our study
 
 <br>
 
-```{r Figure 1, fig.cap = "**Images of the online videogame Dead by Daylight** **A)** The predator player's first person vision. **B)** The prey (survivor) player's third person vision. Prey can cooperate to repair generators. Once all generators are repaired, prey may activate one of the two **C)** doors in order to escape and win the match. **D)** Representative pictures of the different game environments where matches take place. The game environments settings vary between urban, farmland, and forest areas.", echo = FALSE}
+```{r Figure 1, fig.cap = "Images of the online videogame Dead by Daylight. A) The predator player's first person vision. B) The prey (survivor) player's third person vision. Prey can cooperate to repair generators. Once all generators are repaired, prey may activate one of the two C) doors in order to escape and win the match. D) Representative pictures of the different game environments where matches take place. The game environments settings vary between urban, farmland, and forest areas.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure1.png"))
 ```
 
@@ -148,7 +143,7 @@ As predicted, we found moderate among-individual differences in average travel s
 
 Contrary to our predictions, predators did not differ in their average travel speed ($ICC_{env}$, average speed [95% CI] = 0.002 [0.001, 0.003]), nor in their proportion of time spent in ambushing ($ICC_{env}$, time in ambush [95% CI] = 0.002 [0.001, 0.003]) in different game environments. However, we detected small differences among the game environments in the average rate of space covered and time before the first capture ($ICC_{env}$, space covered [95% CI] = 0.065 [0.036, 0.097]) ($ICC_{env}$, time 1^st^ capture [95% CI] = 0.055 [0.029, 0.082]) (Fig. 2B, diagonal). Finally, predators displayed weak among-avatar differences for the four hunting behaviours ($ICC_{avatar}$, average speed [95% CI] = 0.091 [0.042, 0.153], $ICC_{avatar}$, space covered [95% CI] = 0.025 [0.010, 0.046], $ICC_{avatar}$, time in ambush [95% CI] = 0.034 [0.012, 0.064], $ICC_{avatar}$, time 1^st^ capture [95% CI] = 0.021 [0.008, 0.039]) (*Fig. SX in Supplementary material*).
 
-```{r Figure 2, fig.cap = "**Correlations between combinations of hunting behaviours and their ICCs.** For each panel, the ICC of the trait is displayed on the diagonal. Black and gray circles are negative and positive correlations respectively. **A)** Among-individual behavioural correlations on the lower off-diagonal, and residual within-individual behavioural correlations on the upper off-diagonal. **B)** Among-environment behavioural correlations on the lower off-diagonal. Behaviour names were shortened to simplify the plot.", echo = FALSE}
+```{r Figure 2, fig.cap = "Correlations between combinations of hunting behaviours and their ICCs. For each panel, the ICC of the trait is displayed on the diagonal. Black and gray circles are negative and positive correlations respectively. A) Among-individual behavioural correlations on the lower off-diagonal, and residual within-individual behavioural correlations on the upper off-diagonal. B) Among-environment behavioural correlations on the lower off-diagonal. Behaviour names were shortened to simplify the plot.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure2.png"))
 ```
 
@@ -170,6 +165,190 @@ Predator behaviour alone (equation S5) explained 12.7% of the variation in hunti
 
 Adding prey behaviour (equation S6) increased the explained variance in hunting success to 18% ($R_{marginal}^2$ = 0.181). Predators that competed against cursorial prey had significantly lower hunting success (Table I). Prey that were faster at covering space in the environment significantly reduced the predators' hunting success (Table I).
 
+\begin{figure}
+\caption*{\textbf{Table 1:} Model estimates of the relationships between predator hunting success and predator hunting behaviour, prey behaviour, and interactions. All values are reported with their corresponding 95% credible intervals.} 
+\includegraphics[width = \linewidth]{table1.png}
+\end{figure}
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, eval = FALSE}
+# I keep the code in case I can run it directly from here!
+# the flextable package does not support height() function
+# for .pdf output, so I import the table as an image instead
+
+# ========================================================
+
+#               Code to produce Table SII
+
+# ========================================================
+
+# Load libraries
+library(data.table)
+library(flextable)
+library(officer)
+library(dplyr)
+
+
+# ========================================================
+# Prepare the table
+# ========================================================
+
+# Load the coefficient table
+table <- readRDS(here::here("outputs", "05_hunting_success_coef-table.rds"))
+
+# Round values to 2 digits
+table[, c("Estimate", "Q2.5", "Q97.5") := 
+         lapply(.SD, function (x) format(round(x, digits = 2), nsmall = 2)),
+      .SDcols = c(2:4)]
+
+# Compute the CI column
+table[, "CI" := apply(cbind(Q2.5, Q97.5),
+                      1, function(x) paste(sort(x), collapse = ", "))]
+
+table[, "CI2" := paste("(", table$CI, sep = "")]
+table[, "CI3" := paste(table$CI2, ")", sep = "")]
+table[, c(3, 4, 6, 7) := NULL]
+setnames(table, "CI3", "CI")
+
+# Compute the estimate column
+table[, Estimate := paste(table$Estimate, CI, sep = " ")][, CI := NULL]
+
+# Reorder columns
+setcolorder(table, neworder = c(3, 1, 2))
+
+# Change coefficient names
+coefficient1 <- list(
+  "intercept",
+  "speed",
+  "space",
+  "ambush",
+  "time",
+  "prey speed",
+  "prey space",
+  "speed",
+  "space",
+  "ambush",
+  "time",
+  "speed:space",
+  "speed:ambush",
+  "speed:time",
+  "space:ambush",
+  "space:time",
+  "ambush:time",
+  "prey speed",
+  "prey space",
+  "speed:prey speed",
+  "speed:prey space",
+  "space:prey space",
+  "space:prey space",
+  "ambush:prey speed",
+  "ambush:prey space",
+  "time:prey speed",
+  "time:prey space"
+)
+
+table[, coefficient := coefficient1]
+
+# ========================================================
+# ========================================================
+
+
+
+# ========================================================
+#               Reshape the table
+# ========================================================
+
+# Trait names
+newtab <- table[2:7, 2]
+
+# Predator trait interactions names
+newtab <- rbind(newtab, table[12:17, 2])
+
+# Pred-Prey interactions names
+newtab <- rbind(newtab, table[20:27, 2])
+
+# linear estimates
+estimate1 <- c(table[2,3], table[3,3],
+               table[4,3], table[5,3],
+               table[6,3], table[7,3],
+               rep("-", 14))
+
+# Quadratic estimates
+estimate2 <- c(table[8,3], table[9,3],
+               table[10,3], table[11,3],
+               table[18,3], table[19,3],
+               rep("-", 14))
+
+# Predator trait interactions estimates
+estimate3 <- c(rep("-", 6), 
+               table[12,3], table[13,3],
+               table[14,3], table[15,3],
+               table[16,3], table[17,3],
+               rep("-", 8))
+
+# Pred-prey interactions estimates 
+estimate4 <- c(rep("-", 12), 
+               table[20,3], table[21,3],
+               table[22,3], table[23,3],
+               table[24,3], table[25,3],
+               table[26,3], table[27,3])
+
+# Bind estimates
+newtab <- cbind(newtab, estimate1 = estimate1,
+                estimate2 = estimate2,
+                estimate3 = estimate3,
+                estimate4 = estimate4)
+
+# ========================================================
+# ========================================================
+
+
+
+# ========================================================
+# Compute the table using flextable
+# ========================================================
+
+# Custom header
+my_header1 <- data.frame(
+  col_keys = c("coefficient", "estimate1",
+               "estimate2", "estimate3", "estimate4"),
+  line1 = c(" ", "Linear (95% CI)",
+            "Quadratic (95% CI)", "Pred Interaction (95% CI)",
+            "Pred-prey Interaction (95% CI)"),
+  stringsAsFactors = FALSE
+)
+
+# Custom theme
+my_theme <- function(x, ...) {
+    x <- colformat_double(x, big.mark = "'", decimal.mark = ",", digits = 1)
+    x <- set_table_properties(x, layout = "fixed")
+    x <- border_remove(x)
+    std_border <- fp_border(width = 1, color = "black")
+    x <- hline_top(x, part = "all", border = std_border)
+    x <- hline_bottom(x, part = "all", border = std_border)
+    autofit(x)
+}
+
+# Create the table
+newtab %>%
+   select(coefficient, estimate1, estimate2,
+          estimate3, estimate4) %>%
+   flextable(col_keys = my_header1$col_keys) %>%
+   set_header_df(mapping = my_header1, key = "col_keys") %>%
+   my_theme %>%
+   merge_v(part = "header") %>%
+   merge_h(part = "header") %>%
+   align(align = "center", part = "all") %>%
+   fontsize(size = 10, part = "all") %>%
+   #autofit() %>%
+   align(align = "left", part = "body", j = 1) %>% # left align first column
+   width(j = c(1:5), width = 1.24) %>% # control table width
+   height(height = .5) %>%
+   hrule(rule = "exact")
+
+# ========================================================
+# ========================================================
+```
+
 \begin{center}
 \emph{Effect of predator and prey behaviour on hunting success: Quadratic relationships}
 \end{center}
@@ -178,7 +357,7 @@ Relative to the first model, the model that included quadratic and interaction t
 
 The model that included quadratic and interaction terms for predator and prey behaviour (euqation S8) had the highest explanatory power in hunting success ($R_{marginal}^2$ = 0.212). We detected concave relationships between hunting success and prey speed/prey rate of space covered (Table I), thus, predators had a higher probability of capturing all prey during a match when they competed against prey that expressed average population values of these traits.
 
-```{r Figure 3, fig.cap = "**Effect of predator hunting behaviour on prey capture.** Hunting success (i.e. the probability of capturing four prey) is on the y axis for all panels, and the standardised hunting behaviour is on the x axis. The black dashed lines represent the 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals (variance in fixed effects + variance in random effects). **(A)**, **(B)**, **(C)** Linear functions. **(D)**, **(E)**, **(F)** Quadratic functions.", echo = FALSE}
+```{r Figure 3, fig.cap = "Effect of predator hunting behaviour on prey capture. Hunting success (i.e. the probability of capturing four prey) is on the y axis for all panels, and the standardised hunting behaviour is on the x axis. The black dashed lines represent the 95% credibility intervals for the predicted values, and the gray band represents the 95% prediction intervals (variance in fixed effects + variance in random effects). (A), (B), (C), (D) Linear functions. (E), (F), (G), (H) Quadratic functions.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "04_figure3.png"))
 ```
 
@@ -208,7 +387,6 @@ We are among the first ecologists [Cere et al. accepted; @Barbe.etal2020] to pro
 
 To conclude, individual variation in predator (and prey) behaviour is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015; @toscanoPersonalityForagingBehavior2016; @Moran.etal2017]. Albeit our study being essentially descriptive, as it is the first to investigate individual variation in foraging behaviour using an online videogame, we showed that individuals differed in contrasting hunting strategies that align with those used by wild predators. These hunting modes varied among- and within- individuals along correlated behaviours (foraging syndrome hypothesis), and our results suggest that predator-prey locomotor-crossovers may promote the coexistence of different predator and prey behavioural types. We are confident that further studies using online videogames will provide valuable ecological insight for behavioural and community ecologists.
 
-\newpage
 ### Acknowledgements:
 We thank Behaviour Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us in improving this manuscript.
 
