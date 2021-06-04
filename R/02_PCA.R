@@ -232,8 +232,8 @@ PCA_fullZ_biplot23 <- ggpubr::ggpar(PCA_fullZ_biplot23,
 # =========================================================================
 # 8. Calculate variables having highest loading (Table SI)
 # =========================================================================
-contrib_table <- round(var_fullZ$contrib, digits = 2)
-corr_table <- round(var_fullZ$cor, digits = 2)
+contrib_table <- data.table(format(round(var_fullZ$contrib, digits = 2), nsmall = 2), keep.rownames = TRUE)
+corr_table <- data.table(format(round(var_fullZ$cor, digits = 2), nsmall = 2), keep.rownames = TRUE)
 # =========================================================================
 # =========================================================================
 

@@ -1,6 +1,5 @@
 ---
 title: "Online supporting information for  \nAnalysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
-author: "Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Olivier Montiglio^1^"
 output: 
   word_document:
     reference_docx: Chapter2-styles.docx
@@ -11,18 +10,12 @@ header-includes:
   \usepackage{amsmath}
 ---
 
-###### Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
-  
-###### ^1^Correspondence: Pavillon des Sciences Biologiques (SB) SB-1805, 141 Avenue du Président-Kennedy, Montréal (Québec), Canada, H2X 1Y4
-
-###### ^1^Corresponding author: maxime(dot)fraser(dot)franco(at)hotmail.com
-
 \newpage
 # Appendix S1. Materials and methods {.unnumbered}
 
 ## S1.1 Behavioural traits measurements
 
-We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all places (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
+We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. These grids are invisible to the player, but are drawn by the videogame developer to calculate quantify this behaviour. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all places (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
 
 ## S1.2 Principal component analysis
 
