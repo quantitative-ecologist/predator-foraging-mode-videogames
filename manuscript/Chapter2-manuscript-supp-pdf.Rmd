@@ -106,7 +106,7 @@ $$
 where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
 \begin{center}
-\emph{Parametrization of the bayesian mixed-models for hunting success}
+\emph{Parametrization of the bayesian mixed-models of hunting success}
 \end{center}
 
 We used a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all models. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed random intercepts for the individual player ID and the game environment. We also included an observation-level random effect to account for overdispersion. We calculated the ICC estimates using the function posterior_samples() in the "brms" package, by dividing each random effect variances by the total variance. We could thus compute the mean and HDP intervals to obtain the ICC values.
