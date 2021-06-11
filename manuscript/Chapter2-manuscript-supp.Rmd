@@ -1,0 +1,254 @@
+---
+title: "Online supporting information for  \nAnalysing individual specialisation and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
+output: 
+  word_document:
+    reference_docx: Chapter2-styles.docx
+bibliography: references.bib
+csl: american-naturalist.csl
+
+header-includes:
+  \usepackage{amsmath}
+---
+
+\newpage
+# Appendix S1. Materials and methods {.unnumbered}
+
+## S1.1 Behavioural traits measurements
+
+We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. These grids are invisible to the player, but are drawn by the videogame developer to calculate quantify this behaviour. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all places (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
+
+## S1.2 Principal component analysis
+
+We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) prior to running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis using the ratio of their specific cos2 multiplied by 100 with the cos2 of the principal component.
+
+## S1.3 Parametrisation of the bayesian mixed-models
+
+### Multivariate mixed-model
+We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations by sampling every 40 intervals (thinning), and used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean and HDP intervals to obtain the correlation values. The variance-covariance matrixes were parametrized as :
+
+$$
+\begin{bmatrix}
+id_{0y1,i} \\ 
+id_{0y2,i} \\ 
+id_{0y3,i} \\
+id_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{id}) : \text{where } \Omega_{id} = 
+\begin{bmatrix}
+V_{id_{0y1,i}} & & &  \\
+Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} & & \\
+Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} & \\
+Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4,i}} & V_{id_{0y4,i}}
+\end{bmatrix}
+$$
+$$
+\begin{bmatrix}
+en_{0y1,i} \\ 
+en_{0y2,i} \\ 
+en_{0y3,i} \\
+en_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{en}) : \text{where } \Omega_{en} = 
+\begin{bmatrix}
+V_{en_{0y1,i}} & & & \\
+Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} & & \\ 
+Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} & \\
+Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4,i}} & V_{en_{0y4,i}}
+\end{bmatrix}
+$$
+$$
+\begin{bmatrix}
+av_{0y1,i} \\ 
+av_{0y2,i} \\ 
+av_{0y3,i} \\
+av_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{av}) : \text{where } \Omega_{av} = 
+\begin{bmatrix}
+V_{av_{0y1,i}} & & & \\
+Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} & &\\ 
+Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} & \\
+Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4,i}} & V_{av_{0y4,i}}
+\end{bmatrix}
+$$
+$$
+\begin{bmatrix}
+\varepsilon_{0y1,i} \\ 
+\varepsilon_{0y2,i} \\ 
+\varepsilon_{0y3,i} \\
+\varepsilon_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{\varepsilon}) : \text{where } \Omega_{\varepsilon} = 
+\begin{bmatrix}
+V_{\varepsilon_{0y1,i}} & & & \\
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} & & \\ 
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} & \\
+Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsilon_{0y4,i}} & Cov_{\varepsilon_{0y3,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y4,i}}
+\end{bmatrix}
+$$
+where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
+
+
+
+$$
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} \\
+&+ \beta_{2,pred} \text{space}_{i} \\
+&+ \beta_{3,pred} \text{time in ambush}_{i} \\
+&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+\tag{eq. 1}
+$$
+
+
+$$
+\begin{align}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} \\
+&+ \beta_{2,pred} \text{space}_{i} \\
+&+ \beta_{3,pred} \text{time in ambush}_{i} \\
+&+ \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'} \\
+&+ \beta_{6,prey} \text{space}_{i}^{'} \\
+\tag{eq. S2}
+\end{align}
+$$
+
+
+
+
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
+&+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
+&+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
+&+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
+$$
+
+
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&+ \beta_{1,pred} \text{speed}_{i} + \beta_{2,pred} \text{space}_{i} + \beta_{3,pred} \text{time in ambush}_{i} + \beta_{4,pred} \text{time 1}^{st} \text{capture}_{i} \\
+&+ \frac{1}{2} \gamma_{1,pred} \text{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \text{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \text{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \text{time 1}^{st} \text{capture}_{i}^{2} \\
+&+ \gamma_{1,pred}\text{speed}_{i} \times \text{space}_{i} + \gamma_{2,pred}\text{speed}_{i} \times \text{time in ambush}_{i} \\ 
+&+ \gamma_{3,pred}\text{speed}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{4,pred}\text{space}_{i} \times \text{time in ambush}_{i} \\
+&+ \gamma_{5,pred}\text{space}_{i} \times \text{time 1}^{st} \text{capture}_{i} + \gamma_{6,pred}\text{time in ambush}_{i} \times \text{time 1}^{st} \text{capture}_{i} \\
+&+ \beta_{5,prey} \text{speed}_{i}^{'} + \beta_{6,prey} \text{space}_{i}^{'} \\
+&+ \frac{1}{2} \gamma_{5,prey} \text{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \text{space}_{i}^{'2} \\
+&+ \gamma_{7,\textit{pred prey}}\text{speed}_{i} \times \text{speed}_{i}^{'} + \gamma_{8,\text{pred prey}}\text{speed}_{i} \times \text{space}_{i}^{'} + \gamma_{9,\text{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{10,\text{pred prey}}\text{space}_{i} \times \text{space}_{i}^{'} + \gamma_{11,\text{pred prey}}\text{time in ambush}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{12,\text{pred prey}}\text{time in ambush}_{i} \times \text{space}_{i}^{'} + \gamma_{13,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{speed}_{i}^{'} \\
+&+ \gamma_{14,\text{pred prey}}\text{time 1}^{st} \text{capture}_{i} \times \text{space}_{i}^{'} \\
+\end{aligned}
+$$
+
+
+
+
+# Appendix S2. Results
+
+## S2.1 Principal component analysis
+
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and time spent ambushing had the highest contribution to the first principal component (23.19% and 29.38% respectively) (Table SI), while the rate of space covered and the time before first capture had the second highest contribution (48.12% and 35.55%) to the second principal component (Table SI). Time spent ambushing is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+
+```{r Figure S1, fig.cap = "**Figure S1. Principal component analysis on predator hunting variables.** All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses. The PCA was computed on a sample of 70 831 matches from 2 171 players. Average speed and time spent ambushing were the highest contributing behaviours to the PC1 axis (in bold). The rate of space covered and the time before first capture were the highest contributing behaviours to the PC2 axis (in bold).", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
+```
+
+\newpage
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+# ========================================================
+
+#               Code to produce Table SI
+
+# ========================================================
+
+# Load libraries
+library(factoextra)
+library(FactoMineR)
+library(data.table)
+library(flextable)
+library(dplyr)
+
+# Load the data
+game_data <- fread(here::here("data", "merged-data.csv"))
+full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 77, 79)]
+
+# Change variable names
+setnames(full_Zmatrix, "Zspeed", "average speed")
+setnames(full_Zmatrix, "Zspace_covered_rate", "rate of space covered")
+setnames(full_Zmatrix, "Zprox_mid_guard", "time spent ambushing")
+setnames(full_Zmatrix, "Zcloset_open", "closets opened")
+setnames(full_Zmatrix, "Zhit_special_count", "special attacks")
+setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")
+setnames(full_Zmatrix, "Zpallet_destroyed", "pallets destroyed")
+setnames(full_Zmatrix, "Zdamage_generator", "generators damaged")
+setnames(full_Zmatrix, "Zhook_start_time", "time before 1st capture")
+
+# Compute the PCA, save results in an object
+PCA_fullZ <- PCA(full_Zmatrix, graph = FALSE, scale.unit = FALSE)
+var_fullZ <- get_pca_var(PCA_fullZ)
+
+# Calculate variables having highest loading (Table SI)
+contrib_table <- data.table(round(var_fullZ$contrib, digits = 2), keep.rownames=TRUE)
+corr_table <- data.table(round(var_fullZ$cor, digits = 2), keep.rownames = TRUE)
+
+# Compute seperate tables based on PCs
+pc1_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc1" = corr_table$Dim.1,
+                      "variance_pc1" = contrib_table$Dim.1)
+
+pc2_tab <- data.table("variable" = contrib_table$rn,
+                      "correlation_pc2" = corr_table$Dim.2,
+                      "variance_pc2" = contrib_table$Dim.2)
+
+# Compute the table for Word
+my_header <- data.frame(
+  col_keys = c("variable", "correlation_pc1", "variance_pc1", 
+               "correlation_pc2", "variance_pc2"),
+  line1 = c("", rep("PC1 (% variance = 21.0)", 2), rep("PC2 (% variance = 15.3)", 2)),
+  line2 = c(" ", "Correlation", "% variance", "Correlation", "% variance"),
+  stringsAsFactors = FALSE
+)
+
+cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
+  select(variable, correlation_pc1, variance_pc1,
+         correlation_pc2, variance_pc2) %>%
+  flextable(col_keys = my_header$col_keys) %>%
+  set_header_df(mapping = my_header, key = "col_keys") %>%
+  theme_booktabs() %>%
+  merge_v(part = "header") %>%
+  merge_h(part = "header") %>%
+  align(align = "center", part = "all") %>%
+  font(fontname = "Times new roman", part = "all") %>%
+  autofit(add_w = -0.1) %>% 
+  align(align = "left", part = "body", j = 1)
+
+```
+
+
+
+\newpage
+
+# References
+
+<div id="refs"></div>
+
+
+<!-- library(flextable) -->
+<!-- bab <- data.frame(x = "dummy") -->
+<!-- bab <- flextable(bab) -->
+<!-- bab <- compose(bab, part = "body", i = 1, j = 1, -->
+<!--          value = as_paragraph("allo", -->
+<!--                               as_sup("-3"))) -->
+<!-- bab -->
+
+
+
+
+
+
+

@@ -1,0 +1,195 @@
+---
+title: "Online supporting information for  \nAnalysing individual specialization and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    fig_caption: true
+fontsize: 11pt
+bibliography: references.bib
+csl: american-naturalist.csl
+header-includes:
+   - \usepackage{lineno}\linenumbers                    # add line number for the whole document
+   - \usepackage{amsmath}                               # equations
+   - \usepackage{setspace}\doublespacing                # double space the document
+   - \usepackage[labelfont=bf]{caption}                 # bold figure label
+   - \captionsetup{singlelinecheck = false}             # left-align figure label
+   - \captionsetup[figure]{name = Figure S}
+   - \usepackage{sectsty}\allsectionsfont{\centering}   # center all section headers (can safely ignore warning)
+   - \usepackage{graphicx}
+---
+
+\newpage
+### S1. Materials and methods {.unnumbered}
+
+\begin{center}
+\emph{Behavioural traits measurements}
+\end{center}
+
+We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. These grids are invisible to the player, but are drawn by the videogame developer to calculate quantify this behaviour. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all sites (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
+
+\begin{center}
+\emph{Principal component analysis}
+\end{center}
+
+We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) prior to running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis using the ratio of their specific cos2 multiplied by 100 with the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
+
+\begin{center}
+\emph{Parametrization of the bayesian multivariate mixed-model}
+\end{center}
+
+We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations by sampling every 40 intervals (thinning), and used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean and HDP intervals to obtain the correlation values. The variance-covariance matrixes were parametrized as :
+
+$$
+\begin{bmatrix}
+id_{0y1,i} \\ 
+id_{0y2,i} \\ 
+id_{0y3,i} \\
+id_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{id}) : \text{where } \Omega_{id} = 
+\begin{bmatrix}
+V_{id_{0y1,i}} & & &  \\
+Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} & & \\
+Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} & \\
+Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4,i}} & V_{id_{0y4,i}}
+\end{bmatrix}
+\tag{S1}
+$$
+$$
+\begin{bmatrix}
+en_{0y1,i} \\ 
+en_{0y2,i} \\ 
+en_{0y3,i} \\
+en_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{en}) : \text{where } \Omega_{en} = 
+\begin{bmatrix}
+V_{en_{0y1,i}} & & & \\
+Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} & & \\ 
+Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} & \\
+Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4,i}} & V_{en_{0y4,i}}
+\end{bmatrix}
+\tag{S2}
+$$
+$$
+\begin{bmatrix}
+av_{0y1,i} \\ 
+av_{0y2,i} \\ 
+av_{0y3,i} \\
+av_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{av}) : \text{where } \Omega_{av} = 
+\begin{bmatrix}
+V_{av_{0y1,i}} & & & \\
+Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} & &\\ 
+Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} & \\
+Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4,i}} & V_{av_{0y4,i}}
+\end{bmatrix}
+\tag{S3}
+$$
+$$
+\begin{bmatrix}
+\varepsilon_{0y1,i} \\ 
+\varepsilon_{0y2,i} \\ 
+\varepsilon_{0y3,i} \\
+\varepsilon_{0y4,i}
+\end{bmatrix}
+= MVN(0, \Omega_{\varepsilon}) : \text{where } \Omega_{\varepsilon} = 
+\begin{bmatrix}
+V_{\varepsilon_{0y1,i}} & & & \\
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} & & \\ 
+Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} & \\
+Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsilon_{0y4,i}} & Cov_{\varepsilon_{0y3,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y4,i}}
+\end{bmatrix}
+\tag{S4}
+$$
+where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
+
+\begin{center}
+\emph{Parametrization of the bayesian mixed-models of hunting success}
+\end{center}
+
+We used a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all models. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed random intercepts for the individual player ID and the game environment. We also included an observation-level random effect to account for overdispersion. We calculated the ICC estimates using the function posterior_samples() in the "brms" package, by dividing each random effect variances by the total variance. We could thus compute the mean and HDP intervals to obtain the ICC values.
+
+For the first model, we aimed at investigating the relationship between hunting success and predator behaviour exclusively. For this model, we ran four chains using 103 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&\text{ } + \text{ } \beta_{1,pred} \textit{speed}_{i} \\
+&\text{ } + \text{ } \beta_{2,pred} \textit{space}_{i} \\
+&\text{ } + \text{ } \beta_{3,pred} \textit{time in ambush}_{i} \\
+&\text{ } + \text{ } \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{i} \\
+\end{aligned}
+\tag{S5}
+$$
+
+We included prey behaviour in the second model and kept the same structure as equation S5. For this model, we ran four chains using 153 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&\text{ } + \text{ } \beta_{1,pred} \textit{speed}_{i} \\
+&\text{ } + \text{ } \beta_{2,pred} \textit{space}_{i} \\
+&\text{ } + \text{ } \beta_{3,pred} \textit{time in ambush}_{i} \\
+&\text{ } + \text{ } \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{i} \\
+&\text{ } + \text{ } \beta_{5,prey} \textit{speed}_{i}^{'} \\
+&\text{ } + \text{ } \beta_{6,prey} \textit{space}_{i}^{'} \\
+\end{aligned}
+\tag{S6}
+$$
+In the third model, we were interested in investigating nonlinear relationships between hunting success and predator behaviour exlusively. We thus added quadratic effects for each hunting trait. We also investigated how predator behaviours interact to affect huntin success. The model was run for 103 000 iterations by sampling every 100 intervals and using the first 3000 iterations as warmups. This model was computed as :
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&\text{ } + \beta_{1,pred} \textit{speed}_{i} + \beta_{2,pred} \textit{space}_{i} + \beta_{3,pred} \textit{time in ambush}_{i} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{i} \\
+&\text{ } + \frac{1}{2} \gamma_{1,pred} \textit{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \textit{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \textit{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{i}^{2} \\
+&\text{ } + \gamma_{1,pred}\textit{speed}_{i} \times \textit{space}_{i} + \gamma_{2,pred}\textit{speed}_{i} \times \textit{time in ambush}_{i} \\ 
+&\text{ } + \gamma_{3,pred}\textit{speed}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} + \gamma_{4,pred}\textit{space}_{i} \times \textit{time in ambush}_{i} \\
+&\text{ } + \gamma_{5,pred}\textit{space}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} + \gamma_{6,pred}\textit{time in ambush}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} \\
+\end{aligned}
+\tag{S7}
+$$
+
+The fourth and final model included prey behaviours with their quadratic effects. We also included interactions between predator and prey behaviours to investigate how they jointly affect hunting success. The model was run for 103 000 iterations by sampling every 100 intervals and using the first 3000 iterations as warmups. The model is described as :
+$$
+\begin{aligned}
+logit (P_{ij}) &= (\beta_{0} + id_{0i} + env_{0i} + \varepsilon_{0,ij}) \\
+&\text{ } + \beta_{1,pred} \textit{speed}_{i} + \beta_{2,pred} \textit{space}_{i} + \beta_{3,pred} \textit{time in ambush}_{i} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{i} \\
+&\text{ } + \frac{1}{2} \gamma_{1,pred} \textit{speed}_{i}^{2} + \frac{1}{2} \gamma_{2,pred} \textit{space}_{i}^{2} + \frac{1}{2} \gamma_{3,pred} \textit{time in ambush}_{i}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{i}^{2} \\
+&\text{ } + \gamma_{1,pred}\textit{speed}_{i} \times \textit{space}_{i} + \gamma_{2,pred}\textit{speed}_{i} \times \textit{time in ambush}_{i} \\ 
+&\text{ } + \gamma_{3,pred}\textit{speed}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} + \gamma_{4,pred}\textit{space}_{i} \times \textit{time in ambush}_{i} \\
+&\text{ } + \gamma_{5,pred}\textit{space}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} + \gamma_{6,pred}\textit{time in ambush}_{i} \times \textit{time 1}^{st} \textit{capture}_{i} \\
+&\text{ } + \beta_{5,prey} \textit{speed}_{i}^{'} + \beta_{6,prey} \textit{space}_{i}^{'} \\
+&\text{ } + \frac{1}{2} \gamma_{5,prey} \textit{speed}_{i}^{'2} + \frac{1}{2} \gamma_{6,prey} \textit{space}_{i}^{'2} \\
+&\text{ } + \gamma_{7,\textit{pred prey}}\textit{speed}_{i} \times \textit{speed}_{i}^{'} + \gamma_{8,\textit{pred prey}}\text{speed}_{i} \times \textit{space}_{i}^{'} + \gamma_{9,\textit{pred prey}}\text{space}_{i} \times \text{speed}_{i}^{'} \\
+&\text{ } + \gamma_{10,\text{pred prey}}\textit{space}_{i} \times \textit{space}_{i}^{'} + \gamma_{11,\textit{pred prey}}\textit{time in ambush}_{i} \times \textit{speed}_{i}^{'} \\
+&\text{ } + \gamma_{12,\textit{pred prey}}\textit{time in ambush}_{i} \times \textit{space}_{i}^{'} + \gamma_{13,\textit{pred prey}}\textit{time 1}^{st} \textit{capture}_{i} \times \textit{speed}_{i}^{'} \\
+&\text{ } + \gamma_{14,\textit{pred prey}}\textit{time 1}^{st} \textit{capture}_{i} \times \textit{space}_{i}^{'} \\
+\end{aligned}
+\tag{S8}
+$$
+
+
+### S2. Results
+
+\begin{center}
+\emph{Principal component analysis}
+\end{center}
+
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and time spent ambushing had the highest contribution to the first principal component (23.19% and 29.38% respectively) (Table SI), while the rate of space covered and the time before first capture had the second highest contribution (48.12% and 35.55%) to the second principal component (Table SI). Time spent ambushing is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+
+```{r Figure S1, fig.cap = "Biplot of the principal component analysis on predator hunting variables. All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
+```
+
+\newpage
+
+\begin{figure}
+\centering
+\caption*{\textbf{Table SI:} Principal component loadings for all the predator behavioural traits.}
+\includegraphics[width = \linewidth]{tableS1.png}
+\end{figure}
+
+
+### Literature Cited
+
+<div id="refs"></div>
