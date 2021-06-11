@@ -23,13 +23,13 @@ Article type: Major article
 Word count: 5952
 
 List of main elements:
-* Abstract
-* Introduction
-* Materials and methods
-* Discussion
-* Aknowledgements
-* Funding
-* Citing literature
+1. Abstract
+2. Introduction
+3. Materials and methods
+4. Discussion
+5. Aknowledgements
+6. Funding
+7. Literature Cited
 
 Keywords: individual variation, hunting success, foraging mode, hunting tactics, predator-prey behaviour, online videogames.
 
