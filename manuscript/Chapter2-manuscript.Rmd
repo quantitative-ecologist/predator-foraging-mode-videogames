@@ -27,13 +27,13 @@ List of main elements:
 Keywords: individual variation, hunting success, foraging mode, hunting tactics, predator-prey behaviour, online videogames.
 
 \newpage
-## Abstract {.unnumbered}
+# Abstract {.unnumbered}
 
 Predator-prey interactions are important drivers of community and ecosystem dynamics. In this study, we propose a novel system, which is to use an online multiplayer videogame, to explore within-population variation in predator hunting mode, and how predator-prey behavioural interactions affect predator hunting success. We examined how travel speed, space coverage, ambush time, and latency to first capture correlate at different hierarchical levels (among environments, among individuals, and within individuals) to assess the structure of the predator hunting mode. We also investigated how these traits interact with prey travel speed and space coverage to affect predator hunting success. We found that individual predators specialized either as cursorial or ambush hunters along a continuum of hunting traits, but also shifted their strategy between encounters. Predators were generally better against slower-moving prey, and both types of hunters achieved similar hunting success over the sampling period. Our study brings additional evidence that considering within-population variation in behavior and success during predator-prey interactions can increase our understanding of community stability. We further discuss the advantages of using online videogames for ecological research and how they can provide realistic scientific insight, and develop on their weaknesses and potential biases.
 
 
 \newpage
-## Introduction {.unnumbered}
+# Introduction {.unnumbered}
 
 Predator hunting mode plays a crucial role in structuring ecological communities and ecosystems [@hueyEcologicalConsequencesForaging1981; @preisserPredatorHuntingMode2007; @schmitzEffectsPredatorHunting2008; @kersch-beckerCommunitywideResponsesPredation2018] and is usually described as 1) active/cursioral when hunters search, follow, and chase prey for long distances, 2) sit-and-pursue, when hunters remain motionless and pounce on prey that are within chasing distance, and 3) sit-and-wait/ambush, when hunters wait for prey to be within immediate capture distance [@mclaughlinSearchModesBirds1989]. Field studies show that predators with contrasting hunting modes (e.g. cursorial vs ambush) differ in the number of individuals or species, or in the type of prey that they capture [@donihueAegeanWallLizards2016; @glaudasForagingModeRelative2019; @millerFearMovePredator2014]. As a result, they can cause opposing trophic cascades and act at different trophic levels [@schmitzEffectsPredatorHunting2008; @romeroContrastingCascadeEffects2011].
 
@@ -57,7 +57,7 @@ knitr::include_graphics(here::here("outputs", "04_figure1.png"))
 
 In this study, we use an extensive and complete dataset on the hunting behavior of predator players in *DBD* to investigate environmental and individual variation in hunting mode, and how hunting mode affects prey capture. We use four hunting-related behaviors as proxies of hunting mode: travel speed, the rate of space covered in the environment, the proportion of time spent in an ambush position, and the time elapsed before the first prey capture. We use multivariate mixed-modelling to quantify variation in multiple behaviors and their correlations at different hierarchical levels [i.e. among and within-individuals, @dingemanseQuantifyingIndividualVariation2013] as a way to describe the variation in hunting mode within a population of predators [@perryForagingModeLacertid1990; @perryEvolutionSearchModes1999; @cooperForagingModeControversy2005; @butlerForagingModeChameleon2005; @Miles.etal2007]. Within-population variation includes among-environment differences in average hunting behavior, variation in tactic use arising when some individuals use one tactic more often than others (i.e. individual specialization), and variation arising from individuals adjusting tactic use over time in response to temporal changes in environmental conditions or prey behavior (i.e. individual flexibility). First, we hypothesize that predators use hunting tactics according to habitat-specific characteristics. Therefore, we expect correlated trait values associated with ambush tactics in smaller and heterogeneous environments, and correlated trait values associated with cursorial tactics in open/wider and homogeneous environments [@jamesEffectsHabitatComplexity1994; @wasiolkaBehaviouralResponsesLizard2009; @donihueAegeanWallLizards2016]. Second, we hypothesize that individual predators consistently differ in their hunting mode over time, with some specialising as cursorial hunters, and others as ambush hunters. Thus, we predict that individual predators should differ in their average trait values along a continuum for all combinations of the four hunting traits (among-individual behavioral correlations). Following the locomotor-crossover hypothesis[@hueyEcologicalConsequencesForaging1981], we predict that ambush and cursorial predator-types will coexist in the population, because both achieve similar hunting success by performing better against prey with the opposite locomotor tendency. Lastly, we hypothesize that individual predators will express flexible hunting behavior, by switching from cursorial to ambush tactics between foraging bouts (i.e. between matches). Thus, we predict that the individuals' residual trait values in contrasting hunting behaviors (ambush vs cursorial) should be negatively correlated (within-individual behavioral correlations).
 
-## Materials and methods
+# Materials and methods
 
 ## Study system
 
@@ -67,7 +67,7 @@ The datasets used to test our hypotheses were provided by Behaviour Interactive 
 
 The study period ranged from 20 March to 17 June 2019. Our population consisted of 2 171 new anonymous players who initiated their first match between 20 March and 22 March, with a total record of 70 831 matches (average: 177 matches per individual, range: 1 - 972 matches). The average match duration was 11 minutes (range: 5 - 58 minutes). For each match, we recorded the date (date-hour-minutes), the duration, the predator player’s anonymous ID, the prey players’ anonymous ID’s, the predator’s avatar, and the game environment where the match took place. We also recorded predator and prey behavior. We retained matches that lasted more than 5 minutes (short matches are usually interrupted because of technical issues). Players also score points during a match by performing different actions. To control for matches where players did not play, or for errors in the data collection, we removed matches where predators earned less than 1 point.
 
-## Behavioural traits
+## Behavioral traits
 
 We selected four out of eight behavioral variables that summarized most of the variation in predator hunting tactics based on a principal component analysis (see figure S1 and table S1 in the Supporting information): average travel speed (m/s), the rate of space covered (square/s), the proportion of time spent in an ambush position over the match duration, and the proportion of time predators took to capture their first prey over the match duration. Travel speed and the rate of space covered differ in that speed describes the average distance traveled in meters per second, while space coverage desribes the number of 16x16 meters squares (from a grid that covers the whole virtual environment) entered per second in the environment [similar to the open field test, @Montiglio.etal2010]. The proportion of time spent ambushing describes the total amount of time a predator spent monitoring around capture sites to ambush prey that try to rescue a conspecific (see section ‘behavioral traits measurements’ in the Supporting information for details).
 
@@ -122,7 +122,7 @@ We built a third model with the same structure as the first model and included q
 
 We calculated the models’ ICCs following @nakagawaCoefficientDeterminationR22017. For each model parameter, we computed the 95% credibility intervals using the highest posterior density intervals. We assumed the fixed effects and the ICCs reached statistical significance when the 95% credible intervals did not overlap zero [@Nakagawa.Cuthill2007].
 
-## Results
+# Results
 
 ## Variation in hunting mode: Repeatability of hunting behaviour
 
@@ -347,7 +347,7 @@ knitr::include_graphics(here::here("outputs", "04_figure4.png"))
 
 <br>
 
-## Discussion
+# Discussion
 
 Our study is the first to use an online multiplayer videogame to investigate individual variation in predator foraging mode, and how predator and prey behavior affect hunting success. We provide evidence that individuals who adopt the predator role display individual specialization and flexibility in their foraging modes, varying along a continuum from cursorial to sit-and-wait. The expression of these foraging modes was consistent with shifts in the expression of other behaviors such as space use and the latency to first prey capture, matching the predictions of the foraging syndrome hypothesis at the individual level. Contrary to our expectations, neither hunting behavior nor prey capture varied among game environments. Even if we found the presence of competing foraging modes in the population, the most successful predators were those who hunted at average population values of travel speed, and those who spent an above population-average of their time ambushing prey. Lastly, we found evidence for the locomotor-crossover hypothesis for some predator-prey trait combinations. However, predators were generally less successful when they competed against fast traveling prey and those who covered space faster in the environment.
 
@@ -363,13 +363,13 @@ We are among the first ecologists [Cere et al. accepted; @Barbe.etal2020] to pro
 
 To conclude, individual variation in predator (and prey) behavior is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015; @toscanoPersonalityForagingBehavior2016; @Moran.etal2017]. Albeit our study being essentially descriptive, as it is the first to investigate individual variation in foraging behavior using an online videogame, we showed that individuals differed in contrasting hunting strategies that align with those used by wild predators. These hunting modes varied among- and within- individuals along correlated behaviors (foraging syndrome hypothesis), and our results suggest that predator-prey locomotor-crossovers may promote the coexistence of different predator and prey behavioral types. We are confident that further studies using online videogames will provide valuable ecological insight for behavioral and community ecologists.
 
-## Acknowledgements:
+# Acknowledgements:
 We thank behavior Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us improve this manuscript. This project was funded by the Mitacs Accelerate Grant (#IT12054) through a partnership with behavior Interactive and Université du Québec à Montréal.
 
-## Competing interests:
+# Competing interests:
 The authors declare no competing interests
 
-## Citing Literature
+# Citing Literature
 
 <div id="refs"></div>
 
