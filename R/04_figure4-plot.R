@@ -4,15 +4,13 @@
 
 #########################################################################
 
-# Code to produce Figure 4 in Fraser Franco et al. 2021.
-# Plot interactions between predator and prey traits of the quadratic hunting success model 2
+# Code to produce Figure 4
+# Plot interactions between predator 
+# and prey traits of the quadratic hunting success model 2
 
 # All graphs are saved directly from the offline webhost into my outputs
 
 # *I produced the final 3D figure by combining the individual plots on powerpoint*
-
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
 # -----------------------------------------------------------------------
 
 

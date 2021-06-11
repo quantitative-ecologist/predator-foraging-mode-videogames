@@ -4,11 +4,8 @@
 
 #########################################################################
 
-# Code to produce Figure 3 in Fraser Franco et al. 2021.
+# Code to produce Figure 3
 # Plot marginal effects of the base and quadratic hunting success models
-
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
 # -----------------------------------------------------------------------
 
 

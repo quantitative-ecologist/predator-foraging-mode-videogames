@@ -1,13 +1,8 @@
 #########################################################################
 
-#                 Base and quadratic model diagnostics                  #
+#                     Multivariate model diagnostics                    #
 
 #########################################################################
-
-
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
-# -----------------------------------------------------------------------
 
 
 

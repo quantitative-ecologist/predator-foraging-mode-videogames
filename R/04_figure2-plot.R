@@ -4,11 +4,8 @@
 
 #########################################################################
 
-# Code to produce Figure 2 in Fraser Franco et al. 2021.
+# Code to produce Figure 2
 # Powerpoint was used to produce the final adjustements
-
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
 # -----------------------------------------------------------------------
 
 

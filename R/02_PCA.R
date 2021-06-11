@@ -5,10 +5,8 @@
 
 ###########################################################################
 
-# Code to produce the PCA and Figure S1 in Fraser Franco et al. (2021).
+# Code to produce the PCA and Figure S1
 
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
 # -------------------------------------------------------------------------
 
 

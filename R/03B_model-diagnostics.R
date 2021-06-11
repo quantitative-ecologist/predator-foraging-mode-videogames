@@ -5,11 +5,6 @@
 #########################################################################
 
 
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
-# -----------------------------------------------------------------------
-
-
 
 
 

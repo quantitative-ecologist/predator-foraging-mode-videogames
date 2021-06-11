@@ -10,9 +10,6 @@
 # This model quantifies the relationship between hunting behaviour and hunting success. 
 # Hunting success = number of prey captured.
 
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
-
 # Detect number of cores
 options(mc.cores = parallel::detectCores())
 # -----------------------------------------------------------------------

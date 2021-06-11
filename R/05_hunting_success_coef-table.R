@@ -1,14 +1,11 @@
 #########################################################################
 
-#     Create a table to produce Table SII in Supporting information     #
+#                   Create a table to produce Table I                   #
 
 #########################################################################
 
-# Code to produce Table SII in Fraser Franco et al. 2021.
+# Code to produce the values reported in Table I
 # Extract coefficients from all the hunting success models
-
-# Contact: maxime.fraser.franco@hotmail.com
-# Département des Sciences Biologiques, UQAM, Montréal, Québec
 # -----------------------------------------------------------------------
 
 
