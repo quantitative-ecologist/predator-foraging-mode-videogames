@@ -1,5 +1,5 @@
 ---
-title: "Online supporting information for  \nAnalysing individual specialization and flexibility in predator hunting mode and its effect on hunting success using an online multiplayer videogame"
+title: "Online supporting information for  \nAnalysing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -175,7 +175,7 @@ $$
 \emph{Principal component analysis}
 \end{center}
 
-The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (Fig. S1). We found that travel speed and time spent ambushing had the highest contribution to the first principal component (23.19% and 29.38% respectively) (Table SI), while the rate of space covered and the time before first capture had the second highest contribution (48.12% and 35.55%) to the second principal component (Table SI). Time spent ambushing is negatively correlated with travel speed (Fig. S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table SI), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table SI). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
 
 ```{r Figure S1, fig.cap = "Biplot of the principal component analysis on predator hunting variables. All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
