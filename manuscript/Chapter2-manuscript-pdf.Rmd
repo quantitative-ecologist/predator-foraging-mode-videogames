@@ -415,7 +415,7 @@ We thank behavior Interactive for generous access to their data, and members of 
 ### Competing interests
 The authors declare no competing interests
 
-### Data availability statement:
+### Data availability statement
 We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
 
 ### Literature Cited
