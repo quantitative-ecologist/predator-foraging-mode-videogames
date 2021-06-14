@@ -24,7 +24,7 @@ library(export)
 
 # Load data
 load("./outputs/03A_multivariate-model.rda")
-load("./outputs/03A_icc-table.RDS")
+icc_tab <- readRDS("./outputs/03A_icc-table2.RDS")
 
 # =======================================================================
 # =======================================================================
