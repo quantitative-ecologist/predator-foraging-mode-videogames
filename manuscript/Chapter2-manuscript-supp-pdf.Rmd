@@ -105,6 +105,9 @@ Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsil
 $$
 where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
+We ran a separate multivariate mixed-model after seeing that game environments did not explain a high percentage of variation in predator behavior to test the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. Results for environmental variation in predator behavior are presented below in the results section of the supporting information.
+
+
 \begin{center}
 \emph{Parametrization of the bayesian mixed-models of hunting success}
 \end{center}
@@ -182,6 +185,12 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 ```
 
 \newpage
+
+\begin{center}
+\emph{Among-environment variation of predator behavior without the effect of prey behavior}
+\end{center}
+
+
 
 \begin{figure}
 \centering

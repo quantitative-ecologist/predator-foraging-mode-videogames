@@ -21,7 +21,7 @@ load("./outputs/03A_multivariate-model1.rda")
 mv_model1 <- mv_model
 rm(mv_model)
 
-load("./outputs/03A_multivariate-model.rda")
+load("./outputs/03A_multivariate-model2.rda")
 mv_model2 <- mv_model
 rm(mv_model)
 
@@ -164,9 +164,9 @@ icc_tab2[, ranef_variable := c(rep("id", 4),
 # 3. Save values in r object
 # =======================================================================
 
-save(icc_tab1, file = "./outputs/03A_icc-table1.RDS")
+saveRDS(icc_tab1, file = "./outputs/03A_icc-table1.rds")
 
-save(icc_tab2, file = "./outputs/03A_icc-table2.RDS")
+saveRDS(icc_tab2, file = "./outputs/03A_icc-table2.rds")
 
 # =======================================================================
 # =======================================================================
