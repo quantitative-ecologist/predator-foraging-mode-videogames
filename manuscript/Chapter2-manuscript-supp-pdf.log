@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.7)  13 JUN 2021 12:41
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.7)  14 JUN 2021 16:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -968,23 +968,23 @@ Overfull \hbox (26.4944pt too wide) detected at line 201
  []
 
 [3] [4]
-Overfull \hbox (0.65314pt too wide) detected at line 283
-[][]
- []
-
-
-Overfull \hbox (0.65314pt too wide) detected at line 306
+Overfull \hbox (0.65314pt too wide) detected at line 292
 [][]
  []
 
 [5]
+Overfull \hbox (0.65314pt too wide) detected at line 315
+[][]
+ []
+
+[6]
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/02_figureS1.png
  Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/02_figureS1.png>
-[6] [7]
+[7] [8]
 File: tableS1.png Graphic file (type bmp)
 <tableS1.png>
-[8] (./Chapter2-manuscript-supp-pdf.aux)
+[9] [10] (./Chapter2-manuscript-supp-pdf.aux)
 Package rerunfilecheck Info: File `Chapter2-manuscript-supp-pdf.out' has not ch
 anged.
 (rerunfilecheck)             Checksum: 563DE45A424F7A11A5FF5B6D9E9D3FE9;409.
@@ -992,10 +992,10 @@ anged.
 Here is how much of TeX's memory you used:
  19069 strings out of 478443
  347019 string characters out of 5856230
- 847693 words of memory out of 5000000
+ 846695 words of memory out of 5000000
  39130 multiletter control sequences out of 15000+600000
  409863 words of font info for 78 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,10n,120p,533b,412s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,10n,120p,533b,443s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Chapter2-manuscript-supp-pdf.pdf (8 pages).
+Output written on Chapter2-manuscript-supp-pdf.pdf (10 pages).

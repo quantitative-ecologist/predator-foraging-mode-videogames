@@ -186,18 +186,17 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 
 \newpage
 
-\begin{center}
-\emph{Among-environment variation of predator behavior without the effect of prey behavior}
-\end{center}
-
-
-
 \begin{figure}
 \centering
 \caption*{\textbf{Table SI:} Principal component loadings for all the predator behavioural traits.}
 \includegraphics[width = \linewidth]{tableS1.png}
 \end{figure}
 
+\begin{center}
+\emph{Among-environment variation of predator behavior without the effect of prey behavior}
+\end{center}
+
+After removing prey behavior as linear fixed effects, the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed (0.0021 [0.0010, 0.0035]), the proportion of time spent ambushing (0.0014 [0.0006, 0.0023]), and the proportion of time required to capture the first prey (0.0019 [0.0009, 0.0033]). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (0.2752 [0.1733, 0.3977]).
 
 ### Literature Cited
 

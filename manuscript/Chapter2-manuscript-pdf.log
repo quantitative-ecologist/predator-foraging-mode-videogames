@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.7)  13 JUN 2021 12:37
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.7)  14 JUN 2021 16:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -908,27 +908,27 @@ File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 302.
+(Font)              scaled to size 7.665pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 302.
+(Font)              scaled to size 5.475pt on input line 303.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-02.
+03.
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.95099pt on input line 302.
+(Font)              scaled to size 10.95099pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.66568pt on input line 302.
+(Font)              scaled to size 7.66568pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.4755pt on input line 302.
+(Font)              scaled to size 5.4755pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.94882pt on input line 302.
+(Font)              scaled to size 10.94882pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.66417pt on input line 302.
+(Font)              scaled to size 7.66417pt on input line 303.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.47441pt on input line 302.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 302
+(Font)              scaled to size 5.47441pt on input line 303.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 303
 .
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -937,7 +937,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 fg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 302
+LaTeX Font Info:    Trying to load font information for U+msb on input line 303
 .
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -973,6 +973,6 @@ Here is how much of TeX's memory you used:
  39167 multiletter control sequences out of 15000+600000
  406941 words of font info for 56 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,9n,120p,962b,749s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,9n,120p,978b,749s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on Chapter2-manuscript-pdf.pdf (28 pages).
