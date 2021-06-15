@@ -37,13 +37,13 @@ library(ggpubr)
 game_data <- fread("./data/merged-data.csv")
 
 # Select column to be analyzed
-full_Zmatrix <- game_data[, c(68:71, 73, 74, 76, 77, 79)]
+full_Zmatrix <- game_data[, c(69:72, 74, 75, 77, 78, 80)]
 
 names(full_Zmatrix)
 # Change variable names
-setnames(full_Zmatrix, "Zspeed", "average speed")
+setnames(full_Zmatrix, "Zspeed", "travel speed")
 setnames(full_Zmatrix, "Zspace_covered_rate", "rate of space covered")
-setnames(full_Zmatrix, "Zprox_mid_guard", "time spent ambushing")
+setnames(full_Zmatrix, "Zprox_mid_guard", "ambush time")
 setnames(full_Zmatrix, "Zcloset_open", "closets opened")
 setnames(full_Zmatrix, "Zhit_special_count", "special attacks")
 setnames(full_Zmatrix, "Zhit_far_count", "normal attacks")
@@ -160,7 +160,7 @@ contrib_PC3 <- fviz_contrib(PCA_fullZ, choice = "var", axes = 3, top = 13) +
 # PCA Biplot (individuals + variables)
 PCA_fullZ_biplot12 <- fviz_pca_biplot(PCA_fullZ,
                                     col.var = "black",
-                                    col.ind = "#96579e", #571A44
+                                    col.ind = "dimgray", #571A44 #96579e
                                     alpha.ind = 0.2,
                                     arrowsize = 1,
                                     geom.ind = "point",
@@ -193,7 +193,7 @@ PCA_fullZ_biplot12 <- ggpubr::ggpar(PCA_fullZ_biplot12,
 PCA_fullZ_biplot23 <- fviz_pca_biplot(PCA_fullZ,
                                     col.var = "black",
                                     axes = c(2,3),
-                                    col.ind = "#96579e", # firebrick3
+                                    col.ind = "dimgray", # firebrick3
                                     alpha.ind = 0.2,
                                     arrowsize = 1,
                                     geom.ind = "point",

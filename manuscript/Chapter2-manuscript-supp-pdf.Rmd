@@ -23,22 +23,16 @@ header-includes:
 ### S1. Materials and methods {.unnumbered}
 
 \begin{center}
-\emph{Behavioural traits measurements}
-\end{center}
-
-We quantified the predator's average travel speed as the average number of meters per second traveled during a match. For the rate of space covered, grids with squares of 16 m2 covering the entire playable surface area were drawn for all game environments. These grids are invisible to the player, but are drawn by the videogame developer to quantify this behaviour. Similar to the open-field test for rodents [@Montiglio.etal2010], the number of times a predator entered a square on the grid was recorded, however, it was not possible to know which specific square was visited. Based on this data, we could divide the number of times a square was visited by the match duration to obtain the rate of space covered. For the proportion of time spent ambushing prey, circles of 9-meter radiuses were drawn around all sites (the circles’ center) where the predator brought prey to be consumed. Predators in *DBD* wait for other prey to come save their conspecifics to ambush them. For each event, the time (in seconds) a predator spent monitoring inside the area of a circle was recorded. We could then sum the amount of time spent ambushing during a match and divide it by the total amount of time a match lasted (in seconds) to have the proportion of time spent ambushing over the match duration. Lastly, the the time before the first capture was calculated as the amount of seconds elapsed before a predator consumed his first prey, divided by the match duration.
-
-\begin{center}
 \emph{Principal component analysis}
 \end{center}
 
-We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) prior to running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis using the ratio of their specific cos2 multiplied by 100 with the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
+We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
 
 \begin{center}
 \emph{Parametrization of the bayesian multivariate mixed-model}
 \end{center}
 
-We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations by sampling every 40 intervals (thinning), and used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean and HDP intervals to obtain the correlation values. The variance-covariance matrixes were parametrized as :
+We used a weakly informative LKJ prior with a shape parameter (n) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations, and sampled every 40 intervals (thinning). We used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed among-individual, environment, avatar, and within-individual variance-covariance matrixes. We extracted the among- (individual, avatar, environment) and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean of the correlation sample values, and the HDP intervals to obtain the 95% credible intervals for each correlation. The variance-covariance matrixes were parametrized as :
 
 $$
 \begin{bmatrix}
@@ -106,14 +100,14 @@ Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsil
 $$
 where the diagonals represent the random effect variances for each hunting trait, and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed, the rate of space covered, the proportion of time spent ambushing, and the time before first capture).
 
-We ran a separate multivariate mixed-model after seeing that game environments did not explain a high percentage of variation in predator behavior to test the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. Results for environmental variation in predator behavior are presented below in the results section of the supporting information.
+We ran a separate multivariate mixed-model after seeing that game environments did not explain a high percentage of variation in predator behavior (see the "discussion" in the main text). We did so to test the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. Results for environmental variation in predator behavior are presented below in the results section of the supporting information.
 
 
 \begin{center}
 \emph{Parametrization of the bayesian mixed-models of hunting success}
 \end{center}
 
-We used a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects of all models. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We computed random intercepts for the individual player ID and the game environment. We also included an observation-level random effect to account for overdispersion. We calculated the ICC estimates using the function posterior_samples() in the "brms" package, by dividing each random effect variances by the total variance. We could thus compute the mean and HDP intervals to obtain the ICC values and their corresponding 95% credible intervals.
+We used a Gaussian prior with mean of 0 and standard deviation of 5 for all the models' fixed effects. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We computed random intercepts for the individual player ID and the game environment. We also included an observation-level random effect to account for overdispersion. We calculated the ICC estimates using the function posterior_samples() in the "brms" package, by dividing each random effect variance sample value by the total variance. We could thus compute the mean of the samples to obtain the ICC value for each random effect, and HDP intervals to obtain their corresponding 95% credible intervals.
 
 For the first model, we aimed at investigating the relationship between hunting success and predator behaviour exclusively. For this model, we ran four chains using 103 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
 $$
@@ -181,7 +175,7 @@ $$
 
 The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table SI), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table SI). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
 
-```{r Figure S1, fig.cap = "Biplot of the principal component analysis on predator hunting variables. All variables were standardized to 0 mean and unit variance (Z scores) prior to analysis. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
+```{r Figure S1, fig.cap = "Biplot of the principal component analysis on predator hunting variables. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 ```
 
@@ -194,7 +188,7 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 \end{figure}
 
 \begin{center}
-\emph{Among-environment variation of predator behavior without the effect of prey behavior}
+\emph{Differences among environments in predator behavior without the effect of prey}
 \end{center}
 
 After removing prey behavior as linear fixed effects, the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed (0.0021 [0.0010, 0.0035]), the proportion of time spent ambushing (0.0014 [0.0006, 0.0023]), and the proportion of time required to capture the first prey (0.0019 [0.0009, 0.0033]). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (0.2752 [0.1733, 0.3977]).
