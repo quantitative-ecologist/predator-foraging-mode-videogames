@@ -152,8 +152,8 @@ my_header1 <- data.frame(
   col_keys = c("coefficient", "estimate1",
                "estimate2", "estimate3", "estimate4"),
   line1 = c(" ", "Linear (95% CI)",
-            "Quadratic (95% CI)", "Pred Interaction (95% CI)",
-            "Pred-prey Interaction (95% CI)"),
+            "Quadratic (95% CI)", "Predator trait interactions (95% CI)",
+            "Predator-prey trait interactions (95% CI)"),
   stringsAsFactors = FALSE
 )
 

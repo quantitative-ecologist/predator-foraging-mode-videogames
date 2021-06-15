@@ -5,6 +5,7 @@ output:
     latex_engine: xelatex
     fig_caption: true
 fontsize: 11pt
+mainfont: Times New Roman
 bibliography: references.bib
 csl: american-naturalist.csl
 header-includes:
