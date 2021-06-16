@@ -19,7 +19,6 @@ header-includes:
    - \captionsetup[figure]{name = Figure S}
    - \usepackage{sectsty}\allsectionsfont{\centering}   # center all section headers (can safely ignore warning)
    - \usepackage{graphicx}
-   - \usepackage[export]{adjustbox}
 ---
 
 \newpage
