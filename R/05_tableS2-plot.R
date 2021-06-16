@@ -91,21 +91,11 @@ ranef_variable1 <- c(
 
 icc_tab[, group := as.factor(group1)][, ranef_variable := as.factor(ranef_variable1)]
 
-# Reorder factor levels
-group1 <-  as.factor(c("travel speed", "travel speed", 
-                       "travel speed", "travel speed",
-                       "space covered", "space covered", 
-                       "space covered", "space covered",
-                       "ambush time", "ambush time", 
-                       "ambush time", "ambush time",
-                       "time 1st capture", "time 1st capture", 
-                       "time 1st capture", "time 1st capture"))
-group2 <-  as.factor(c("travel speed",
-                       "space covered",
-                       "ambush time",
-                       "time 1st capture"))
+# Reorder the table
+icc_tab <- icc_tab[c(1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16)]
 
-icc_tab$group <- factor(icc_tab$group, levels=unique(group1))
+# Remove repeated
+icc_tab[c(2:4,6:8,10:12,14:16), group := " "]
 
 # ========================================================
 # ========================================================
@@ -118,7 +108,8 @@ icc_tab$group <- factor(icc_tab$group, levels=unique(group1))
 
 # Custom header
 my_header <- data.frame(
-  col_keys = c("Behavior", "Random effect", "ICC (95% CI)"),
+  col_keys = c("group", "ranef_variable", "icc"),
+  line1 = c("Behavior", "Random effect", "ICC (95% CI)"),
   stringsAsFactors = FALSE
 )
 
@@ -134,22 +125,23 @@ my_theme <- function(x, ...) {
 }
 
 # Create the table
-icc_tab %>%
+icc_table <- icc_tab %>%
   select(group, ranef_variable, icc) %>%
   flextable(col_keys = my_header$col_keys) %>%
   set_header_df(mapping = my_header, key = "col_keys") %>%
   my_theme() %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
-  align(align = "center", part = "all") %>%
+  align(align = "left", part = "all") %>%
   fontsize(size = 11, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "body", j = 1) %>%
+  align(align = "left", part = "body", j = 2) %>%
   #width(j = c(1:3), width = 1.3) %>%
   height(height = .3) %>%
   hrule(rule = "exact")
 
-save_as_image(tableS1, "./manuscript/tableS1.png")
+save_as_image(icc_table, "./manuscript/tableS2.png")
 
 # ========================================================
 # ========================================================

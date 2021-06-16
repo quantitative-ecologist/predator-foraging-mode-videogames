@@ -54,32 +54,32 @@ setcolorder(table, neworder = c(3, 1, 2))
 # Change coefficient names
 coefficient1 <- list(
   "intercept",
-  "speed",
-  "space",
-  "ambush",
-  "time",
-  "prey speed",
-  "prey space",
-  "speed",
-  "space",
-  "ambush",
-  "time",
-  "speed:space",
-  "speed:ambush",
-  "speed:time",
-  "space:ambush",
-  "space:time",
-  "ambush:time",
-  "prey speed",
-  "prey space",
-  "speed:prey speed",
-  "speed:prey space",
-  "space:prey space",
-  "space:prey space",
-  "ambush:prey speed",
-  "ambush:prey space",
-  "time:prey speed",
-  "time:prey space"
+  "travel speed",
+  "space covered",
+  "ambush time",
+  "time 1st capture",
+  "prey travel speed",
+  "prey space covered",
+  "travel speed",
+  "space covered",
+  "ambush time",
+  "time 1st capture",
+  "travel speed:space covered",
+  "travel speed:ambush time",
+  "travel speed:time 1st capture",
+  "space covered:ambush time",
+  "space covered:time 1st capture",
+  "ambush time:time 1st capture",
+  "prey travel speed",
+  "prey space covered",
+  "travel speed:prey travel speed",
+  "travel speed:prey space covered",
+  "space covered:prey space covered",
+  "space covered:prey space covered",
+  "ambush time:prey travel speed",
+  "ambush time:prey space covered",
+  "time 1st capture:prey travel speed",
+  "time 1st capture:prey space covered"
 )
 
 table[, coefficient := coefficient1]
@@ -179,7 +179,7 @@ table1 <-newtab %>%
   merge_h(part = "header") %>%
   align(align = "center", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
-  font(fontname = "CMU Serif Roman", part = "all") %>%
+  font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "body", j = 1) %>% # left align first column
   width(j = c(1:5), width = 1.6) %>% # control table width
   height(height = .25) %>%

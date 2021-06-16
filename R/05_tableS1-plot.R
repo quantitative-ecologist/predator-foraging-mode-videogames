@@ -86,7 +86,7 @@ tableS1 <- cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
   merge_h(part = "header") %>%
   align(align = "center", part = "all") %>%
   fontsize(size = 11, part = "all") %>%
-  font(fontname = "CMU Serif Roman", part = "all") %>%
+  font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "body", j = 1) %>%
   width(j = c(1:5), width = 1.3) %>%
   height(height = .3) %>%

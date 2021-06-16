@@ -868,7 +868,7 @@ panel_plot <- annotate_figure(panel_plot,
                                                size = 15,
                                                hjust = 1.7, vjust = 2.1))
 
-ggexport(panel_plot, filename = "./outputs/04_figure3_black.png",
+ggexport(panel_plot, filename = "./outputs/04_figure3.png",
          width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
 # =======================================================================
 # =======================================================================
