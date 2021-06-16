@@ -30,8 +30,9 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data.csv",
               select = c("mirrors_id", "match_id", "character_name",
                          "map_name", "hunting_success", "sqrtspeed", 
                          "sqrtspace_covered_rate", "sqrtprox_mid_guard",
-                         "sqrthook_start_time"),
-              stringsAsFactors = TRUE)
+                         "sqrthook_start_time", "sqrtsurv_speed",
+                         "sqrtsurv_space_covered_rate"),
+                         stringsAsFactors = TRUE)
 
 # =======================================================================
 # =======================================================================
@@ -48,9 +49,10 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data.csv",
 standardize <- function (x) {(x - mean(x)) / sd(x)}
 
 data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
-         "Zsqrthook_start_time") :=
-       lapply(.SD, standardize), 
-     .SDcols = c(6:9)]
+         "Zsqrthook_start_time", "Zsqrtsurv_speed", 
+         "Zsqrtsurv_space_covered_rate") :=
+                lapply(.SD, standardize), 
+                .SDcols = c(6:11)]
 
 # =======================================================================
 # =======================================================================
@@ -65,32 +67,50 @@ data[, c("Zsqrtspeed", "Zsqrtspace_covered_rate", "Zsqrtprox_mid_guard",
 
 # Formula for each response variable
 # Each model will fit a seperate var-cov matrix for each random effect
-speed_form <- bf(Zsqrtspeed ~ 1 +
-                   (1 |a| map_name) +
-                   (1 |b| character_name) +
-                   (1 |c| mirrors_id)) +
-  gaussian()
-
-space_form <- bf(Zsqrtspace_covered_rate ~ 1 +
-                   (1 |a| map_name) +
-                   (1 |b| character_name) +
-                   (1 |c| mirrors_id)) +
-  gaussian()
-
-guard_form <- bf(Zsqrtprox_mid_guard ~ 1 +
-                   (1 |a| map_name) +
-                   (1 |b| character_name) +
-                   (1 |c| mirrors_id)) +
-  gaussian()
-
-hook_form <- bf(Zsqrthook_start_time ~ 1 +
+speed_form <- bf(Zsqrtspeed ~
+                  Zsqrtsurv_speed +
+                  Zsqrtsurv_space_covered_rate +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| mirrors_id)) +
-  gaussian()
+                  gaussian()
+
+space_form <- bf(Zsqrtspace_covered_rate ~
+                  Zsqrtsurv_speed +
+                  Zsqrtsurv_space_covered_rate +
+                  (1 |a| map_name) +
+                  (1 |b| character_name) +
+                  (1 |c| mirrors_id)) +
+                  gaussian()
+
+guard_form <- bf(Zsqrtprox_mid_guard ~
+                  Zsqrtsurv_speed +
+                  Zsqrtsurv_space_covered_rate +
+                  (1 |a| map_name) +
+                  (1 |b| character_name) +
+                  (1 |c| mirrors_id)) +
+                  gaussian()
+
+hook_form <- bf(Zsqrthook_start_time ~
+                  Zsqrtsurv_speed +
+                  Zsqrtsurv_space_covered_rate +
+                  (1 |a| map_name) +
+                  (1 |b| character_name) +
+                  (1 |c| mirrors_id)) +
+                  gaussian()
 
 # priors
 priors <- c(
+  set_prior("normal(0, 5)", 
+            class = "b",
+            coef = "Zsqrtsurv_speed",
+            resp = c("Zsqrtspeed", "Zsqrtspacecoveredrate", 
+                     "Zsqrtproxmidguard", "Zsqrthookstarttime")),
+  set_prior("normal(0, 5)", 
+            class = "b",
+            coef = "Zsqrtsurv_space_covered_rate",
+            resp = c("Zsqrtspeed", "Zsqrtspacecoveredrate", 
+                     "Zsqrtproxmidguard", "Zsqrthookstarttime")),
   set_prior("lkj(2)", 
             class = "cor",
             group = "character_name"),
@@ -113,10 +133,10 @@ priors <- c(
 # =======================================================================
 #( nitt - burnin ) / thin = 1000
 mv_model <- brm(speed_form +
-                  space_form +
-                  guard_form +   
-                  hook_form +
-                  set_rescor(TRUE),
+                space_form +
+                guard_form +   
+                hook_form +
+                set_rescor(TRUE),
                 warmup = 3000, 
                 iter = 43000,
                 thin = 40,
@@ -124,11 +144,11 @@ mv_model <- brm(speed_form +
                 inits = "0",
                 threads = threading(10),
                 backend = "cmdstanr",
-                seed = 20210608,
+                seed = 20210422,
                 prior = priors,
                 control = list(adapt_delta = 0.95),
                 data = data)
 
-save(mv_model, file = "03A_multivariate-model1.rda")
+save(mv_model, file = "03A_multivariate-model.rda")
 # ======================================================================
 # ======================================================================
