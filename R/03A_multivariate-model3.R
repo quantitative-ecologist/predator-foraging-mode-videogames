@@ -35,7 +35,7 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data.csv",
                          "sqrtsurv_space_covered_rate"),
               stringsAsFactors = TRUE)
 
-map_dat <- fread("./data/clean_map-data.csv", 
+map_dat <- fread("/home/maxime11/projects/def-monti/maxime11/data/clean_map-data.csv", 
                  stringsAsFactors = TRUE)
 
 # Merge datasets to have map surface area

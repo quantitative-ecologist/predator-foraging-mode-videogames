@@ -4,6 +4,8 @@ output:
   pdf_document:
     latex_engine: xelatex
     fig_caption: true
+    includes:  
+      in_header: header.tex
 fontsize: 11pt
 mainfont: Times New Roman
 bibliography: references.bib
