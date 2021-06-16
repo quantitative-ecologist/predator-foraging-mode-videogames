@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.7)  15 JUN 2021 15:42
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  16 JUN 2021 14:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Chapter2-manuscript-pdf.tex
 (./Chapter2-manuscript-pdf.tex
-LaTeX2e <2021-06-01>
+LaTeX2e <2021-06-01> patch level 1
 L3 programming layer <2021-06-01> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
 -dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
@@ -1098,19 +1098,19 @@ Graphic file (type bmp)
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure4.png 
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure4.png>
-[17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] (./Chapter2-manuscript-p
-df.aux)
+[17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] (./Chapter2-manuscr
+ipt-pdf.aux)
 Package rerunfilecheck Info: File `Chapter2-manuscript-pdf.out' has not changed
 .
 (rerunfilecheck)             Checksum: AA17F28483F8AAEC3E371131E13A4DD2;1099.
  ) 
 Here is how much of TeX's memory you used:
- 19126 strings out of 478443
- 349047 string characters out of 5856230
- 840480 words of memory out of 5000000
- 39200 multiletter control sequences out of 15000+600000
+ 19128 strings out of 478419
+ 349090 string characters out of 5855629
+ 841138 words of memory out of 5000000
+ 39226 multiletter control sequences out of 15000+600000
  407037 words of font info for 68 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,9n,122p,983b,749s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on Chapter2-manuscript-pdf.pdf (27 pages).
+Output written on Chapter2-manuscript-pdf.pdf (28 pages).

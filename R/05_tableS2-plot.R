@@ -133,12 +133,12 @@ icc_table <- icc_tab %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
   align(align = "left", part = "all") %>%
-  fontsize(size = 11, part = "all") %>%
+  fontsize(size = 10, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "body", j = 1) %>%
   align(align = "left", part = "body", j = 2) %>%
-  width(j = c(1:3), width = 1.3) %>%
-  height(height = .1) %>%
+  width(j = c(1:3), width = 2) %>%
+  height(height = .01) %>%
   hrule(rule = "exact")
 
 save_as_image(icc_table, "./manuscript/tableS2.png")
