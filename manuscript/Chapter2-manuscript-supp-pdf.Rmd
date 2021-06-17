@@ -45,58 +45,58 @@ id_{0y4,i}
 \end{bmatrix}
 = MVN(0, \Omega_{id}) : \text{where } \Omega_{id} = 
 \begin{bmatrix}
-V_{id_{0y1,i}} & & &  \\
-Cov_{id_{0y1,i}id_{0y2,i}} & V_{id_{0y2,i}} & & \\
-Cov_{id_{0y1,i}id_{0y3,i}} & Cov_{id_{0y1,i}id_{0y4,i}} & V_{id_{0y3,i}} & \\
-Cov_{id_{0y2,i}id_{0y3,i}} & Cov_{id_{0y2,i}id_{0y4,i}} & Cov_{id_{0y3,i}id_{0y4,i}} & V_{id_{0y4,i}}
+V_{id_{0y1}} & & &  \\
+Cov_{id_{0y1}id_{0y2}} & V_{id_{0y2}} & & \\
+Cov_{id_{0y1}id_{0y3}} & Cov_{id_{0y1}id_{0y4}} & V_{id_{0y3}} & \\
+Cov_{id_{0y2}id_{0y3}} & Cov_{id_{0y2}id_{0y4}} & Cov_{id_{0y3}id_{0y4}} & V_{id_{0y4}}
 \end{bmatrix}
 \tag{S1}
 $$
 $$
 \begin{bmatrix}
-en_{0y1,i} \\ 
-en_{0y2,i} \\ 
-en_{0y3,i} \\
-en_{0y4,i}
+en_{0y1,g} \\ 
+en_{0y2,g} \\ 
+en_{0y3,g} \\
+en_{0y4,g}
 \end{bmatrix}
 = MVN(0, \Omega_{en}) : \text{where } \Omega_{en} = 
 \begin{bmatrix}
-V_{en_{0y1,i}} & & & \\
-Cov_{en_{0y1,i}en_{0y2,i}} & V_{en_{0y2,i}} & & \\ 
-Cov_{en_{0y1,i}en_{0y3,i}} & Cov_{en_{0y1,i}en_{0y4,i}} & V_{en_{0y3,i}} & \\
-Cov_{en_{0y2,i}en_{0y3,i}} & Cov_{en_{0y2,i}en_{0y4,i}} & Cov_{en_{0y3,i}en_{0y4,i}} & V_{en_{0y4,i}}
+V_{en_{0y1}} & & & \\
+Cov_{en_{0y1}en_{0y2}} & V_{en_{0y2}} & & \\ 
+Cov_{en_{0y1}en_{0y3}} & Cov_{en_{0y1}en_{0y4}} & V_{en_{0y3}} & \\
+Cov_{en_{0y2}en_{0y3}} & Cov_{en_{0y2}en_{0y4}} & Cov_{en_{0y3}en_{0y4}} & V_{en_{0y4}}
 \end{bmatrix}
 \tag{S2}
 $$
 $$
 \begin{bmatrix}
-av_{0y1,i} \\ 
-av_{0y2,i} \\ 
-av_{0y3,i} \\
-av_{0y4,i}
+av_{0y1,h} \\ 
+av_{0y2,h} \\ 
+av_{0y3,h} \\
+av_{0y4,h}
 \end{bmatrix}
 = MVN(0, \Omega_{av}) : \text{where } \Omega_{av} = 
 \begin{bmatrix}
-V_{av_{0y1,i}} & & & \\
-Cov_{av_{0y1,i}av_{0y2,i}} & V_{av_{0y2,i}} & &\\ 
-Cov_{av_{0y1,i}av_{0y3,i}} & Cov_{av_{0y1,i}av_{0y4,i}} & V_{av_{0y3,i}} & \\
-Cov_{av_{0y2,i}av_{0y3,i}} & Cov_{av_{0y2,i}av_{0y4,i}} & Cov_{av_{0y3,i}av_{0y4,i}} & V_{av_{0y4,i}}
+V_{av_{0y1}} & & & \\
+Cov_{av_{0y1}av_{0y2}} & V_{av_{0y2}} & &\\ 
+Cov_{av_{0y1}av_{0y3}} & Cov_{av_{0y1}av_{0y4}} & V_{av_{0y3}} & \\
+Cov_{av_{0y2}av_{0y3}} & Cov_{av_{0y2}av_{0y4}} & Cov_{av_{0y3}av_{0y4}} & V_{av_{0y4}}
 \end{bmatrix}
 \tag{S3}
 $$
 $$
 \begin{bmatrix}
-\varepsilon_{0y1,i} \\ 
-\varepsilon_{0y2,i} \\ 
-\varepsilon_{0y3,i} \\
-\varepsilon_{0y4,i}
+\varepsilon_{0y1,ghij} \\ 
+\varepsilon_{0y2,ghij} \\ 
+\varepsilon_{0y3,ghij} \\
+\varepsilon_{0y4,ghij}
 \end{bmatrix}
 = MVN(0, \Omega_{\varepsilon}) : \text{where } \Omega_{\varepsilon} = 
 \begin{bmatrix}
-V_{\varepsilon_{0y1,i}} & & & \\
-Cov_{\varepsilon_{0y1,i}\varepsilon_{0y2,i}} & V_{\varepsilon_{0y2,i}} & & \\ 
-Cov_{\varepsilon_{0y1,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y1,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y3,i}} & \\
-Cov_{\varepsilon_{0y2,i}\varepsilon_{0y3,i}} & Cov_{\varepsilon_{0y2,i}\varepsilon_{0y4,i}} & Cov_{\varepsilon_{0y3,i}\varepsilon_{0y4,i}} & V_{\varepsilon_{0y4,i}}
+V_{\varepsilon_{0y1}} & & & \\
+Cov_{\varepsilon_{0y1}\varepsilon_{0y2}} & V_{\varepsilon_{0y2}} & & \\ 
+Cov_{\varepsilon_{0y1}\varepsilon_{0y3}} & Cov_{\varepsilon_{0y1}\varepsilon_{0y4}} & V_{\varepsilon_{0y3}} & \\
+Cov_{\varepsilon_{0y2}\varepsilon_{0y3}} & Cov_{\varepsilon_{0y2}\varepsilon_{0y4}} & Cov_{\varepsilon_{0y3}\varepsilon_{0y4}} & V_{\varepsilon_{0y4}}
 \end{bmatrix}
 \tag{S4}
 $$
