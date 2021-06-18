@@ -28,13 +28,13 @@ header-includes:
 \emph{Principal component analysis}
 \end{center}
 
-We computed the PCA using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The “PCA” function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
+We computed a principal components analysis (PCA) using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The "PCA()" function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were then standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
 
 \begin{center}
 \emph{Parametrization of the bayesian multivariate mixed-model}
 \end{center}
 
-We used a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations, and sampled every 40 intervals (thinning). We used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, avatar, individual, and within- individual behavioural correlations using the function posterior_samples() in the "brms" package. We could thus compute the mean of the correlation sample values, and the HDP intervals to obtain the 95% credible intervals for each correlation. The variance-covariance matrixes were parametrized as :
+We used a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations, and sampled every 40 intervals (thinning). We used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, avatar, individual, and within- individual behavioural correlations using the function "posterior_samples()" in the "brms" package. We could thus compute the mean of the correlation sample values, and the HDP intervals to obtain the 95% credible intervals for each correlation. The variance-covariance matrixes were parametrized as :
 
 \[
 \begin{bmatrix}
@@ -113,7 +113,7 @@ We ran a separate multivariate mixed-model after observing that game environment
 \emph{Parametrization of the Bayesian mixed-models for hunting success}
 \end{center}
 
-We used a Gaussian prior with mean of 0 and standard deviation of 5 for all the models' fixed effects. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We calculated the $ICC_k$ estimate for each random effect ($k$) using the function posterior_samples() in the "brms" package, by dividing each random effect variance sample value by the total variance. We could then compute the mean of the samples to obtain the $ICC$ value for each random effect, and HDP intervals to obtain their corresponding 95% credible intervals.
+We computed 4 different models to investigate the relationship between predator and prey behavior and predator hunting success. We used a Gaussian prior with mean of 0 and standard deviation of 5 for all the models' fixed effects. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We calculated the $ICC_k$ estimate for each random effect ($k$) using the function posterior_samples() in the "brms" package, by dividing each random effect variance sample value by the total variance. We could then compute the mean of the samples to obtain the $ICC$ value for each random effect, and HDP intervals to obtain their corresponding 95% credible intervals.
 
 For the first model, we aimed at investigating the relationship between hunting success and predator behaviour exclusively. For this model, we ran four chains using 103 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
 $$
@@ -185,9 +185,9 @@ logit (P_{hij}) &= (\beta_{0} + env_{0h} + id_{0i} + \varepsilon_{0,hij}) \\
 &\text{ } + \gamma_{5,pred}\textit{space}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \gamma_{6,pred}\textit{ambush time}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \gamma_{7,\textit{pred prey}}\textit{speed}_{hi} \times \textit{speed}_{hi}^{'} \\
-&\text{ } + \gamma_{8,\textit{pred prey}}\text{speed}_{hi} \times \textit{space}_{hi}^{'} \\
-&\text{ } + \gamma_{9,\textit{pred prey}}\text{space}_{hi} \times \text{speed}_{hi}^{'} \\
-&\text{ } + \gamma_{10,\text{pred prey}}\textit{space}_{hi} \times \textit{space}_{hi}^{'} \\
+&\text{ } + \gamma_{8,\textit{pred prey}}\textit{speed}_{hi} \times \textit{space}_{hi}^{'} \\
+&\text{ } + \gamma_{9,\textit{pred prey}}\textit{space}_{hi} \times \textit{speed}_{hi}^{'} \\
+&\text{ } + \gamma_{10,\textit{pred prey}}\textit{space}_{hi} \times \textit{space}_{hi}^{'} \\
 &\text{ } + \gamma_{11,\textit{pred prey}}\textit{ambush time}_{hi} \times \textit{speed}_{hi}^{'} \\
 &\text{ } + \gamma_{12,\textit{pred prey}}\textit{ambush time}_{hi} \times \textit{space}_{hi}^{'} \\
 &\text{ } + \gamma_{13,\textit{pred prey}}\textit{time 1}^{st} \textit{capture}_{hi} \times \textit{speed}_{hi}^{'} \\
@@ -225,9 +225,11 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 
 After removing prey behavior as linear fixed effects, the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table SII). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table SII).
 
+\vspace{12pt}
+
 \begin{figure}
 \centering
-\caption*{\textbf{Table SII:} ICC estimates for the model without prey fixed effects.}
+\caption*{\textbf{Table SII:} ICC estimates for the multivariate model without prey fixed effects.}
 \includegraphics[width = \linewidth]{tableS2.png}
 \end{figure}
 

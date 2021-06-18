@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  17 JUN 2021 17:25
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  18 JUN 2021 12:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1080,36 +1080,36 @@ LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/b/n' will be
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/it' will be
 (Font)              scaled to size 10.95pt on input line 104.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.95422pt on input line 124.
+(Font)              scaled to size 7.95422pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.6816pt on input line 124.
+(Font)              scaled to size 5.6816pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.36435pt on input line 124.
+(Font)              scaled to size 11.36435pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.95505pt on input line 124.
+(Font)              scaled to size 7.95505pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.68219pt on input line 124.
+(Font)              scaled to size 5.68219pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.36201pt on input line 124.
+(Font)              scaled to size 11.36201pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.9534pt on input line 124.
+(Font)              scaled to size 7.9534pt on input line 125.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.68102pt on input line 124.
+(Font)              scaled to size 5.68102pt on input line 125.
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 149.
+(Font)              scaled to size 7.665pt on input line 150.
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 149.
+(Font)              scaled to size 5.475pt on input line 150.
 
-Overfull \hbox (6.95103pt too wide) detected at line 157
+Overfull \hbox (6.95103pt too wide) detected at line 158
 [] [] [][][][][][] [][][] [] [][][] [] []
  []
 
-
-Overfull \hbox (3.1149pt too wide) detected at line 174
+[2]
+Overfull \hbox (3.1149pt too wide) detected at line 175
 [] [] [][][][][][] [][][] [] [][][] [] []
  []
 
-[2] [3] [4] [5] [6] [7]
+[3] [4] [5] [6] [7]
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/02_figureS1.png
  Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/02_figureS1.png>
@@ -1127,10 +1127,10 @@ anged.
 Here is how much of TeX's memory you used:
  19179 strings out of 478419
  350428 string characters out of 5855629
- 844675 words of memory out of 5000000
+ 846675 words of memory out of 5000000
  39261 multiletter control sequences out of 15000+600000
  409959 words of font info for 90 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,10n,122p,533b,416s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,10n,122p,533b,371s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on Chapter2-manuscript-supp-pdf.pdf (11 pages).
