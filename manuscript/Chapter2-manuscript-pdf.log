@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  17 JUN 2021 16:49
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  17 JUN 2021 21:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1031,8 +1031,10 @@ LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
 [1
 
 ]
+LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
+(Font)              scaled to size 12.0pt on input line 122.
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 122.
+(Font)              scaled to size 12.0pt on input line 122.
 [2] [3] [4]
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/it' will be
 (Font)              scaled to size 10.95pt on input line 263.
@@ -1040,6 +1042,8 @@ LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/it' will be
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png 
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png>
+LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/b/n' will be
+(Font)              scaled to size 10.95pt on input line 306.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 7.95422pt on input line 306.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1102,14 +1106,14 @@ Graphic file (type bmp)
 ipt-pdf.aux)
 Package rerunfilecheck Info: File `Chapter2-manuscript-pdf.out' has not changed
 .
-(rerunfilecheck)             Checksum: AA17F28483F8AAEC3E371131E13A4DD2;1099.
+(rerunfilecheck)             Checksum: 8E3BFFC3DCB149B8152F8A81B6E6E2E2;1121.
  ) 
 Here is how much of TeX's memory you used:
- 19134 strings out of 478419
- 349366 string characters out of 5855629
+ 19141 strings out of 478419
+ 349630 string characters out of 5855629
  843138 words of memory out of 5000000
- 39230 multiletter control sequences out of 15000+600000
- 407053 words of font info for 70 fonts, out of 8000000 for 9000
+ 39235 multiletter control sequences out of 15000+600000
+ 407069 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,9n,122p,983b,749s stack positions out of 5000i,500n,10000p,200000b,80000s
 
