@@ -129,8 +129,9 @@ icc_tab2 <- cbind(icc_tab2, icc3 = icc_tab3$icc)
 
 # Custom header
 my_header <- data.frame(
-  col_keys = c("group", "ranef_variable", "icc"),
-  line1 = c("Behavior", "Random effect", "ICC (95% CI)"),
+  col_keys = c("group", "ranef_variable", "icc", "icc3"),
+  line1 = c("Behavior", "Random effect",
+            "ICC (95% CI) - Model 2", "ICC (95% CI) - Model 3"),
   stringsAsFactors = FALSE
 )
 
@@ -147,20 +148,28 @@ my_theme <- function(x, ...) {
 
 # Create the table
 icc_table <- icc_tab2 %>%
-  select(group, ranef_variable, icc) %>%
+  select(group, ranef_variable, icc, icc3) %>%
   flextable(col_keys = my_header$col_keys) %>%
   set_header_df(mapping = my_header, key = "col_keys") %>%
   my_theme() %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
-  align(align = "left", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
-  align(align = "left", part = "body", j = 1) %>%
-  align(align = "left", part = "body", j = 2) %>%
-  width(j = c(1:3), width = 2) %>%
+  align(align = "left", part = "all", j = 1) %>%
+  align(align = "left", part = "all", j = 2) %>%
+  align(align = "center", part = "all", j = 3) %>%
+  align(align = "center", part = "all", j = 4) %>%
+  width(j = c(1:4), width = 1.8) %>%
   height(height = .01) %>%
-  hrule(rule = "exact")
+  hrule(rule = "exact") #%>%
+ # footnote(i = 1, j = 3:4,
+ #           value = as_paragraph(
+ #             c("Model without the effect of prey behavior",
+ #               "Model including the game environment surface area")
+ #           ),
+ #           ref_symbols = c("*", "*"),
+ #           part = "header")
 
 save_as_image(icc_table2, "./manuscript/tableS2.png")
 
