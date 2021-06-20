@@ -171,7 +171,7 @@ icc_table <- icc_tab2 %>%
  #           ref_symbols = c("*", "*"),
  #           part = "header")
 
-save_as_image(icc_table2, "./manuscript/tableS2.png")
+save_as_image(icc_table, "./manuscript/tableS2.png")
 
 # ========================================================
 # ========================================================
