@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.16)  18 JUN 2021 12:27
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.20)  20 JUN 2021 14:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Chapter2-manuscript-pdf.tex
 (./Chapter2-manuscript-pdf.tex
 LaTeX2e <2021-06-01> patch level 1
-L3 programming layer <2021-06-01> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
+L3 programming layer <2021-06-18> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
 -dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo
@@ -144,7 +144,7 @@ Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unico
 de-math.sty
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2021-06-01 L3 programming layer (loader) 
+Package: expl3 2021-06-18 L3 programming layer (loader) 
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backen
 d-xetex.def
@@ -168,11 +168,11 @@ TeX
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/
 xparse.sty
-Package: xparse 2021-06-01 L3 Experimental document command parser
+Package: xparse 2021-06-18 L3 Experimental document command parser
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2
 e/l3keys2e.sty
-Package: l3keys2e 2021-06-01 LaTeX2e option processing using LaTeX3 keys
+Package: l3keys2e 2021-06-18 LaTeX2e option processing using LaTeX3 keys
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.
 sty
@@ -1105,10 +1105,10 @@ Package rerunfilecheck Info: File `Chapter2-manuscript-pdf.out' has not changed
 (rerunfilecheck)             Checksum: AA17F28483F8AAEC3E371131E13A4DD2;1099.
  ) 
 Here is how much of TeX's memory you used:
- 19134 strings out of 478419
- 349366 string characters out of 5855629
- 843138 words of memory out of 5000000
- 39230 multiletter control sequences out of 15000+600000
+ 19135 strings out of 478417
+ 349387 string characters out of 5855589
+ 843177 words of memory out of 5000000
+ 39233 multiletter control sequences out of 15000+600000
  407053 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,9n,122p,983b,749s stack positions out of 5000i,500n,10000p,200000b,80000s

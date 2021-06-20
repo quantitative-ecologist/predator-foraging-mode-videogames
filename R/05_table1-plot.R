@@ -74,7 +74,7 @@ coefficient1 <- list(
   "prey space covered",
   "travel speed:prey travel speed",
   "travel speed:prey space covered",
-  "space covered:prey space covered",
+  "space covered:prey travel speed",
   "space covered:prey space covered",
   "ambush time:prey travel speed",
   "ambush time:prey space covered",
