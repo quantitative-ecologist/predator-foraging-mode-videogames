@@ -106,8 +106,7 @@ Cov_{\varepsilon_{0y2}\varepsilon_{0y3}} & Cov_{\varepsilon_{0y2}\varepsilon_{0y
 
 where the diagonals represent the random effect ($k$) variance ($V_{k_{0y_n}}$) for each hunting trait ($y_n$), and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed ($y1$), the rate of space covered ($y2$), the proportion of time spent ambushing ($y3$), and the time before first capture ($y4$)).
 
-We ran a separate multivariate mixed-model after observing that game environments did not explain a high percentage of variation in predator behavior (see the "discussion" in the main text). We did so to test the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. Results for environmental variation in predator behavior are presented below in the results section of the supporting information.
-
+We ran two additional multivariate mixed-models after observing that the game environments did not explain a high percentage of variation in predator behavior (see the "discussion" in the main text). For the second model, we tested the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. For the third model, we investigated if the game environment surface area explained an important portion of the observed variation in space covered when prey were exluded as fixed effects (see results section below). We thus kept prey behavior in this model and included the game environment surface area as a fixed effect.
 
 \begin{center}
 \emph{Parametrization of the Bayesian mixed-models for hunting success}
@@ -220,16 +219,16 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 \newpage
 
 \begin{center}
-\emph{Differences among environments in predator behavior without the effect of prey}
+\emph{Intra-class correlation coefficients of predator behavior without the effect of prey and with the effect of the game environment surface area}
 \end{center}
 
-After removing prey behavior as linear fixed effects, the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table SII). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table SII).
+After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table SII). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table SII). The surface area (model 3) of the game environment did not seem to explain a high portion of the variation in space coverage nor in any of the other measured behaviors (table SII).
 
 \vspace{12pt}
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table SII:} ICC estimates for the multivariate model without prey fixed effects.}
+\caption*{\textbf{Table SII:} ICC estimates of the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
 \includegraphics[width = \linewidth]{tableS2.png}
 \end{figure}
 
