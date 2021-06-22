@@ -413,9 +413,6 @@ We are among the first ecologists [Cere et al. accepted; @Barbe.etal2020] to pro
 
 To conclude, individual variation in predator (and prey) behavior is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015; @toscanoPersonalityForagingBehavior2016; @Moran.etal2017]. Albeit our study being essentially descriptive, as it is the first to investigate individual variation in predator foraging behavior using an online videogame, we showed that individuals differed in contrasting hunting strategies that align with those used by wild predators. These hunting modes varied among- and within- individuals along correlated behaviors (foraging syndrome hypothesis), and our results suggest that predator-prey locomotor-crossovers may promote the coexistence of different predator and prey behavioral types. We are confident that further studies using online videogames will provide valuable ecological insight for behavioral and community ecologists.
 
-### Acknowledgements
-We thank behavior Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us improve this manuscript. This project was funded by a Mitacs Accelerate Grant (#IT12054) through a partnership with behavior Interactive and Université du Québec à Montréal.
-
 ### Competing interests
 The authors declare no competing interests
 
