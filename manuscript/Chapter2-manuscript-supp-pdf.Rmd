@@ -202,7 +202,7 @@ $$
 \emph{Principal component analysis}
 \end{center}
 
-The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table SI), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table SI). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table S1), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table S1). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
 
 ```{r Figure 1, out.width = "80%", fig.align = "center", fig.cap = "Biplot of the principal component analysis on predator hunting variables. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
@@ -212,7 +212,7 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table SI:} Principal component loadings for all the predator behavioural traits.}
+\caption*{\textbf{Table S1:} Principal component loadings for all the predator behavioural traits.}
 \includegraphics[width = \linewidth]{tableS1.png}
 \end{figure}
 
@@ -222,13 +222,13 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 \emph{Intra-class correlation coefficients of predator behavior without the effect of prey and with the effect of the game environment surface area}
 \end{center}
 
-After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table SII). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table SII). The surface area (model 3) of the game environment did not seem to explain a high portion of the variation in space coverage nor in any of the other measured behaviors (table SII).
+After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table S2). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table S2). The surface area (model 3) of the game environment did not seem to explain a high portion of the variation in space coverage nor in any of the other measured behaviors (table S2).
 
 \vspace{12pt}
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table SII:} ICC estimates of the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
+\caption*{\textbf{Table S2:} ICC estimates of the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
 \includegraphics[width = \linewidth]{tableS2.png}
 \end{figure}
 
