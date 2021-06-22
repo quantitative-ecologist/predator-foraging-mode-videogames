@@ -151,7 +151,7 @@ newtab <- cbind(newtab, estimate1 = estimate1,
 my_header1 <- data.frame(
   col_keys = c("coefficient", "estimate1",
                "estimate2", "estimate3", "estimate4"),
-  line1 = c(" ", "Linear (95% CI)",
+  line1 = c("Predictor", "Linear (95% CI)",
             "Quadratic (95% CI)", "Predator trait interactions (95% CI)",
             "Predator-prey trait interactions (95% CI)"),
   stringsAsFactors = FALSE
@@ -180,7 +180,7 @@ table1 <-newtab %>%
   align(align = "center", part = "all") %>%
   fontsize(size = 10, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
-  align(align = "left", part = "body", j = 1) %>% # left align first column
+  align(align = "left", part = "all", j = 1) %>% # left align first column
   width(j = c(1:5), width = 1.6) %>% # control table width
   height(height = .25) %>%
   hrule(rule = "exact")
