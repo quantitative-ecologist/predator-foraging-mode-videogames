@@ -21,3 +21,4 @@ tests/beta-binom_base.sh
 tests/beta-binom_quad.R
 tests/beta-binom_quad.sh
 versions
+manuscript/FraserFranco-AmNat-cover_letter.docx
