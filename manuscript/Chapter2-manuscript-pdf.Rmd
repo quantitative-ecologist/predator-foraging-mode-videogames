@@ -19,7 +19,7 @@ header-includes:
    - \usepackage{graphicx}
 ---
 
-Title: Analysing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
+Title: Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
 
 Article type: Major article
 
