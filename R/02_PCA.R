@@ -37,7 +37,7 @@ library(ggpubr)
 game_data <- fread("./data/merged-data.csv")
 
 # Select column to be analyzed
-full_Zmatrix <- game_data[, c(50:60)]
+full_Zmatrix <- game_data[, c(47:56)]
 
 names(full_Zmatrix)
 # Change variable names

@@ -149,7 +149,7 @@ dotchart(data$Zhook_start_time,
 # Plot variable relationships
 # With standardized variables
 pairplot_Z <- ggpairs(data, 
-                      columns = c(50:52, 60:62), 
+                      columns = c(47:49, 56:58), 
                       columnLabels = c("Time guarding", 
                                         "Speed", 
                                         "Rate space cvd.",
@@ -168,7 +168,7 @@ pairplot_Z <- ggpairs(data,
 
 # With sqrt variables
 pairplot_sqrt <- ggpairs(data, 
-                         columns = c(37:39, 47:49), 
+                         columns = c(35:37, 44:46), 
                          columnLabels = c("Time guarding", 
                                           "Speed", 
                                           "Rate space cvd.",
