@@ -12,6 +12,7 @@ outputs/03C_hunting_success_quadratic-model1.rds
 outputs/03C_hunting_success_quadratic-model2.rda
 data/merged-data.csv
 data/clean_map-data.csv
+data/metadata.txt
 tests
 tests/test.R
 tests/test.sh
