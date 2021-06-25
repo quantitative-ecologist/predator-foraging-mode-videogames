@@ -38,22 +38,20 @@ data <- fread("./data/merged-data.csv",
 # Data structure
 str(data)
 # Range of values for the variables and standard deviation
-data[,. (range = range(Zprox_guard), sd = sd(Zprox_guard))]
-data[,. (range = range(Zmid_guard), sd = sd(Zmid_guard))]
 data[,. (range = range(Zprox_mid_guard), sd = sd(Zprox_mid_guard))]
 data[,. (range = range(Zspeed), sd = sd(Zspeed))]
 data[,. (range = range(Zspace_covered_rate), sd = sd (Zspace_covered_rate))]
+data[,. (range = range(Zhook_start_time), sd = sd (Zhook_start_time))]
 data[,. (range = range(sum_bloodpoints), sd = sd(sum_bloodpoints))]
 
 # Verify the amount of unique players that scored a high amount of bloodpoints (without accounting for multiplyers)
 length(unique(data[sum_bloodpoints > 30000]$mirrors_id)) # 344 players scored +30000 bpts
 
 # Summary for the variables
-summary(data$Zprox_guard)
-summary(data$Zmid_guard)
 summary(data$Zprox_mid_guard)
 summary(data$Zspeed)
 summary(data$Zspace_covered_rate)
+summary(data$Zhook_start_time)
 summary(data$sum_bloodpoints)
 
 # Investigate predator and prey behaviour distribution
@@ -69,32 +67,28 @@ hist(data$Zsurv_space_covered_rate,
 
 # Predator
 hist(as.numeric(data$sum_bloodpoints),
-     ylim = range(0,400), breaks = 400, col = "darkgray") ?
-hist(data$proportion_prox_guard,
-     ylim = range(0,30000), breaks = 200,
-     col = "darkgray") 
-hist(data$proportion_mid_guard,
-     ylim = range(0,8000), breaks = 200,
-     col = "darkgray") 
+     breaks = 50,
+     col = "darkgray")
 hist(data$proportion_prox_mid,
-     ylim = range(0,6000), breaks = 200,
+     breaks = 50,
+     col = "darkgray")
+hist(data$space_covered_rate, 
+     breaks = 50,
      col = "darkgray") 
 hist(data$speed,
-     breaks = 200, col = "darkgray")
-hist(data$Zprox_guard,
-     ylim = range(0, 10000), xlim = range(-5, 25),
-     breaks = 200, col = "darkgray")
-hist(data$Zmid_guard,
-     ylim = range(0, 2000), xlim = range(-5, 15),
-     breaks = 200, col = "darkgray")
-hist(data$Zprox_mid_guard,
-     ylim = range(0, 7000), xlim = range(-5, 15),
-     breaks = 200, col = "darkgray")
-hist(data$Zspeed,
-     ylim = range(0, 800), breaks = 500,
+     breaks = 50, col = "darkgray")
+hist(data$hook_start_time, 
+     breaks = 50,
      col = "darkgray")
-hist(data$Zspace_covered_rate,
-     ylim = range(0, 1500), breaks = 200,
+hist(data$Zprox_mid_guard,
+     breaks = 100, col = "darkgray")
+hist(data$Zspeed, breaks = 50,
+     col = "darkgray")
+hist(data$Zspace_covered_rate, 
+     breaks = 50,
+     col = "darkgray")
+hist(data$Zhook_start_time, 
+     breaks = 50,
      col = "darkgray")
 
 # =======================================================================
@@ -135,11 +129,9 @@ dotchart(data$Zspeed,
          color = char_colors[data$character_name], main = "Z Speed", pch = 16)
 dotchart(data$Zspace_covered_rate,
          color = char_colors[data$character_name], main = "Z Space covered rate", pch = 16)
-dotchart(data$Zprox_guard,
-         color = char_colors[data$character_name], main = "Z Prox guard", pch = 16)
-dotchart(data$Zmid_guard,
-         color = char_colors[data$character_name], main = "Z Mid guard", pch = 16)
 dotchart(data$Zprox_mid_guard,
+         color = char_colors[data$character_name], main = "Z Prox-mid guard", pch = 16)
+dotchart(data$Zhook_start_time,
          color = char_colors[data$character_name], main = "Z Prox-mid guard", pch = 16)
 #dev.off()
 
@@ -157,10 +149,11 @@ dotchart(data$Zprox_mid_guard,
 # Plot variable relationships
 # With standardized variables
 pairplot_Z <- ggpairs(data, 
-                      columns = c(65:67, 76:77), 
+                      columns = c(50:52, 60:62), 
                       columnLabels = c("Time guarding", 
                                         "Speed", 
                                         "Rate space cvd.",
+                                        "Latency 1st cap.",
                                         "Prey speed",
                                         "Prey space cvd."),
                       title = "Z-scored variables",
@@ -175,10 +168,11 @@ pairplot_Z <- ggpairs(data,
 
 # With sqrt variables
 pairplot_sqrt <- ggpairs(data, 
-                         columns = c(48:50, 59:60), 
+                         columns = c(37:39, 47:49), 
                          columnLabels = c("Time guarding", 
                                           "Speed", 
                                           "Rate space cvd.",
+                                          "Latency 1st cap.",
                                           "Prey speed",
                                           "Prey space cvd."),
                          title = "Sqrt variables",
