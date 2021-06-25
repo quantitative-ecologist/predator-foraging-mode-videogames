@@ -21,7 +21,7 @@ header-includes:
 
 Title: Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
 
-Article type: Major article
+Article type: E-article
 
 Word count: \approx 6264
 
@@ -31,8 +31,8 @@ List of main elements:
 * Introduction
 * Materials and methods
 * Discussion
-* Acknowledgements
-* Funding
+* Competing interests
+* Data availability statement
 * Literature Cited
 
 Keywords: individual specialization, environmental variation, foraging mode, hunting tactics, predator-prey interactions, online videogames.
