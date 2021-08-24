@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.8.23)  23 AUG 2021 17:09
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.8.23)  24 AUG 2021 17:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1035,33 +1035,33 @@ LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/b/n' will be
 (Font)              scaled to size 10.95pt on input line 120.
 [2] [3] [4]
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/it' will be
-(Font)              scaled to size 10.95pt on input line 265.
+(Font)              scaled to size 10.95pt on input line 266.
 [5]
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png 
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure1.png>
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.95422pt on input line 319.
+(Font)              scaled to size 7.95422pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.6816pt on input line 319.
+(Font)              scaled to size 5.6816pt on input line 320.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-19.
+20.
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.36435pt on input line 319.
+(Font)              scaled to size 11.36435pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.95505pt on input line 319.
+(Font)              scaled to size 7.95505pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.68219pt on input line 319.
+(Font)              scaled to size 5.68219pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.36201pt on input line 319.
+(Font)              scaled to size 11.36201pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.9534pt on input line 319.
+(Font)              scaled to size 7.9534pt on input line 320.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.68102pt on input line 319.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 319
+(Font)              scaled to size 5.68102pt on input line 320.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 320
 .
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1070,7 +1070,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 fg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 319
+LaTeX Font Info:    Trying to load font information for U+msb on input line 320
 .
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1079,18 +1079,18 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 fg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Overfull \hbox (65.55989pt too wide) in paragraph at lines 308--322
+Overfull \hbox (65.55989pt too wide) in paragraph at lines 309--323
 []\TU/TimesNewRoman(0)/m/n/10.95 \begin{figure} []
  []
 
 
-Underfull \hbox (badness 1603) in paragraph at lines 308--322
+Underfull \hbox (badness 1603) in paragraph at lines 309--323
 \TU/TimesNewRoman(0)/m/n/10.95 \caption{Images of the online videogame Dead by 
 Daylight. (A) Image of the predator player’s
  []
 
 
-Underfull \hbox (badness 5403) in paragraph at lines 308--322
+Underfull \hbox (badness 5403) in paragraph at lines 309--323
 \TU/TimesNewRoman(0)/m/n/10.95 light wiki and forum web pages ([]$[][][][][] []
  [] [] [][][][][][][][][][][][][][] [] [][][][][][] [] [][][] [] [][][][] [] []
 [][][] [] [][] [] [][][][][][][][] [] [][][][]$[],
@@ -1098,9 +1098,9 @@ Underfull \hbox (badness 5403) in paragraph at lines 308--322
 
 [6] [7] [8] [9]
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
-(Font)              scaled to size 7.665pt on input line 487.
+(Font)              scaled to size 7.665pt on input line 488.
 LaTeX Font Info:    Font shape `TU/TimesNewRoman(0)/m/n' will be
-(Font)              scaled to size 5.475pt on input line 494.
+(Font)              scaled to size 5.475pt on input line 495.
 [10] [11] [12]
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure2.png 
 Graphic file (type bmp)
@@ -1112,17 +1112,12 @@ File: table1.png Graphic file (type bmp)
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure3.png 
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure3.png>
-
-Overfull \hbox (65.54575pt too wide) in paragraph at lines 767--777
-[]\TU/TimesNewRoman(0)/m/n/10.95 \begin{figure} []
- []
-
 [16]
 File: C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure4.png 
 Graphic file (type bmp)
 <C:/Users/maxim/OneDrive/Documents/GitHub/Chapter2/outputs/04_figure4.png>
 [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
-Underfull \hbox (badness 1448) in paragraph at lines 1315--1318
+Underfull \hbox (badness 1448) in paragraph at lines 1319--1322
 [][]\TU/TimesNewRoman(0)/m/n/10.95 Schmitz OJ. 2008. Effects of predator huntin
 g mode on grassland ecosystem function. Science.
  []
@@ -1130,12 +1125,12 @@ g mode on grassland ecosystem function. Science.
 [27] [28] (./Chapter2-manuscript-pdf.aux)
 Package rerunfilecheck Info: File `Chapter2-manuscript-pdf.out' has not changed
 .
-(rerunfilecheck)             Checksum: 9E34EFBA5F1BD23792E75928CE92EE04;974.
+(rerunfilecheck)             Checksum: 45499406EB9190C75EDB766E7FC8286E;974.
  ) 
 Here is how much of TeX's memory you used:
  19183 strings out of 478450
  352537 string characters out of 5856443
- 839673 words of memory out of 5000000
+ 840130 words of memory out of 5000000
  39245 multiletter control sequences out of 15000+600000
  407053 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
