@@ -18,29 +18,22 @@ header-includes:
    - \usepackage{sectsty}\allsectionsfont{\centering} # center all section headers (can safely ignore warning)
    - \usepackage{graphicx}
 ---
-
-Title: Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
-
-Word count: \approx 7162 with figure legends
-
-List of main elements:
- 
-* Abstract
-* Introduction
-* Materials and methods
-* Discussion
-* Competing interests
-* Data availability statement
-* Literature Cited
-
-Keywords: individual specialization, environmental variation, foraging mode, hunting tactics, predator-prey interactions, online videogames.
+### Lay summary {.unnumbered}
 
 
 \newpage
+
+**Title:** Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
+
+**Short title:** Analyzing predator hunting mode and hunting success using an online multiplayer videogame
+
 ### Abstract {.unnumbered}
 
 Predator-prey interactions are important drivers of community and ecosystem dynamics. With an online multiplayer videogame, we propose a novel system to explore within-population variation in predator hunting mode, and how predator-prey behavioral interactions affect predator hunting success. We empirically examined how travel speed, space coverage, ambush time, and latency to first capture covary at three hierarchical levels (among environments, among individuals, and within individuals) to assess the structure of predator hunting mode. We also investigated how these traits interact with prey travel speed and space coverage to affect predator hunting success. We found that individual predators specialized either as cursorial or ambush hunters along a continuum of these hunting traits, but also shifted their strategy between encounters. Both types of hunters were generally better against slower-moving prey, and they achieved similar prey captures over the sampling period. Our study supports key findings on predator foraging mode and predator-prey interactions from behavioral ecology. This suggests that virtual worlds supporting multiplayer online videogames can serve as legitimate systems to advance our knowledge on predator-prey interactions. We further discuss the insight they can provide for ecological research.
 
+<br>
+
+**Keywords:** individual specialization, environmental variation, foraging mode, hunting tactics, predator-prey interactions, online videogames.
 
 \newpage
 ### Introduction {.unnumbered}
