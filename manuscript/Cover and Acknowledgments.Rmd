@@ -1,0 +1,52 @@
+---
+title: "Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame"
+output: 
+    pdf_document:
+        latex_engine: xelatex
+fontsize: 11pt
+mainfont: Times New Roman
+header-includes:
+   - \usepackage{setspace}\doublespacing              # double space the document
+   - \usepackage{sectsty}\allsectionsfont{\centering} # center all section headers
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Short title:** Analyzing predator hunting mode and hunting success using an online multiplayer videogame
+
+\vspace{12pt}
+
+Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Olivier Montiglio^1^
+
+\vspace{12pt}
+
+^1^Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
+
+\vspace{12pt}
+
+^1^Correspondence: Pavillon des Sciences Biologiques (SB) SB-1805, 141 Avenue du Président-Kennedy, Montréal (Québec), Canada, H2X 1Y4
+
+\vspace{12pt}
+
+Corresponding author: maxime.fraser.franco@hotmail.com
+
+\newpage
+
+### Funding {.unnumbered}
+
+This work was supported by a Mitacs Accelerate Grant (grant number IT12054) through a partnership with Behaviour Interactive and Université du Québec à Montréal.
+
+\newpage
+
+### Acknowledgements {.unnumbered}
+
+We thank Behavior Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us improve this manuscript.
+
+### Data availability statement {.unnumbered}
+
+We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request and pending a non-disclosure agreement, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
+
+Here is an anonymized link to our data for reviewing purposes that we deposited on the Open Science
+Framework: https://osf.io/wyvrt/?view_only=8449b28df2314f24958702532dc4bbee

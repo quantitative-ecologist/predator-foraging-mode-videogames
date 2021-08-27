@@ -7,7 +7,7 @@ output:
       in_header: header.tex # this is to hold the plot position
 fontsize: 11pt
 mainfont: Times New Roman
-bibliography: references2.bib
+bibliography: references.bib
 csl: behav-ecol.csl
 header-includes:
    - \usepackage{lineno}\linenumbers                  # add line numbers for the whole document
@@ -18,8 +18,20 @@ header-includes:
    - \usepackage{sectsty}\allsectionsfont{\centering} # center all section headers (can safely ignore warning)
    - \usepackage{graphicx}
 ---
+
 ### Lay summary {.unnumbered}
 
+Understanding how predators chose their hunting strategies and the type of prey they capture is crucial to predict their impact on natural populations. With an online multiplayer videogame simulating a predator-prey interaction, we demonstrate that some predator players specialize as active hunters, while others prefer to use ambushes. These behavioral differences lead to differences in the type of prey that they capture. In that sense, comparable to natural predators, both type of hunters can coexist because they achieve similar hunting success. 
+
+
+
+The International Society for Behavioral Ecology has undertaken to provide a Lay Summary of each paper published in Behavioral Ecology. The Lay Summary will appear on the Table of Contents on the journal's Web site. The purpose of a Lay Summary is to interpret the context and significance of our published papers in a manner intelligible to interested nonspecialists, thereby increasing the accessibility of our research work to the public at large, and to organizations and individuals whose main function may not be research, but who may nonetheless be interested in research findings.
+
+Guidelines for authors
+
+A Lay Summary is a short (max. 75 word) statement that, in nontechnical language, provides a view of the paper from the perspective of the broad questions of the field, summarizes briefly the current state of knowledge – emphasizing what is not known or understood – and explains the contribution of the paper. The first 140 characters of the Lay Summary should convey the most important and novel message, and function as a "Tweet". A Lay Summary is not a "dumbed down" version of the Abstract of your paper: its aims are rather different. Nor is a Lay Summary specifically about potential or real applications of the results (unless these were the topic of the paper). The Abstract of your paper emphasizes the findings for other specialists who know the history of the field and the context of your questions, who will understand and be interested in details of your methodology, and who will be able to evaluate for themselves the significance of your results. Most of the readership of a Lay Summary will not be in this category.
+
+Assume that the reader of your Lay Summary is an intelligent and interested person who may know something about behavioral ecology, but may not know terms such as EPC, MVT, altricial, phylogeny, or mini-satellite. Therefore, avoid technical language and jargon. Many readers of the Lay Summary have not been schooled in the history of the discipline, so provide the necessary background, focusing on generalities rather than specifics. Generally, details of the methods are of little importance. Summarize succinctly what the paper contributed.
 
 \newpage
 
@@ -36,6 +48,7 @@ Predator-prey interactions are important drivers of community and ecosystem dyna
 **Keywords:** individual specialization, environmental variation, foraging mode, hunting tactics, predator-prey interactions, online videogames.
 
 \newpage
+
 ### Introduction {.unnumbered}
 
 Predator hunting mode plays a crucial role in structuring ecological communities and ecosystems [@hueyEcologicalConsequencesForaging1981; @preisserPredatorHuntingMode2007; @schmitzEffectsPredatorHunting2008; @kersch-beckerCommunitywideResponsesPredation2018] and is usually described as 1) active/cursioral when hunters search, follow, and chase prey for long distances, 2) sit-and-pursue, when hunters remain motionless and pounce on prey that are within chasing distance, and 3) sit-and-wait/ambush, when hunters wait for prey to be within immediate capture distance [@mclaughlinSearchModesBirds1989]. Field studies show that contrasting hunting modes (e.g. cursorial vs ambush) found among and within predator species can lead to differences in the number of individuals or species, or in the type of prey captured [@donihueAegeanWallLizards2016; @glaudasForagingModeRelative2019; @millerFearMovePredator2014]. As a result, predators with contrasting hunting modes can cause opposing trophic cascades and act at different trophic levels [@schmitzEffectsPredatorHunting2008; @romeroContrastingCascadeEffects2011].
@@ -409,9 +422,6 @@ To conclude, individual variation in predator (and prey) behavior is increasingl
 
 ### Competing interests
 The authors declare no competing interests
-
-### Data availability statement
-We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request and pending a non-disclosure agreement, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
 
 ### Literature Cited
 
