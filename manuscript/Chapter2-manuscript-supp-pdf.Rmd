@@ -1,5 +1,5 @@
 ---
-title: "Online supporting information for  \nAnalyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success with an online multiplayer videogame"
+title: "Online supporting information for  \nStudying predator foraging mode and hunting success at the individual level with an online videogame"
 output: 
   pdf_document:
     latex_engine: xelatex

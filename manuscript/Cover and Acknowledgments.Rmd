@@ -1,5 +1,5 @@
 ---
-title: "Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame"
+title: "Studying predator foraging mode and hunting success at the individual level with an online videogame"
 output: 
     pdf_document:
         latex_engine: xelatex
@@ -14,7 +14,7 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Short title:** Analyzing predator hunting mode and hunting success using an online multiplayer videogame
+**Short title:** Predator-prey interactions in an online videogame.
 
 \vspace{12pt}
 
