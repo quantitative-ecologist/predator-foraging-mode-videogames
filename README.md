@@ -1,6 +1,5 @@
 # videogame_hunting_tactics-Rscripts
-R scripts used to produce the results in "Analyzing individual variation in predator hunting mode and the effect of predator and
-prey behavior on hunting success with an online multiplayer videogame" (in preparation).
+R scripts used to produce the results in "Studying predator foraging mode and hunting success at the individual level with an online videogame" (in preparation).
 
 All models were run on a remote computer cluster (Cedar, Compute Canada, https://docs.computecanada.ca/wiki/Cedar). You can open the .sh files under the "jobs" folder to see the computer specifications used to run the models. The computer cluster runs on CentOS Linux 7.
 
