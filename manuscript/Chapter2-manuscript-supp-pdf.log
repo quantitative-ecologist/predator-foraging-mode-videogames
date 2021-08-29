@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.6.20)  10 AUG 2021 11:59
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.8.29)  29 AUG 2021 14:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Chapter2-manuscript-supp-pdf.tex
 (./Chapter2-manuscript-supp-pdf.tex
 LaTeX2e <2021-06-01> patch level 1
-L3 programming layer <2021-06-18> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
+L3 programming layer <2021-08-27> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
 -dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo
@@ -144,11 +144,11 @@ Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unico
 de-math.sty
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2021-06-18 L3 programming layer (loader) 
+Package: expl3 2021-08-27 L3 programming layer (loader) 
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backen
 d-xetex.def
-File: l3backend-xetex.def 2021-05-07 L3 backend support: XeTeX
+File: l3backend-xetex.def 2021-08-04 L3 backend support: XeTeX
 (|extractbb --version)
 \c__kernel_sys_dvipdfmx_version_int=\count198
 \l__color_backend_stack_int=\count199
@@ -168,11 +168,11 @@ TeX
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/
 xparse.sty
-Package: xparse 2021-06-18 L3 Experimental document command parser
+Package: xparse 2021-08-27 L3 Experimental document command parser
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2
 e/l3keys2e.sty
-Package: l3keys2e 2021-06-18 LaTeX2e option processing using LaTeX3 keys
+Package: l3keys2e 2021-08-27 LaTeX2e option processing using LaTeX3 keys
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.
 sty
@@ -1125,10 +1125,10 @@ anged.
 (rerunfilecheck)             Checksum: 50D677B0B26E5450C1DB9383251F0073;615.
  ) 
 Here is how much of TeX's memory you used:
- 19180 strings out of 478417
- 350449 string characters out of 5855589
- 847714 words of memory out of 5000000
- 39264 multiletter control sequences out of 15000+600000
+ 19182 strings out of 478507
+ 350479 string characters out of 5860142
+ 843731 words of memory out of 5000000
+ 39176 multiletter control sequences out of 15000+600000
  409959 words of font info for 90 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,10n,122p,533b,371s stack positions out of 5000i,500n,10000p,200000b,80000s

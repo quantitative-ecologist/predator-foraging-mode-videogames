@@ -1,11 +1,11 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.8.23)  27 AUG 2021 15:39
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/W32TeX) (preloaded format=xelatex 2021.8.29)  29 AUG 2021 14:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **Cover-and-Acknowledgments.tex
 (./Cover-and-Acknowledgments.tex
 LaTeX2e <2021-06-01> patch level 1
-L3 programming layer <2021-07-12> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
+L3 programming layer <2021-08-27> (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf
 -dist/tex/latex/base/article.cls
 Document Class: article 2021/02/12 v1.4n Standard LaTeX document class
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/base/size11.clo
@@ -144,7 +144,7 @@ Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/unicode-math/unico
 de-math.sty
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2021-07-12 L3 programming layer (loader) 
+Package: expl3 2021-08-27 L3 programming layer (loader) 
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backen
 d-xetex.def
@@ -168,11 +168,11 @@ TeX
 
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/xparse/
 xparse.sty
-Package: xparse 2021-08-04 L3 Experimental document command parser
+Package: xparse 2021-08-27 L3 Experimental document command parser
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3packages/l3keys2
 e/l3keys2e.sty
-Package: l3keys2e 2021-08-04 LaTeX2e option processing using LaTeX3 keys
+Package: l3keys2e 2021-08-27 LaTeX2e option processing using LaTeX3 keys
 )
 (c:/Users/maxim/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fontspec/fontspec.
 sty
@@ -1048,10 +1048,10 @@ ed.
 (rerunfilecheck)             Checksum: 7056015831B08621E84C75DFDFCF1D2D;388.
  ) 
 Here is how much of TeX's memory you used:
- 17640 strings out of 478450
- 320056 string characters out of 5856443
- 797185 words of memory out of 5000000
- 37723 multiletter control sequences out of 15000+600000
+ 17640 strings out of 478507
+ 320056 string characters out of 5860142
+ 796094 words of memory out of 5000000
+ 37666 multiletter control sequences out of 15000+600000
  409911 words of font info for 84 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  87i,5n,122p,530b,372s stack positions out of 5000i,500n,10000p,200000b,80000s

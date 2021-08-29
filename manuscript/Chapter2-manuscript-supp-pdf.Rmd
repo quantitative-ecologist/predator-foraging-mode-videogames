@@ -1,5 +1,5 @@
 ---
-title: "Online supporting information for  \nAnalyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame"
+title: "Online supporting information for  \nAnalyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success with an online multiplayer videogame"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -9,7 +9,7 @@ output:
 fontsize: 11pt
 mainfont: Times New Roman
 bibliography: references.bib
-csl: american-naturalist.csl
+csl: behav-ecol.csl
 header-includes:
    - \usepackage{lineno}\linenumbers                    # add line number for the whole document
    - \usepackage{amsmath}                               # equations

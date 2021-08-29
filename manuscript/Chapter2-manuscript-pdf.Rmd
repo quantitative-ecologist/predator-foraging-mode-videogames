@@ -21,31 +21,29 @@ header-includes:
 
 ### Lay summary {.unnumbered}
 
-Understanding how predators chose their hunting strategies and the type of prey they capture is crucial to predict their impact on natural populations. With an online multiplayer videogame simulating a predator-prey interaction, we demonstrate that some predator players specialize as active hunters, while others prefer to use ambushes. These behavioral differences lead to differences in the type of prey that they capture. In that sense, comparable to natural predators, both type of hunters can coexist because they achieve similar hunting success. 
-
-
-
-The International Society for Behavioral Ecology has undertaken to provide a Lay Summary of each paper published in Behavioral Ecology. The Lay Summary will appear on the Table of Contents on the journal's Web site. The purpose of a Lay Summary is to interpret the context and significance of our published papers in a manner intelligible to interested nonspecialists, thereby increasing the accessibility of our research work to the public at large, and to organizations and individuals whose main function may not be research, but who may nonetheless be interested in research findings.
-
-Guidelines for authors
-
-A Lay Summary is a short (max. 75 word) statement that, in nontechnical language, provides a view of the paper from the perspective of the broad questions of the field, summarizes briefly the current state of knowledge – emphasizing what is not known or understood – and explains the contribution of the paper. The first 140 characters of the Lay Summary should convey the most important and novel message, and function as a "Tweet". A Lay Summary is not a "dumbed down" version of the Abstract of your paper: its aims are rather different. Nor is a Lay Summary specifically about potential or real applications of the results (unless these were the topic of the paper). The Abstract of your paper emphasizes the findings for other specialists who know the history of the field and the context of your questions, who will understand and be interested in details of your methodology, and who will be able to evaluate for themselves the significance of your results. Most of the readership of a Lay Summary will not be in this category.
-
-Assume that the reader of your Lay Summary is an intelligent and interested person who may know something about behavioral ecology, but may not know terms such as EPC, MVT, altricial, phylogeny, or mini-satellite. Therefore, avoid technical language and jargon. Many readers of the Lay Summary have not been schooled in the history of the discipline, so provide the necessary background, focusing on generalities rather than specifics. Generally, details of the methods are of little importance. Summarize succinctly what the paper contributed.
+Understanding the hunting strategies and prey preferences of predators is crucial to predict their impact on natural populations. With an online videogame simulating a predator-prey interaction, we demonstrate that some predator players specialize as active hunters, while others prefer to use ambushes. Both types of hunters differ in the type of prey that they capture, enabling them to achieve similar hunting success. Our results show that online videogames can be useful for ecological research.
 
 \newpage
 
-**Title:** Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success using an online multiplayer videogame
+**Title:** Analyzing individual variation in predator hunting mode and the effect of predator and prey behavior on hunting success with an online multiplayer videogame
 
-**Short title:** Analyzing predator hunting mode and hunting success using an online multiplayer videogame
+**Short title:** Analyzing predator hunting mode and hunting success with an online multiplayer videogame
+
+\vspace{12pt}
 
 ### Abstract {.unnumbered}
 
 Predator-prey interactions are important drivers of community and ecosystem dynamics. With an online multiplayer videogame, we propose a novel system to explore within-population variation in predator hunting mode, and how predator-prey behavioral interactions affect predator hunting success. We empirically examined how travel speed, space coverage, ambush time, and latency to first capture covary at three hierarchical levels (among environments, among individuals, and within individuals) to assess the structure of predator hunting mode. We also investigated how these traits interact with prey travel speed and space coverage to affect predator hunting success. We found that individual predators specialized either as cursorial or ambush hunters along a continuum of these hunting traits, but also shifted their strategy between encounters. Both types of hunters were generally better against slower-moving prey, and they achieved similar prey captures over the sampling period. Our study supports key findings on predator foraging mode and predator-prey interactions from behavioral ecology. This suggests that virtual worlds supporting multiplayer online videogames can serve as legitimate systems to advance our knowledge on predator-prey interactions. We further discuss the insight they can provide for ecological research.
 
-<br>
+\vspace{12pt}
+\vspace{12pt}
 
 **Keywords:** individual specialization, environmental variation, foraging mode, hunting tactics, predator-prey interactions, online videogames.
+
+\vspace{12pt}
+
+**Data:** Here is an anonymized link to our data for reviewing purposes that we deposited on the Open Science
+Framework: https://osf.io/wyvrt/?view_only=8449b28df2314f24958702532dc4bbee
 
 \newpage
 
