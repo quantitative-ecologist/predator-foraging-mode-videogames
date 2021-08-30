@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-.gitignore
 >>>>>>> parent of f4a7c7b (no base_model in git because file too large)
 outputs/03A_multivariate-model3.rda
 outputs/03A_multivariate-model2.rda
