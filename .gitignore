@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 
-# prevent the library from being commited
+# Prevent the library from being commited
 renv/library
 
 # Some outputs files are too large
