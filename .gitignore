@@ -12,6 +12,9 @@ outputs/03B_hunting_success_base-model2.rda
 outputs/03C_hunting_success_quadratic-model1.rds
 outputs/03C_hunting_success_quadratic-model2.rda
 
+# Code prior to first review Behavioural Ecology
+R/before-review-BehavEcol
+
 # The data is anonymous
 data
 
