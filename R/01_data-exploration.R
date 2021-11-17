@@ -78,11 +78,25 @@ summary(data$sum_bloodpoints)
 
 # Prey behavioural distributions ----------------------------------------
 
-hist(data$prey_avg_speed,
-     col = "darkgray", breaks = 100)
-hist(data$prey_avg_space_covered_rate,
-     col = "darkgray", breaks = 100)
+tiff("outputs/figures/data_exploration/01_prey-distributions.tiff", 
+     res = 300, 
+     width = 3000, 
+     height = 1500)
 
+par(mar = c(4, 4, 1, 1), 
+    oma = c(1, 1, 1, 1),
+    mfrow = c(1, 2))
+
+hist(data$prey_avg_speed,
+     col = "darkgray", breaks = 50,
+     xlab = "Prey avg. speed",
+     main = "")
+hist(data$prey_avg_space_covered_rate,
+     col = "darkgray", breaks = 50,
+     xlab = "Prey avg. rate of space covered",
+     main = "")
+
+dev.off()
 
 
 # Predator behavioural distributions ------------------------------------
@@ -124,6 +138,45 @@ hist(log(data$hook_start_time),
      breaks = 50,
      col = "darkgray")
 
+
+
+# Save a figure ---------------------------------------------------------
+tiff("outputs/figures/data_exploration/01_predator-distributions.tiff", 
+     res = 300, 
+     width = 2000, 
+     height = 2000)
+
+par(mar = c(4, 4, 1, 1), 
+    oma = c(1, 1, 1, 1),
+    mfrow = c(2, 2))
+
+# Speed
+hist(data$speed,
+     breaks = 30,
+     col = "darkgray",
+     main = "",
+     xlab = "Predator avg. speed")
+# Rate of space covered
+hist(data$space_covered_rate, 
+     breaks = 30,
+     col = "darkgray",
+     main = "",
+     xlab = "Predator rate of space covered")
+# Log seems to be the best transformation
+hist(log(data$hook_start_time),
+     breaks = 30,
+     col = "darkgray",
+     main = "",
+     xlab = "log(Latency before the 1st capture)")
+# log+1 (seems to be the best transformation)
+hist(log(data$prox_mid_PreyGuarding + 1),
+     breaks = 30,
+     col = "darkgray",
+     main = "",
+     xlab = "log(Prey guarding + 1)")
+
+dev.off()
+
 # =======================================================================
 # =======================================================================
 
@@ -144,13 +197,16 @@ hist(log(data$hook_start_time),
 
 
 # Prey behaviours -------------------------------------------------------
-tiff("outputs/figures/data_exploration/prey-dotplot.tiff", 
+
+tiff("outputs/figures/data_exploration/01_prey-dotplot.tiff", 
      res = 300, 
      width = 1500, 
      height = 2000)
+
 par(mar = c(2, 2, 2, 2), 
     oma = c(2, 2, 2, 2),
     mfrow = c(2, 1))
+
 dotchart(data$speed, 
          main = "Prey avg. speed", 
          pch = 20)
@@ -163,75 +219,29 @@ dev.off()
 
 
 # Predator behaviours ---------------------------------------------------
-#tiff("03_predator-dotplot.tiff", res = 300, width = 3000, height = 2000)
-#par(mar = c(2, 2, 2, 2), oma = c(2, 2, 2, 2), mfrow = c(3,3))
-dotchart(data$sum_bloodpoints,
-         color = char_colors[data$character_name], main = "Bloodpoints", pch = 16)
-dotchart(data$Zspeed,
-         color = char_colors[data$character_name], main = "Z Speed", pch = 16)
-dotchart(data$Zspace_covered_rate,
-         color = char_colors[data$character_name], main = "Z Space covered rate", pch = 16)
-dotchart(data$Zprox_mid_guard,
-         color = char_colors[data$character_name], main = "Z Prox-mid guard", pch = 16)
-dotchart(data$Zhook_start_time,
-         color = char_colors[data$character_name], main = "Z Prox-mid guard", pch = 16)
-#dev.off()
+
+tiff("outputs/figures/data_exploration/01_predator-dotplot.tiff",
+     res = 300,
+     width = 3000,
+     height = 2000)
+
+par(mar = c(2, 2, 2, 2),
+    oma = c(2, 2, 2, 2),
+    mfrow = c(2, 2))
+
+dotchart(data$speed,
+         main = "Speed", pch = 20)
+dotchart(data$space_covered_rate,
+         main = "Rate of space covered", pch = 20)
+dotchart(data$prox_mid_PreyGuarding,
+         main = "Prey guarding", pch = 20)
+dotchart(data$hook_start_time,
+         main = "Latency for 1st capture", pch = 20)
+
+dev.off()
 
 # =======================================================================
 # =======================================================================
 
 
-
-
-
-# =======================================================================
-# 4. Pairplots
-# =======================================================================
-
-# Plot variable relationships
-# With standardized variables
-pairplot_Z <- ggpairs(data, 
-                      columns = c(47:49, 56:58), 
-                      columnLabels = c("Time guarding", 
-                                        "Speed", 
-                                        "Rate space cvd.",
-                                        "Latency 1st cap.",
-                                        "Prey speed",
-                                        "Prey space cvd."),
-                      title = "Z-scored variables",
-                      diag = list(mapping = aes(color = character_name)),
-                      lower = list(mapping = aes(color = character_name),
-                                   continuous = wrap("points", 
-                                                      alpha = 0.3, 
-                                                      size = 0.4))) +
-                      theme_bw() +
-                      theme(panel.grid.major = element_blank())
-
-
-# With sqrt variables
-pairplot_sqrt <- ggpairs(data, 
-                         columns = c(35:37, 44:46), 
-                         columnLabels = c("Time guarding", 
-                                          "Speed", 
-                                          "Rate space cvd.",
-                                          "Latency 1st cap.",
-                                          "Prey speed",
-                                          "Prey space cvd."),
-                         title = "Sqrt variables",
-                         diag = list(mapping = aes(color = character_name)),
-                         lower = list(mapping = aes(color = character_name),
-                                      continuous = wrap("points", 
-                                                        alpha = 0.3, 
-                                                        size = 0.4))) +
-                         theme_bw() +
-                         theme(panel.grid.major = element_blank(),
-                               panel.grid.minor = element_blank())
-
-# Save and export figures
-#ggexport(pairplot_Z, filename = "03_Ztraits-pairplot.tiff",
-#         width = 2200, height = 2200, res = 300) # more res = bigger plot zoom
-
-#ggexport(pairplot_sqrt, filename = "03_sqrttraits-pairplot.tiff",
-#         width = 2200, height = 2200, res = 300) # more res = bigger plot zoom
-
-# End of script ------------------------------------------------------
+# End of script ---------------------------------------------------------
