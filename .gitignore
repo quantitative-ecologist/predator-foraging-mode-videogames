@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 
-# Some outputs files that are too large
+# Some outputs files are too large
 outputs/03A_multivariate-model3.rda
 outputs/03A_multivariate-model2.rda
 outputs/03A_multivariate-model1.rda
@@ -16,7 +16,6 @@ outputs/03C_hunting_success_quadratic-model2.rda
 manuscript/*.log
 manuscript/*.aux
 manuscript/*.out
-
 
 # Code prior to first review Behavioural Ecology
 R/before-review-BehavEcol
