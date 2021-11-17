@@ -301,17 +301,8 @@ corr_table <- data.table(format(round(pc_results$cor, digits = 2),
 # =========================================================================
 
 
-# One player opened way too many closets
-# run the PCA again without these observations
-# only 2 (closets = 66 of 113)
-# match IDs
-#HOHDB5898Y
-#GHSCB5076B
 
-# This player changes the whole distributions of hits
-# YXADP5365C
-# almost all the matches for prop_hit_far_count that are above 0.5
-# come from him!
+
 
 # =========================================================================
 # 8. Save plots in a PDF file or other png file****
