@@ -2,7 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
->>>>>>> parent of f4a7c7b (no base_model in git because file too large)
+
+# Some outputs files that are too large
 outputs/03A_multivariate-model3.rda
 outputs/03A_multivariate-model2.rda
 outputs/03A_multivariate-model1.rda
@@ -10,17 +11,14 @@ outputs/03B_hunting_success_base-model1.rds
 outputs/03B_hunting_success_base-model2.rda
 outputs/03C_hunting_success_quadratic-model1.rds
 outputs/03C_hunting_success_quadratic-model2.rda
-data/merged-data.csv
-data/clean_map-data.csv
-data/metadata.txt
+
+# The data is anonymous
+data
+
+# The test folder is just for us
 tests
-tests/test.R
-tests/test.sh
-tests/mv_model_test.rda
-tests/beta-binom_base.R
-tests/beta-binom_base.sh
-tests/beta-binom_quad.R
-tests/beta-binom_quad.sh
+
+# Manuscript folders just for us
 versions
 manuscript/cover_letter
 corrections.txt
