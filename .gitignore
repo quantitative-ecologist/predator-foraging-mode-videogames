@@ -4,6 +4,8 @@
 .Ruserdata
 
 # Some outputs files are too large
+outputs/outputs_before-review
+
 outputs/03A_multivariate-model3.rda
 outputs/03A_multivariate-model2.rda
 outputs/03A_multivariate-model1.rda
