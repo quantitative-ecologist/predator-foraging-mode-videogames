@@ -28,7 +28,18 @@ library(parallel)
 # import dataset
 data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data2021.csv",
               select = c("player_id", "match_id", "character_name",
-                         "map_name", "hunting_success", "speed", 
+                         "map_name", "hunting_success",
+                         "game_duration", "speed", 
+                         "space_covered_rate", "prox_mid_PreyGuarding",
+                         "hook_start_time", "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
+                         stringsAsFactors = TRUE)
+
+# When working locally
+data <- fread("./data/merged-data2021.csv",
+              select = c("player_id", "match_id", "character_name",
+                         "map_name", "hunting_success", "cumul_xp_total",
+                         "game_duration", "speed", 
                          "space_covered_rate", "prox_mid_PreyGuarding",
                          "hook_start_time", "prey_avg_speed",
                          "prey_avg_space_covered_rate"),
@@ -50,7 +61,9 @@ data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data2021.c
 
 # Transform the data even though it is not perfect
 data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
-             hook_start_time = log(hook_start_time + 1))]
+             hook_start_time = log(hook_start_time + 1),
+             game_duration = sqrt(game_duration),
+             cumul_xp_total = log(cumul_xp_total + 1))]
 
 
 
@@ -58,11 +71,12 @@ data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Zspeed", "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
+data[, c("Zgame_duration", "Zspeed",
+         "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
          "Zhook_start_time", "Zprey_avg_speed", 
          "Zprey_avg_space_covered_rate") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(6:11)]
+                .SDcols = c(6:12)]
 
 # =======================================================================
 # =======================================================================
@@ -77,10 +91,12 @@ data[, c("Zspeed", "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
 
 
 # Formula for each response variable ------------------------------------
+
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
                   Zprey_avg_speed +
                   Zprey_avg_space_covered_rate +
+                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -89,6 +105,7 @@ speed_form <- bf(Zspeed ~
 space_form <- bf(Zspace_covered_rate ~
                   Zsurv_speed +
                   Zsurv_space_covered_rate +
+                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -97,6 +114,7 @@ space_form <- bf(Zspace_covered_rate ~
 guard_form <- bf(Zprox_mid_PreyGuarding ~
                   Zprey_avg_speed +
                   Zprey_avg_space_covered_rate +
+                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -105,6 +123,7 @@ guard_form <- bf(Zprox_mid_PreyGuarding ~
 hook_form <- bf(Zhook_start_time ~
                   Zprey_avg_speed +
                   Zprey_avg_space_covered_rate +
+                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -118,13 +137,18 @@ priors <- c(
   set_prior("normal(0, 2)", 
             class = "b",
             coef = "Zprey_avg_speed",
-            resp = c("Zspeed", "Zspace_covered_rate", 
-                     "Zsqrtproxmidguard", "Zsqrthookstarttime")),
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)", 
             class = "b",
             coef = "Zprey_avg_space_covered_rate",
-            resp = c("Zspeed", "Zspace_covered_rate", 
-                     "Zsqrtproxmidguard", "Zsqrthookstarttime")),
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
+  set_prior("normal(0, 2)",
+            class = "b",
+            coef = "Zgame_duration",
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),                   
   set_prior("lkj(2)", 
             class = "cor",
             group = "character_name"),
@@ -159,12 +183,14 @@ mv_model <- brm(speed_form +
                 inits = "0",
                 threads = threading(10),
                 backend = "cmdstanr",
-                seed = 20210422,
+                seed = 123,
                 prior = priors,
                 control = list(adapt_delta = 0.95),
+                save_pars = save_pars(all = TRUE),
+                sample_prior = TRUE,
                 data = data)
 
-save(mv_model, file = "03A_multivariate-model.rda")
+saveRDS(mv_model, file = "03A_multivariate-model1.rds")
 
 # ======================================================================
 # ======================================================================
