@@ -24,7 +24,9 @@ renv::activate()
 
 
 # Librairies --------------------------------------------------------------
+
 library(data.table)
+library(missMDA)
 library(ggcorrplot)
 library(factoextra)
 library(FactoMineR)
@@ -34,18 +36,26 @@ library(ggpubr)
 
 
 # Load the data -----------------------------------------------------------
+
 data <- fread("./data/merged-data2021.csv")
 
 # Select the columns to be analyzed
 # Here we use the proportion data to control for game duration
 matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
-                   prop_closet_open, prop_hit_special_count,
-                   prop_hit_far_count, prop_pallet_destroyed,
+                   prop_closet_open, prop_pallet_destroyed,
                    prop_damage_generator, prop_hook_start_time
                    )]
 
-# Log transform prey guarding to have a better distribution
-matrix[, prop_prox_mid := log(prop_prox_mid + 1)]
+
+
+# Transform --------------------------------------------------------------
+
+# Transform the data even though it is not perfect
+matrix[, ":=" (prop_prox_mid = sqrt(prop_prox_mid),
+               prop_closet_open = sqrt(prop_closet_open),
+               prop_pallet_destroyed = sqrt(prop_pallet_destroyed),
+               prop_damage_generator = sqrt(prop_damage_generator),
+               prop_hook_start_time = sqrt(prop_hook_start_time))]
 
 
 
@@ -61,15 +71,14 @@ standardize <- function (x) {(x - mean(x, na.rm = TRUE)) /
 
 matrix[, c("travel speed", "rate of space covered", 
            "prey guarding", "closets opened",
-           "special attacks", "normal attacks",
            "pallets destroyed", "generators damaged",
            "time before 1st capture") :=
        lapply(.SD, standardize), 
-       .SDcols = c(1:9)]
+       .SDcols = c(1:7)]
 
 names(matrix)
 
-matrix <- matrix[, c(10:18)]
+matrix <- matrix[, c(8:14)]
 
 # =========================================================================
 # =========================================================================
@@ -96,7 +105,10 @@ cor_plot <- ggcorrplot(cor_matrix,
                        type = "lower",
                        lab = TRUE,
                        #p.mat = cor_pmat(cor_matrix),
-                       digits = 3)
+                       digits = 3) +
+      scale_fill_gradient2(name = "Pearson\ncorrelation\n",
+                           low = "red", mid = "white", high = "blue",
+                           midpoint = 0, limit = c(-1, 1))
 
 # =========================================================================
 # =========================================================================
@@ -110,9 +122,16 @@ cor_plot <- ggcorrplot(cor_matrix,
 # =========================================================================
 
 
+# Impute missing data -----------------------------------------------------
+
+nb <- estim_ncpPCA(matrix, scale = FALSE)
+comp <- imputePCA(matrix, ncp = 3, scale = FALSE)
+
+
+
 # FactoMineR method : singular value decomposition ------------------------
 
-pca_fit <- PCA(matrix, graph = FALSE, scale.unit = FALSE)
+pca_fit <- PCA(comp$completeObs, graph = FALSE, scale.unit = FALSE)
 
 # spectral decomposition (gives the same results)
 #PCA_fullZ1 <- princomp(full_Zmatrix, cor = FALSE, scores = TRUE)
@@ -133,11 +152,11 @@ pc_results <- get_pca_var(pca_fit)
 
 get_eigenvalue(pca_fit)
 
-scree_plot <- fviz_eig(pca_fit, addlabels = TRUE, ylim = c(0, 20)) +
+scree_plot <- fviz_eig(pca_fit, addlabels = TRUE) +
   theme(axis.line = element_line(),
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 14, face = "plain")) +
-  ylab("Percentage of explained variances\n") +
+  ylab("Percentage of explained variance\n") +
   xlab("\nPC axes")
 
 # =========================================================================
@@ -224,8 +243,8 @@ biplot12 <- fviz_pca_biplot(pca_fit,
                             labelsize = 6,
                             select.var = list(contrib = 9),
                             repel = TRUE) + # no text overlap
-  #scale_y_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
-  #scale_x_continuous(breaks = seq(-10, 10, 5), limits = c(-10, 10)) +
+  scale_x_continuous(breaks = seq(-6, 6, 2), limits = c(-6, 6)) +
+  scale_y_continuous(breaks = seq(-6, 6, 2), limits = c(-7.5, 7.5)) +
   background_grid(major = "none") +
   theme(panel.border = element_rect(fill = NA, size = 0.95),
         axis.text.x = element_text(face = "plain",
@@ -239,8 +258,8 @@ biplot12 <- fviz_pca_biplot(pca_fit,
         plot.margin = margin(0.1, 0.5, 0.2, 0.3, "cm"))
 
 biplot12 <- ggpubr::ggpar(biplot12,
-                          xlab = "\nPC1 (20.1% of explained variance)",
-                          ylab = "PC2 (15.8% of explained variance)\n",
+                          xlab = "\nPC1 (23.5% of explained variance)",
+                          ylab = "PC2 (21.0% of explained variance)\n",
                           title = "",
                           font.x = c(15, "plain"),
                           font.y = c(15, "plain"))
@@ -272,8 +291,8 @@ biplot23 <- fviz_pca_biplot(pca_fit,
         plot.margin = margin(0.1, 0.5, 0.2, 0.5, "cm"))
 
 biplot23 <- ggpubr::ggpar(biplot23,
-                          xlab = "\nPC2 (15.3% of explained variance)",
-                          ylab = "PC3 (13.8% of explained variance)\n",
+                          xlab = "\nPC2 (21.0% of explained variance)",
+                          ylab = "PC3 (15.3% of explained variance)\n",
                           title = "",
                           font.x = c(15, "plain"),
                           font.y = c(15, "plain"))
@@ -305,28 +324,26 @@ corr_table <- data.table(format(round(pc_results$cor, digits = 2),
 
 
 # =========================================================================
-# 8. Save plots in a PDF file or other png file****
+# 8. Save plots
 # =========================================================================
 
 # Ran this code once
+ggexport(plotlist = list(scree_plot,
+                         contrib_PC1,
+                         contrib_PC2,
+                         contrib_PC3),
+         nrow = 1, ncol = 1,
+         filename = "./outputs/figures/data_exploration/02_PCA_diagnostics-plots.pdf")
 
-#ggexport(plotlist = list(scree_plot,
-#                         contrib_PC1, contrib_PC2,
-#                         contrib_PC3),
-#         nrow = 1, ncol = 1,
-#         filename = "./outputs/02_PCA_diagnostics-plots.pdf") # as PDF file
-
-# ggexport(PCA_fullZ_biplot12, filename = "./outputs/02_figureS1.png",
-#          width = 2000, height = 1800, res = 300)
-
+ggexport(biplot12,
+         filename = "./outputs/figures/suppmat_figures/02_figureS1.png",
+         width = 2000,
+         height = 1800,
+         res = 300)
 
 # as one figure with the two plots
 #PCA_figure <- ggarrange(PCA_fullZ_biplot12,
 #                        PCA_fullZ_biplot23,
 #                        ncol = 2, nrow = 1)
-
-# ggexport(PCA_figure, filename = "./outputs/02_figureS1.tiff", 
-#          width = 4000, height = 1800, res = 300)
-
 
 # End of script ==========================================================
