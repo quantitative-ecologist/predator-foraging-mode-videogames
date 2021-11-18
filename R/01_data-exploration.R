@@ -13,12 +13,15 @@
 # =======================================================================
 
 
+# Activate project environment ------------------------------------------
+
+renv::activate()
+
+
+
 # Load librairies -------------------------------------------------------
 library(data.table)
 library(ggplot2)
-library(ggpubr)
-library(GGally)
-library(cowplot)
 library(lattice)
 
 
@@ -63,7 +66,7 @@ data[,. (range = range(sum_bloodpoints),
 # Verify the amount of unique players 
 # that scored a high amount of bloodpoints
 length(unique(data[sum_bloodpoints > 30000]$player_id))
-# 344 players scored +30000 bpts
+# 345 players scored +30000 bpts
 
 
 
@@ -78,7 +81,7 @@ summary(data$sum_bloodpoints)
 
 # Prey behavioural distributions ----------------------------------------
 
-tiff("outputs/figures/data_exploration/01_prey-distributions.tiff", 
+png("outputs/figures/data_exploration/01_prey-distributions.png", 
      res = 300, 
      width = 3000, 
      height = 1500)
@@ -97,6 +100,7 @@ hist(data$prey_avg_space_covered_rate,
      main = "")
 
 dev.off()
+
 
 
 # Predator behavioural distributions ------------------------------------
@@ -134,14 +138,14 @@ hist(data$hook_start_time,
      breaks = 50,
      col = "darkgray")
 # Log seems to be the best transformation
-hist(log(data$hook_start_time),
+hist(log(data$hook_start_time + 1),
      breaks = 50,
      col = "darkgray")
 
 
 
 # Save a figure ---------------------------------------------------------
-tiff("outputs/figures/data_exploration/01_predator-distributions.tiff", 
+png("outputs/figures/data_exploration/01_predator-distributions.png", 
      res = 300, 
      width = 2000, 
      height = 2000)
@@ -163,7 +167,7 @@ hist(data$space_covered_rate,
      main = "",
      xlab = "Predator rate of space covered")
 # Log seems to be the best transformation
-hist(log(data$hook_start_time),
+hist(log(data$hook_start_time + 1),
      breaks = 30,
      col = "darkgray",
      main = "",
@@ -198,7 +202,7 @@ dev.off()
 
 # Prey behaviours -------------------------------------------------------
 
-tiff("outputs/figures/data_exploration/01_prey-dotplot.tiff", 
+png("outputs/figures/data_exploration/01_prey-dotplot.png", 
      res = 300, 
      width = 1500, 
      height = 2000)
@@ -220,7 +224,7 @@ dev.off()
 
 # Predator behaviours ---------------------------------------------------
 
-tiff("outputs/figures/data_exploration/01_predator-dotplot.tiff",
+png("outputs/figures/data_exploration/01_predator-dotplot.png",
      res = 300,
      width = 3000,
      height = 2000)
