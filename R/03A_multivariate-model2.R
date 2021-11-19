@@ -17,32 +17,44 @@
 # 1. Load libraries, and import dataset
 # =======================================================================
 
-# Detect number of cores
+
+# Detect number of cores ------------------------------------------------
+
 options(mc.cores = parallel::detectCores())
 
-# Load libraries
+
+
+# Load libraries --------------------------------------------------------
+
 library(data.table)
 library(brms)
 library(parallel)
 
-# import dataset
-data <- fread("/home/maxime11/projects/def-monti/maxime11/data/merged-data2021.csv",
-              select = c("player_id", "match_id", "character_name",
-                         "map_name", "hunting_success",
-                         "game_duration", "speed", 
-                         "space_covered_rate", "prox_mid_PreyGuarding",
-                         "hook_start_time", "prey_avg_speed",
-                         "prey_avg_space_covered_rate"),
+
+
+# import dataset --------------------------------------------------------
+
+# Folder path Compute Canada
+folder <- file.path("home", "maxime11", "projects", "def-monti", 
+                    "maxime11", "phd_project", "data", "/")
+
+data <- fread(file.path(folder, "merged-data2021.csv"),
+              select = c("player_id", "cumul_xp_total",
+                         "match_id", "character_name",
+                         "map_name", "game_duration", 
+                         "speed", "space_covered_rate",
+                         "prox_mid_PreyGuarding",
+                         "hook_start_time"),
                          stringsAsFactors = TRUE)
 
 # When working locally
 data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "match_id", "character_name",
-                         "map_name", "hunting_success", "cumul_xp_total",
-                         "game_duration", "speed", 
-                         "space_covered_rate", "prox_mid_PreyGuarding",
-                         "hook_start_time", "prey_avg_speed",
-                         "prey_avg_space_covered_rate"),
+              select = c("player_id", "cumul_xp_total", 
+                         "match_id", "character_name",
+                         "map_name", "game_duration",
+                         "speed", "space_covered_rate",
+                         "prox_mid_PreyGuarding",
+                         "hook_start_time"),
                          stringsAsFactors = TRUE)
 
 # =======================================================================
@@ -57,9 +69,8 @@ data <- fread("./data/merged-data2021.csv",
 # =======================================================================
 
 
-# Transform --------------------------------------------------------------
+# Transform -------------------------------------------------------------
 
-# Transform the data even though it is not perfect
 data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
              hook_start_time = log(hook_start_time + 1),
              game_duration = sqrt(game_duration),
@@ -71,12 +82,11 @@ data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Zgame_duration", "Zspeed",
+data[, c("Z_cumul_xp_total", "Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-         "Zhook_start_time", "Zprey_avg_speed", 
-         "Zprey_avg_space_covered_rate") :=
+         "Zhook_start_time") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(6:12)]
+                .SDcols = c(2, 6:10)]
 
 # =======================================================================
 # =======================================================================

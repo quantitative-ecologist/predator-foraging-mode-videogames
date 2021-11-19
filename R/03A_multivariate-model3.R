@@ -19,41 +19,45 @@
 
 
 # Detect number of cores ------------------------------------------------
+
 options(mc.cores = parallel::detectCores())
 
 
 
 # Load libraries --------------------------------------------------------
+
 library(data.table)
 library(brms)
 library(parallel)
 
 
 
-# Import dataset --------------------------------------------------------
+# import dataset ---------------------------------------------------------
+
 
 # Folder path Compute Canada
 folder <- file.path("home", "maxime11", "projects", "def-monti", 
                     "maxime11", "phd_project", "data", "/")
 
-# Import the data
 data <- fread(file.path(folder, "merged-data2021.csv"),
-              select = c("player_id", "match_id",
-                         "character_name", "map_name",
-                         "game_duration", "speed", 
-                         "space_covered_rate",
+              select = c("player_id", "cumul_xp_total",
+                         "match_id", "character_name",
+                         "map_name", "game_duration",
+                         "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time", "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # When working locally
 data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "match_id", 
-                         "character_name", "map_name",
-                         "game_duration", "speed", 
-                         "space_covered_rate",
+              select = c("player_id", "cumul_xp_total", 
+                         "match_id", "character_name",
+                         "map_name", "game_duration",
+                         "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time", "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # =======================================================================
@@ -73,20 +77,21 @@ data <- fread("./data/merged-data2021.csv",
 # Transform the data even though it is not perfect
 data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
              hook_start_time = log(hook_start_time + 1),
-             game_duration = sqrt(game_duration))]
+             game_duration = sqrt(game_duration),
+             cumul_xp_total = log(cumul_xp_total + 1))]
 
 
 
 # Standardise the variables (Z-scores) ----------------------------------
-
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
 data[, c("Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-         "Zhook_start_time") :=
+         "Zhook_start_time", "Zprey_avg_speed", 
+         "Zprey_avg_space_covered_rate") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(5:9)]
+                .SDcols = c(6:12)]
 
 # =======================================================================
 # =======================================================================
@@ -104,6 +109,8 @@ data[, c("Zgame_duration", "Zspeed",
 
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -111,6 +118,8 @@ speed_form <- bf(Zspeed ~
                   gaussian()
 
 space_form <- bf(Zspace_covered_rate ~
+                  Zsurv_speed +
+                  Zsurv_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -118,6 +127,8 @@ space_form <- bf(Zspace_covered_rate ~
                   gaussian()
 
 guard_form <- bf(Zprox_mid_PreyGuarding ~
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -125,6 +136,8 @@ guard_form <- bf(Zprox_mid_PreyGuarding ~
                   gaussian()
 
 hook_form <- bf(Zhook_start_time ~
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -136,18 +149,21 @@ hook_form <- bf(Zhook_start_time ~
 # priors ----------------------------------------------------------------
 
 priors <- c(
-  # priors on fixed effects
+  set_prior("normal(0, 2)", 
+            class = "b",
+            coef = "Zprey_avg_speed",
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
+  set_prior("normal(0, 2)", 
+            class = "b",
+            coef = "Zprey_avg_space_covered_rate",
+            resp = c("Zspeed", "Zspacecoveredrate", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)",
             class = "b",
             coef = "Zgame_duration",
             resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
-  # priors on var. parameters (brms automatically detects half-normal)
-  set_prior("normal(0, 1)",
-            class = sd, # applies to all variance parameters
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
-  # priors on the variance-covariance matrices
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),                   
   set_prior("lkj(2)", 
             class = "cor",
             group = "character_name"),
@@ -156,8 +172,7 @@ priors <- c(
             group = "map_name"),
   set_prior("lkj(2)", 
             class = "cor",
-            group = "player_id")
-            )
+            group = "player_id"))
 
 # ======================================================================
 # ======================================================================
