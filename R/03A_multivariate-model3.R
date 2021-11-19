@@ -111,7 +111,6 @@ data[, c("Zgame_duration", "Zspeed",
 speed_form <- bf(Zspeed ~
                   Zprey_avg_speed +
                   Zprey_avg_space_covered_rate +
-                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -120,7 +119,6 @@ speed_form <- bf(Zspeed ~
 space_form <- bf(Zspace_covered_rate ~
                   Zsurv_speed +
                   Zsurv_space_covered_rate +
-                  Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -162,8 +160,7 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b",
             coef = "Zgame_duration",
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),                   
+            resp = c("ZproxmidPreyGuarding", "Zhookstarttime")),                   
   set_prior("lkj(2)", 
             class = "cor",
             group = "character_name"),

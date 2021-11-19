@@ -40,7 +40,7 @@ folder <- file.path("home", "maxime11", "projects", "def-monti",
 data <- fread(file.path(folder, "merged-data2021.csv"),
               select = c("player_id", "match_id",
                          "character_name", "map_name",
-                         "game_duration", "speed", 
+                         "game_duration", "speed",
                          "space_covered_rate",
                          "prox_mid_PreyGuarding",
                          "hook_start_time"),
@@ -48,9 +48,9 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
 
 # When working locally
 data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "match_id", 
+              select = c("player_id", "match_id",
                          "character_name", "map_name",
-                         "game_duration", "speed", 
+                         "game_duration", "speed",
                          "space_covered_rate",
                          "prox_mid_PreyGuarding",
                          "hook_start_time"),
@@ -104,14 +104,14 @@ data[, c("Zgame_duration", "Zspeed",
 
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
-                  Zgame_duration +
+                  1 +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 space_form <- bf(Zspace_covered_rate ~
-                  Zgame_duration +
+                  1 +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -140,11 +140,10 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b",
             coef = "Zgame_duration",
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
+            resp = c("ZproxmidPreyGuarding", "Zhookstarttime")),
   # priors on var. parameters (brms automatically detects half-normal)
   set_prior("normal(0, 1)",
-            class = sd, # applies to all variance parameters
+            class = "sd", # applies to all variance parameters
             resp = c("Zspeed", "Zspacecoveredrate", 
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   # priors on the variance-covariance matrices
