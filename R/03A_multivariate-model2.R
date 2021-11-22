@@ -7,11 +7,11 @@
 # Code for a multivariate mixed-models to :
 # 1. partition the variance in predator behaviour
 # 2. quantify behavioural correlations among predator behaviours
-# 3. TEST FOR THE EFFECT OF EXPERIENCE
+# 3. Test for the effect of prey behaviour
 # -----------------------------------------------------------------------
 
 
-#  THIS SCRIPT HAS TO BE ADAPTED, STILL NOT FINISHED
+
 
 
 # =======================================================================
@@ -33,29 +33,31 @@ library(parallel)
 
 
 
-# import dataset --------------------------------------------------------
+# import dataset ---------------------------------------------------------
 
 # Folder path Compute Canada
 folder <- file.path("home", "maxime11", "projects", "def-monti", 
                     "maxime11", "phd_project", "data", "/")
 
 data <- fread(file.path(folder, "merged-data2021.csv"),
-              select = c("player_id", "cumul_xp_total",
-                         "match_id", "character_name",
-                         "map_name", "game_duration", 
+              select = c("player_id", "match_id", 
+                         "character_name",
+                         "map_name", "game_duration",
                          "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time", "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # When working locally
 data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "cumul_xp_total", 
-                         "match_id", "character_name",
+              select = c("player_id", "match_id",
+                         "character_name",
                          "map_name", "game_duration",
                          "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time", "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # =======================================================================
@@ -70,24 +72,26 @@ data <- fread("./data/merged-data2021.csv",
 # =======================================================================
 
 
-# Transform -------------------------------------------------------------
+# Transform --------------------------------------------------------------
 
+# Transform the data even though it is not perfect
 data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
              hook_start_time = log(hook_start_time + 1),
-             game_duration = sqrt(game_duration),
-             cumul_xp_total = log(cumul_xp_total + 1))]
+             game_duration = sqrt(game_duration))]
 
 
 
 # Standardise the variables (Z-scores) ----------------------------------
+
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Z_cumul_xp_total", "Zgame_duration", "Zspeed",
+data[, c("Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-         "Zhook_start_time") :=
+         "Zhook_start_time", "Zprey_avg_speed", 
+         "Zprey_avg_space_covered_rate") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(2, 6:10)]
+                .SDcols = c(5:11)]
 
 # =======================================================================
 # =======================================================================
@@ -100,30 +104,21 @@ data[, c("Z_cumul_xp_total", "Zgame_duration", "Zspeed",
 # 3. Build the multivariate model 
 # =======================================================================
 
-# Séparer en 2 groupes d'expérience :
-
-# - est-ce que je sépare par XP totale? Dans ce cas on aurait des xp
-#    mais qui ont des match en tant que novice, interm, avancé
-
-# - sinon, séparer données en fonction de cumul_xp. Comme ça, j'empêche
-# que les joueurs aient au delà d'un certain niveau.
-
 
 # Formula for each response variable ------------------------------------
 
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
-                  Zcumul_xp_total +
-                  Zgame_duration +
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 space_form <- bf(Zspace_covered_rate ~
-                  Zsurv_speed +
-                  Zsurv_space_covered_rate +
-                  Zgame_duration +
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
@@ -153,23 +148,27 @@ hook_form <- bf(Zhook_start_time ~
 
 priors <- c(
   # priors on fixed effects
-  set_prior("normal(0, 2)",
+  set_prior("normal(0, 2)", 
             class = "b",
-            coef = "Zgame_duration",
+            coef = "Zprey_avg_speed",
             resp = c("Zspeed", "Zspacecoveredrate", 
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)", 
             class = "b",
-            coef = "Zcumul_xp_total",
+            coef = "Zprey_avg_space_covered_rate",
             resp = c("Zspeed", "Zspacecoveredrate", 
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
+  set_prior("normal(0, 2)",
+            class = "b",
+            coef = "Zgame_duration",
+            resp = c("ZproxmidPreyGuarding", "Zhookstarttime")),
   # priors on var. parameters (brms automatically detects half-normal)
   set_prior("normal(0, 1)",
             class = "sd", # applies to all variance parameters
             resp = c("Zspeed", "Zspacecoveredrate", 
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   # priors on the variance-covariance matrices
-  set_prior("lkj(2)",
+  set_prior("lkj(2)", 
             class = "cor",
             group = "character_name"),
   set_prior("lkj(2)", 
@@ -190,6 +189,9 @@ priors <- c(
 # 4. Run the multivariate model
 # =======================================================================
 
+
+# Model specifications --------------------------------------------------
+
 #( nitt - burnin ) / thin = 1000
 mv_model <- brm(speed_form +
                 space_form +
@@ -209,6 +211,10 @@ mv_model <- brm(speed_form +
                 save_pars = save_pars(all = TRUE),
                 sample_prior = TRUE,
                 data = data)
+
+
+
+# Save the model object ------------------------------------------------
 
 saveRDS(mv_model, file = "03A_multivariate-model2.rds")
 

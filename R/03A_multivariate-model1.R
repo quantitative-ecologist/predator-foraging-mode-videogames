@@ -47,14 +47,14 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          stringsAsFactors = TRUE)
 
 # When working locally
-data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "match_id",
-                         "character_name", "map_name",
-                         "game_duration", "speed",
-                         "space_covered_rate",
-                         "prox_mid_PreyGuarding",
-                         "hook_start_time"),
-                         stringsAsFactors = TRUE)
+#data <- fread("./data/merged-data2021.csv",
+#              select = c("player_id", "match_id",
+#                         "character_name", "map_name",
+#                         "game_duration", "speed",
+#                         "space_covered_rate",
+#                         "prox_mid_PreyGuarding",
+#                         "hook_start_time"),
+#                         stringsAsFactors = TRUE)
 
 # =======================================================================
 # =======================================================================
@@ -169,6 +169,9 @@ priors <- c(
 # 4. Run the multivariate model
 # =======================================================================
 
+
+# Model specifications --------------------------------------------------
+
 #( nitt - burnin ) / thin = 1000
 mv_model <- brm(speed_form +
                 space_form +
@@ -189,7 +192,18 @@ mv_model <- brm(speed_form +
                 sample_prior = TRUE,
                 data = data)
 
+
+
+# Save the model object ------------------------------------------------
+
 saveRDS(mv_model, file = "03A_multivariate-model1.rds")
+
+
+
+# Capture the session --------------------------------------------------
+
+session <- sessionInfo()
+capture.output(session, file = "session-mvmodels.txt")
 
 # ======================================================================
 # ======================================================================
