@@ -34,7 +34,7 @@ library(parallel)
 
 # Folder path Compute Canada
 folder <- file.path("home", "maxime11", "projects", "def-monti", 
-                    "maxime11", "phd_project", "data", "/")
+                    "maxime11", "phd_project", "data")
 
 # Import the data
 data <- fread(file.path(folder, "merged-data2021.csv"),
