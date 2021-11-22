@@ -40,7 +40,7 @@ folder <- file.path("/home", "maxime11", "projects", "def-monti",
                     "maxime11", "phd_project", "data")
 
 data <- fread(file.path(folder, "merged-data2021.csv"),
-              select = c("player_id", "match_id", 
+              select = c("player_id", "match_id",
                          "character_name",
                          "map_name", "game_duration",
                          "speed", "space_covered_rate",
@@ -50,15 +50,15 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          stringsAsFactors = TRUE)
 
 # When working locally
-data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "match_id",
-                         "character_name",
-                         "map_name", "game_duration",
-                         "speed", "space_covered_rate",
-                         "prox_mid_PreyGuarding",
-                         "hook_start_time", "prey_avg_speed",
-                         "prey_avg_space_covered_rate"),
-                         stringsAsFactors = TRUE)
+#data <- fread("./data/merged-data2021.csv",
+#              select = c("player_id", "match_id",
+#                         "character_name",
+#                         "map_name", "game_duration",
+#                         "speed", "space_covered_rate",
+#                         "prox_mid_PreyGuarding",
+#                         "hook_start_time", "prey_avg_speed",
+#                         "prey_avg_space_covered_rate"),
+#                         stringsAsFactors = TRUE)
 
 # =======================================================================
 # =======================================================================
