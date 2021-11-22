@@ -9,6 +9,8 @@ renv/library
 # Some outputs files are too large
 outputs/outputs_before-review
 
+outputs/models
+
 outputs/03A_multivariate-model3.rds
 outputs/03A_multivariate-model2.rds
 outputs/03A_multivariate-model1.rds
