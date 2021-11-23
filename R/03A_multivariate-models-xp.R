@@ -50,15 +50,15 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          stringsAsFactors = TRUE)
 
 # When working locally
-#data <- fread("./data/merged-data2021.csv",
-#              select = c("player_id", "cumul_xp_total",
-#                         "total_xp",
-#                         "match_id", "character_name",
-#                         "map_name", "game_duration",
-#                         "speed", "space_covered_rate",
-#                         "prox_mid_PreyGuarding",
-#                         "hook_start_time"),
-#                         stringsAsFactors = TRUE)
+data <- fread("./data/merged-data2021.csv",
+              select = c("player_id", "cumul_xp_total",
+                         "total_xp",
+                         "match_id", "character_name",
+                         "map_name", "game_duration",
+                         "speed", "space_covered_rate",
+                         "prox_mid_PreyGuarding",
+                         "hook_start_time"),
+                         stringsAsFactors = TRUE)
 
 # =======================================================================
 # =======================================================================
@@ -237,7 +237,7 @@ mv_model_novice <- brm(speed_form +
                        control = list(adapt_delta = 0.95),
                        save_pars = save_pars(all = TRUE),
                        sample_prior = TRUE,
-                       data = data)
+                       data = data_novice)
 
 
 
@@ -260,7 +260,7 @@ mv_model_experienced <- brm(speed_form +
                             control = list(adapt_delta = 0.95),
                             save_pars = save_pars(all = TRUE),
                             sample_prior = TRUE,
-                            data = data)
+                            data = data_experienced)
 
 
 
