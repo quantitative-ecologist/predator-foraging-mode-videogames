@@ -7,6 +7,7 @@
 # Code for a multivariate mixed-models to :
 # 1. partition the variance in predator behaviour
 # 2. quantify behavioural correlations among predator behaviours
+# 3. Test if experience changes the results
 # -----------------------------------------------------------------------
 
 
@@ -32,33 +33,32 @@ library(parallel)
 
 
 
-# import dataset ---------------------------------------------------------
-
+# import dataset --------------------------------------------------------
 
 # Folder path Compute Canada
-folder <- file.path("home", "maxime11", "projects", "def-monti", 
-                    "maxime11", "phd_project", "data", "/")
+folder <- file.path("/home", "maxime11", "projects", "def-monti", 
+                    "maxime11", "phd_project", "data")
 
 data <- fread(file.path(folder, "merged-data2021.csv"),
               select = c("player_id", "cumul_xp_total",
+                         "total_xp",
                          "match_id", "character_name",
-                         "map_name", "game_duration",
+                         "map_name", "game_duration", 
                          "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time", "prey_avg_speed",
-                         "prey_avg_space_covered_rate"),
+                         "hook_start_time"),
                          stringsAsFactors = TRUE)
 
 # When working locally
-data <- fread("./data/merged-data2021.csv",
-              select = c("player_id", "cumul_xp_total", 
-                         "match_id", "character_name",
-                         "map_name", "game_duration",
-                         "speed", "space_covered_rate",
-                         "prox_mid_PreyGuarding",
-                         "hook_start_time", "prey_avg_speed",
-                         "prey_avg_space_covered_rate"),
-                         stringsAsFactors = TRUE)
+#data <- fread("./data/merged-data2021.csv",
+#              select = c("player_id", "cumul_xp_total",
+#                         "total_xp",
+#                         "match_id", "character_name",
+#                         "map_name", "game_duration",
+#                         "speed", "space_covered_rate",
+#                         "prox_mid_PreyGuarding",
+#                         "hook_start_time"),
+#                         stringsAsFactors = TRUE)
 
 # =======================================================================
 # =======================================================================
@@ -68,30 +68,62 @@ data <- fread("./data/merged-data2021.csv",
 
 
 # =======================================================================
-# 2. Prepare variables for the model
+# 2. Seperate the data by experience
 # =======================================================================
 
 
-# Transform --------------------------------------------------------------
+# Check the quantiles of experience -------------------------------------
 
-# Transform the data even though it is not perfect
-data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
-             hook_start_time = log(hook_start_time + 1),
-             game_duration = sqrt(game_duration),
-             cumul_xp_total = log(cumul_xp_total + 1))]
+quantile(data[, total_xp])
+#  0%  25%  50%  75% 100% 
+#   1   53  135  280 1059
+
+
+
+# Check proportion of players by xp -------------------------------------
+
+nrow(data[cumul_xp_total <= 53]) / nrow(data)
+# 0.5150233
+
+nrow(data[cumul_xp_total > 53]) / nrow(data)
+# 0.4849767
+
+
+
+# Seperate the data -----------------------------------------------------
+
+data_novice <- data[cumul_xp_total <= 53]
+
+# =======================================================================
+# =======================================================================
+
+
+
+
+
+# =======================================================================
+# 3. Prepare variables for the model
+# =======================================================================
+
+
+# Transform -------------------------------------------------------------
+
+data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
+                    hook_start_time = log(hook_start_time + 1),
+                    game_duration = sqrt(game_duration))]
 
 
 
 # Standardise the variables (Z-scores) ----------------------------------
+
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Zgame_duration", "Zspeed",
-         "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-         "Zhook_start_time", "Zprey_avg_speed", 
-         "Zprey_avg_space_covered_rate") :=
-                lapply(.SD, standardize), 
-                .SDcols = c(6:12)]
+data_novice[, c("Zgame_duration", "Zspeed",
+                "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
+                "Zhook_start_time") :=
+              lapply(.SD, standardize), 
+              .SDcols = c(7:11)]
 
 # =======================================================================
 # =======================================================================
@@ -101,7 +133,7 @@ data[, c("Zgame_duration", "Zspeed",
 
 
 # =======================================================================
-# 3. Build the multivariate model 
+# 4. Build the multivariate model 
 # =======================================================================
 
 
@@ -109,26 +141,20 @@ data[, c("Zgame_duration", "Zspeed",
 
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
-                  Zprey_avg_speed +
-                  Zprey_avg_space_covered_rate +
-                  Zgame_duration +
+                  1 +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 space_form <- bf(Zspace_covered_rate ~
-                  Zsurv_speed +
-                  Zsurv_space_covered_rate +
-                  Zgame_duration +
+                  1 +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 guard_form <- bf(Zprox_mid_PreyGuarding ~
-                  Zprey_avg_speed +
-                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -136,8 +162,6 @@ guard_form <- bf(Zprox_mid_PreyGuarding ~
                   gaussian()
 
 hook_form <- bf(Zhook_start_time ~
-                  Zprey_avg_speed +
-                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -149,22 +173,18 @@ hook_form <- bf(Zhook_start_time ~
 # priors ----------------------------------------------------------------
 
 priors <- c(
-  set_prior("normal(0, 2)", 
-            class = "b",
-            coef = "Zprey_avg_speed",
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
-  set_prior("normal(0, 2)", 
-            class = "b",
-            coef = "Zprey_avg_space_covered_rate",
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
+  # priors on fixed effects
   set_prior("normal(0, 2)",
             class = "b",
             coef = "Zgame_duration",
+            resp = c("ZproxmidPreyGuarding", "Zhookstarttime")),
+  # priors on var. parameters (brms automatically detects half-normal)
+  set_prior("normal(0, 1)",
+            class = "sd", # applies to all variance parameters
             resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),                   
-  set_prior("lkj(2)", 
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
+  # priors on the variance-covariance matrices
+  set_prior("lkj(2)",
             class = "cor",
             group = "character_name"),
   set_prior("lkj(2)", 
@@ -182,30 +202,38 @@ priors <- c(
 
 
 # =======================================================================
-# 4. Run the multivariate model
+# 5. Run the multivariate model
 # =======================================================================
 
 #( nitt - burnin ) / thin = 1000
-mv_model <- brm(speed_form +
-                space_form +
-                guard_form +   
-                hook_form +
-                set_rescor(TRUE),
-                warmup = 3000, 
-                iter = 13000,
-                thin = 10,
-                chains = 4, 
-                inits = "0",
-                threads = threading(10),
-                backend = "cmdstanr",
-                seed = 123,
-                prior = priors,
-                control = list(adapt_delta = 0.95),
-                save_pars = save_pars(all = TRUE),
-                sample_prior = TRUE,
-                data = data)
 
-saveRDS(mv_model, file = "03A_multivariate-model1.rds")
+# Run the model on novice players ---------------------------------------
+
+mv_model_novice <- brm(speed_form +
+                       space_form +
+                       guard_form +   
+                       hook_form +
+                       set_rescor(TRUE),
+                       warmup = 3000, 
+                       iter = 13000,
+                       thin = 10,
+                       chains = 4, 
+                       inits = "0",
+                       threads = threading(10),
+                       backend = "cmdstanr",
+                       seed = 123,
+                       prior = priors,
+                       control = list(adapt_delta = 0.95),
+                       save_pars = save_pars(all = TRUE),
+                       sample_prior = TRUE,
+                       data = data_novice)
+
+
+
+# Save the model objects -----------------------------------------------
+
+saveRDS(mv_model_novice, 
+        file = "03A_multivariate-model-novice.rds")
 
 # ======================================================================
 # ======================================================================
