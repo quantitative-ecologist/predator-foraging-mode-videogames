@@ -200,7 +200,7 @@ mv_model <- brm(speed_form +
                 set_rescor(TRUE),
                 warmup = 3000, 
                 iter = 13000,
-                thin = 10,
+                thin = 40,
                 chains = 4, 
                 inits = "0",
                 threads = threading(10),
