@@ -30,6 +30,48 @@ print(object.size(model1), units = "MB")
 mod_summary <- summary(model1)
 
 
+# Extract blups of speed
+player_blup <- as_draws_df(model1, variable = "r_player_id__Zspeed")[1:2378]
+player_blup <- data.table(player_blup)
+
+# Random sample of 1000 posterior samples
+set.seed(123)
+player_blup <-player_blup[sample(nrow(player_blup), 1000), ]
+
+# Reshape the table
+player_blup <- melt(player_blup,
+                    variable.name = "player_id",
+                    measure = patterns("r_player_id__Zspeed"))
+
+# Change variable name
+setnames(player_blup, "value", "blup")
+
+# Compute the confidence intervals and posterior means
+lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
+upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
+
+player_blup[, ":=" (posterior_mean = mean(blup), 
+                    upper_CI = upper_interval(blup), 
+                    lower_CI = lower_interval(blup)), 
+              by = player_id]
+
+player_blup <- unique(player_blup[, -2])
+
+# Keep only the ID string
+player_blup[, player_id := gsub("r_player_id__Zspeed", "", player_id)]
+player_blup[, player_id := gsub(",Intercept", "", player_id)]
+
+
+data[order(data$player_id), ]
+
+test %>% separate(c("NA", ""))
+
+
+
+
+
+
+
 # =======================================================================
 # 2. Basic model diagnostics (takes a very long time to compute)
 # =======================================================================
