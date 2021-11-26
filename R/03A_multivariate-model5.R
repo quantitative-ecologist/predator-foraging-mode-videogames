@@ -215,8 +215,8 @@ mv_model_experienced <- brm(speed_form +
                             hook_form +
                             set_rescor(TRUE),
                             warmup = 3000, 
-                            iter = 13000,
-                            thin = 10,
+                            iter = 11000,
+                            thin = 32,
                             chains = 4, 
                             inits = "0",
                             threads = threading(10),
