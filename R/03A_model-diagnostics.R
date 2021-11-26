@@ -22,15 +22,16 @@ library(broom.helpers)
 # Load model
 model1 <- readRDS("./outputs/models/03A_multivariate-model1.rds")
 print(object.size(model1), units = "MB")
-
-# =======================================================================
-# =======================================================================
-
-
 mod_summary <- summary(model1)
+# =======================================================================
+# =======================================================================
 
 
-# Extract blups of speed
+
+
+
+# Extract blups of speed ------------------------------------------------
+
 player_blup <- as_draws_df(model1, variable = "r_player_id__Zspeed")[1:2378]
 player_blup <- data.table(player_blup)
 
@@ -62,13 +63,147 @@ player_blup[, player_id := gsub("r_player_id__Zspeed", "", player_id)]
 player_blup[, player_id := gsub(",Intercept", "", player_id)]
 
 
-data[order(data$player_id), ]
 
-test %>% separate(c("NA", ""))
+# Extract blups of guarding ---------------------------------------------
+
+player_blup1 <- as_draws_df(model1, variable = "r_player_id__ZproxmidPreyGuarding")[1:2378]
+player_blup1 <- data.table(player_blup1)
+
+# Random sample of 1000 posterior samples
+set.seed(123)
+player_blup1 <- player_blup1[sample(nrow(player_blup1), 1000), ]
+
+# Reshape the table
+player_blup1 <- melt(player_blup1,
+                    variable.name = "player_id",
+                    measure = patterns("r_player_id__ZproxmidPreyGuarding"))
+
+# Change variable name
+setnames(player_blup1, "value", "blup")
+
+# Compute the confidence intervals and posterior means
+player_blup1[, ":=" (posterior_mean = mean(blup), 
+                    upper_CI = upper_interval(blup), 
+                    lower_CI = lower_interval(blup)), 
+              by = player_id]
+
+player_blup1 <- unique(player_blup1[, -2])
+
+# Keep only the ID string
+player_blup1[, player_id := gsub("r_player_id__ZproxmidPreyGuarding", "", player_id)]
+player_blup1[, player_id := gsub(",Intercept", "", player_id)]
 
 
 
+# Extract blups of space covered ----------------------------------------
 
+player_blup2 <- as_draws_df(model1, variable = "r_player_id__Zspacecoveredrate")[1:2378]
+player_blup2 <- data.table(player_blup2)
+
+# Random sample of 1000 posterior samples
+set.seed(123)
+player_blup2 <- player_blup2[sample(nrow(player_blup2), 1000), ]
+
+# Reshape the table
+player_blup2 <- melt(player_blup2,
+                    variable.name = "player_id",
+                    measure = patterns("r_player_id__Zspacecoveredrate"))
+
+# Change variable name
+setnames(player_blup2, "value", "blup")
+
+# Compute the confidence intervals and posterior means
+player_blup2[, ":=" (posterior_mean = mean(blup), 
+                    upper_CI = upper_interval(blup), 
+                    lower_CI = lower_interval(blup)), 
+              by = player_id]
+
+player_blup2 <- unique(player_blup2[, -2])
+
+# Keep only the ID string
+player_blup2[, player_id := gsub("r_player_id__Zspacecoveredrate", "", player_id)]
+player_blup2[, player_id := gsub(",Intercept", "", player_id)]
+
+
+
+# Extract blups of space covered ----------------------------------------
+
+player_blup3 <- as_draws_df(model1, variable = "r_player_id__Zhookstarttime")[1:2378]
+player_blup3 <- data.table(player_blup3)
+
+# Random sample of 1000 posterior samples
+set.seed(123)
+player_blup3 <- player_blup3[sample(nrow(player_blup3), 1000), ]
+
+# Reshape the table
+player_blup3 <- melt(player_blup3,
+                    variable.name = "player_id",
+                    measure = patterns("r_player_id__Zhookstarttime"))
+
+# Change variable name
+setnames(player_blup3, "value", "blup")
+
+# Compute the confidence intervals and posterior means
+player_blup3[, ":=" (posterior_mean = mean(blup), 
+                    upper_CI = upper_interval(blup), 
+                    lower_CI = lower_interval(blup)), 
+              by = player_id]
+
+player_blup3 <- unique(player_blup3[, -2])
+
+# Keep only the ID string
+player_blup3[, player_id := gsub("r_player_id__Zhookstarttime", "", player_id)]
+player_blup3[, player_id := gsub(",Intercept", "", player_id)]
+
+
+
+# Plot the relationships ------------------------------------------------
+
+# Plot 1
+png("outputs/figures/data_exploration/03A_player-blups1a.png",
+     res = 300,
+     width = 3000,
+     height = 2500)
+
+par(mar = c(4, 4, 4, 4),
+    oma = c(1, 1, 1, 1),
+    mfrow = c(2, 2))
+
+plot(player_blup$posterior_mean~player_blup1$posterior_mean,
+          xlab = "speed", ylab = "prey guarding")
+
+
+plot(player_blup$posterior_mean~player_blup2$posterior_mean,
+          xlab = "speed", ylab = "space covered")
+
+
+plot(player_blup$posterior_mean~player_blup3$posterior_mean,
+          xlab = "speed", ylab = "latency 1st capture")
+
+dev.off()
+
+# Plot 2
+png("outputs/figures/data_exploration/03A_player-blups1b.png",
+     res = 300,
+     width = 3000,
+     height = 2500)
+
+par(mar = c(4, 4, 4, 4),
+    oma = c(1, 1, 1, 1),
+    mfrow = c(2, 2))
+
+plot(player_blup2$posterior_mean~player_blup1$posterior_mean,
+          xlab = "space covered", ylab = "prey guarding")
+
+
+plot(player_blup2$posterior_mean~player_blup3$posterior_mean,
+          xlab = "space covered", ylab = "latency 1st capture")
+
+
+plot(player_blup1$posterior_mean~player_blup3$posterior_mean,
+          xlab = "prey guarding", ylab = "latency 1st capture")
+
+dev.off()
 
 
 
