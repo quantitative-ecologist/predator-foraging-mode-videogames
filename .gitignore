@@ -15,7 +15,7 @@ manuscript/*.aux
 manuscript/*.out
 
 # Files prior to first review Behavioural Ecology
-R/before-review-BehavEcol
+code/before-review-BehavEcol
 jobs/jobs-before-review-BehavEcol
 
 # The data is anonymous
