@@ -43,7 +43,8 @@ data <- fread("./data/merged-data2021.csv")
 # Here we use the proportion data to control for game duration
 matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
                    prop_closet_open, prop_pallet_destroyed,
-                   prop_damage_generator, prop_hook_start_time
+                   prop_damage_generator, prop_hook_start_time,
+                   prop_hit_far_count
                    )]
 
 
@@ -52,6 +53,7 @@ matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
 
 # Transform the data even though it is not perfect
 matrix[, ":=" (prop_prox_mid = sqrt(prop_prox_mid),
+               prop_hit_far_count = sqrt(prop_hit_far_count),
                prop_closet_open = sqrt(prop_closet_open),
                prop_pallet_destroyed = sqrt(prop_pallet_destroyed),
                prop_damage_generator = sqrt(prop_damage_generator),
@@ -70,15 +72,18 @@ standardize <- function (x) {(x - mean(x, na.rm = TRUE)) /
 # in this case, by level of experience
 
 matrix[, c("travel speed", "rate of space covered", 
-           "prey guarding", "closets opened",
+           "prey guarding",
+           "closets opened",
            "pallets destroyed", "generators damaged",
-           "time before 1st capture") :=
+           "time before 1st capture",
+           "number of attacks") :=
        lapply(.SD, standardize), 
-       .SDcols = c(1:7)]
+       .SDcols = c(1:8)]
 
 names(matrix)
 
-matrix <- matrix[, c(8:14)]
+#matrix <- matrix[, c(8:14)]
+matrix <- matrix[, c(9:16)]
 
 # =========================================================================
 # =========================================================================
@@ -189,6 +194,7 @@ contrib_PC1 <- fviz_contrib(pca_fit,
 
 
 # Contribution of variables to PC2 ----------------------------------------
+
 contrib_PC2 <- fviz_contrib(pca_fit,
                             choice = "var",
                             axes = 2,
@@ -218,6 +224,7 @@ contrib_PC3 <- fviz_contrib(pca_fit,
                                                    size = 14,
                                                    angle = 45)) +
                   ylab("Contribution (%)\n")
+
 # =========================================================================
 # =========================================================================
 
@@ -243,8 +250,8 @@ biplot12 <- fviz_pca_biplot(pca_fit,
                             labelsize = 6,
                             select.var = list(contrib = 9),
                             repel = TRUE) + # no text overlap
-  scale_x_continuous(breaks = seq(-6, 6, 2), limits = c(-6, 6)) +
-  scale_y_continuous(breaks = seq(-6, 6, 2), limits = c(-7.5, 7.5)) +
+#  scale_x_continuous(breaks = seq(-6, 6, 2), limits = c(-6, 6)) +
+#  scale_y_continuous(breaks = seq(-6, 6, 2), limits = c(-7.5, 7.5)) +
   background_grid(major = "none") +
   theme(panel.border = element_rect(fill = NA, size = 0.95),
         axis.text.x = element_text(face = "plain",
