@@ -134,7 +134,7 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                Zspace_covered_rate : Zhook_start_time +
                                Zprox_mid_PreyGuarding : Zhook_start_time +
                                (1 | map_name) +
-                               (1 | mirrors_id) +
+                               (1 | player_id) +
                                (1 | obs))
 
 # ==========================================================================

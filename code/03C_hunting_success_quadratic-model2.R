@@ -144,7 +144,7 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         Zprox_mid_PreyGuarding : Zprey_avg_speed +
                                         Zprox_mid_PreyGuarding : Zprey_avg_space_covered_rate +
                                         (1 | map_name) +
-                                        (1 | mirrors_id) +
+                                        (1 | player_id) +
                                         (1 | obs))
 
 # ==========================================================================
