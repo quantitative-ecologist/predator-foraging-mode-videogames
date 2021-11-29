@@ -92,7 +92,7 @@ nrow(data[cumul_xp_total > 53]) / nrow(data)
 
 # Seperate the data -----------------------------------------------------
 
-data_novice <- data[cumul_xp_total <= 53]
+data_experienced <- data[cumul_xp_total > 53]
 
 # =======================================================================
 # =======================================================================
@@ -108,9 +108,9 @@ data_novice <- data[cumul_xp_total <= 53]
 
 # Transform -------------------------------------------------------------
 
-data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
-                    hook_start_time = log(hook_start_time + 1),
-                    game_duration = sqrt(game_duration))]
+data_experienced[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
+                         hook_start_time = log(hook_start_time + 1),
+                         game_duration = sqrt(game_duration))]
 
 
 
@@ -119,11 +119,11 @@ data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data_novice[, c("Zgame_duration", "Zspeed",
-                "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-                "Zhook_start_time") :=
-              lapply(.SD, standardize), 
-              .SDcols = c(7:11)]
+data_experienced[, c("Zgame_duration", "Zspeed",
+                     "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
+                     "Zhook_start_time") :=
+                   lapply(.SD, standardize), 
+                   .SDcols = c(7:11)]
 
 # =======================================================================
 # =======================================================================
@@ -207,33 +207,33 @@ priors <- c(
 
 #( nitt - burnin ) / thin = 1000
 
-# Run the model on novice players ---------------------------------------
+# Run the model on experienced players ----------------------------------
 
-mv_model_novice <- brm(speed_form +
-                       space_form +
-                       guard_form +   
-                       hook_form +
-                       set_rescor(TRUE),
-                       warmup = 3000, 
-                       iter = 11000,
-                       thin = 32,
-                       chains = 4, 
-                       inits = "0",
-                       threads = threading(10),
-                       backend = "cmdstanr",
-                       seed = 123,
-                       prior = priors,
-                       control = list(adapt_delta = 0.95),
-                       save_pars = save_pars(all = TRUE),
-                       sample_prior = TRUE,
-                       data = data_novice)
+mv_model_experienced <- brm(speed_form +
+                            space_form +
+                            guard_form +   
+                            hook_form +
+                            set_rescor(TRUE),
+                            warmup = 3000, 
+                            iter = 11000,
+                            thin = 32,
+                            chains = 4, 
+                            inits = "0",
+                            threads = threading(10),
+                            backend = "cmdstanr",
+                            seed = 123,
+                            prior = priors,
+                            control = list(adapt_delta = 0.95),
+                            save_pars = save_pars(all = TRUE),
+                            sample_prior = TRUE,
+                            data = data_experienced)
 
 
 
 # Save the model objects -----------------------------------------------
 
-saveRDS(mv_model_novice, 
-        file = "03A_multivariate-model-novice.rds")
+saveRDS(mv_model_experienced,
+        file = "03A_multivariate-model-experienced.rds")
 
 # ======================================================================
 # ======================================================================
