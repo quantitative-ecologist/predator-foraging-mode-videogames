@@ -2,8 +2,8 @@
 #SBATCH --account=def-monti
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=40
-#SBATCH --mem=70000M
-#SBATCH --time=4-00:00
+#SBATCH --mem=64000M
+#SBATCH --time=0-12:00
 #SBATCH --mail-user=fraser_franco.maxime@courrier.uqam.ca
 #SBATCH --mail-type=ALL
 
