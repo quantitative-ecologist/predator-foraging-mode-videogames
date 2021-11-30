@@ -42,10 +42,24 @@ model4 <- readRDS("./outputs/models/03A_multivariate-model-experienced.rds")
 
 # Extract random effect standard deviations -----------------------------
 
-ran_var1 <- data.table(as_draws_df(model1, variable = c("^sd_", "sigma_"), regex = TRUE))
-ran_var2 <- data.table(as_draws_df(model2, variable = c("^sd_", "sigma_"), regex = TRUE))
-ran_var3 <- data.table(as_draws_df(model3, variable = c("^sd_", "sigma_"), regex = TRUE))
-ran_var4 <- data.table(as_draws_df(model4, variable = c("^sd_", "sigma_"), regex = TRUE))
+ran_var1 <- data.table(
+                as_draws_df(model1,
+                            variable = c("^sd_", "sigma_"),
+                            regex = TRUE))
+
+ran_var2 <- data.table(
+                as_draws_df(model2,
+                            variable = c("^sd_", "sigma_"),
+                            regex = TRUE))
+
+ran_var3 <- data.table(
+                as_draws_df(model3,
+                            variable = c("^sd_", "sigma_"),
+                            regex = TRUE))
+ran_var4 <- data.table(
+                as_draws_df(model4,
+                            variable = c("^sd_", "sigma_"),
+                            regex = TRUE))
 
 ran_var1[, c(17:23) := NULL]
 ran_var2[, c(17:23) := NULL]
@@ -206,10 +220,14 @@ ran_var4[, hookicc_resid := hookvar_resid / hookvar_total]
 lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
 upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
 
-icc_tab1 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map", "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char", "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid", "guardicc_resid", "hookicc_resid"),
+icc_tab1 <- data.table(group = c("speedicc_id", "spaceicc_id",
+                                 "guardicc_id", "hookicc_id",
+                                "speedicc_map", "spaceicc_map",
+                                "guardicc_map", "hookicc_map",
+                                "speedicc_char", "spaceicc_char",
+                                "guardicc_char", "hookicc_char",
+                                "speedicc_resid", "spaceicc_resid",
+                                "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var1[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var1[, lapply(.SD, lower_interval),
@@ -218,10 +236,14 @@ icc_tab1 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "h
                                                    .SDcols = c(21:36)])
                         )
 
-icc_tab2 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map", "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char", "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid", "guardicc_resid", "hookicc_resid"),
+icc_tab2 <- data.table(group = c("speedicc_id", "spaceicc_id",
+                                 "guardicc_id", "hookicc_id",
+                                "speedicc_map", "spaceicc_map",
+                                "guardicc_map", "hookicc_map",
+                                "speedicc_char", "spaceicc_char",
+                                "guardicc_char", "hookicc_char",
+                                "speedicc_resid", "spaceicc_resid",
+                                "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var2[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var2[, lapply(.SD, lower_interval),
@@ -230,10 +252,14 @@ icc_tab2 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "h
                                                    .SDcols = c(21:36)])
                         )
 
-icc_tab3 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map", "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char", "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid", "guardicc_resid", "hookicc_resid"),
+icc_tab3 <- data.table(group = c("speedicc_id", "spaceicc_id",
+                                 "guardicc_id", "hookicc_id",
+                                "speedicc_map", "spaceicc_map",
+                                "guardicc_map", "hookicc_map",
+                                "speedicc_char", "spaceicc_char",
+                                "guardicc_char", "hookicc_char",
+                                "speedicc_resid", "spaceicc_resid",
+                                "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var3[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var3[, lapply(.SD, lower_interval),
@@ -242,10 +268,14 @@ icc_tab3 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "h
                                                    .SDcols = c(21:36)])
                         )
 
-icc_tab4 <- data.table(group = c("speedicc_id", "spaceicc_id", "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map", "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char", "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid", "guardicc_resid", "hookicc_resid"),
+icc_tab4 <- data.table(group = c("speedicc_id", "spaceicc_id",
+                                 "guardicc_id", "hookicc_id",
+                                "speedicc_map", "spaceicc_map",
+                                "guardicc_map", "hookicc_map",
+                                "speedicc_char", "spaceicc_char",
+                                "guardicc_char", "hookicc_char",
+                                "speedicc_resid", "spaceicc_resid",
+                                "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var4[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var4[, lapply(.SD, lower_interval),
@@ -282,7 +312,7 @@ icc_tab4[, ranef_variable := c(rep("id", 4),
 
 
 # =======================================================================
-# 3. Save values as an r object
+# 3. Save the tables as an r object
 # =======================================================================
 
 saveRDS(icc_tab1, file = "./outputs/R_objects/03A_icc-table1.rds")

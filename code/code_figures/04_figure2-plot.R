@@ -242,17 +242,17 @@ corrplot(id_cor_matrix, type = "full", method = "ellipse",
                         addCoef.col = "black", 
                         col = brewer.pal(n = 10, name = "RdBu"), 
                         mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/figures/04_figure2-color.pptx", 
+graph2ppt(file = "./outputs/figures/manuscript_figures/04_figure2-color.pptx", 
           width = 10, height = 6)
 
-corrplot(map_cor_matrix, type = "lower", method = "ellipse", 
+corrplot(map_cor_matrix, type = "full", method = "ellipse", 
                         cl.pos = "r", cl.cex = .85,
                         tl.pos = "lt", tl.col = "black", 
                         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
                         addCoef.col = "black", 
                         col = brewer.pal(n = 10, name = "RdBu"), 
                         mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/figures/04_figure2-color.pptx", 
+graph2ppt(file = "./outputs/figures/manuscript_figures/04_figure2-color.pptx", 
           width = 10, height = 6, append = TRUE)
 
 
@@ -266,17 +266,17 @@ corrplot(id_cor_matrix, type = "full", method = "ellipse",
          addCoef.col = "#7e7c7c", 
          col = c("black", "lightgray"), 
          mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/figures/04_figure2-blackgray.pptx", 
+graph2ppt(file = "./outputs/figures/manuscript_figures/04_figure2-blackgray.pptx", 
           width = 10, height = 6, append = TRUE)
 
-corrplot(map_cor_matrix, type = "lower", method = "ellipse", 
+corrplot(map_cor_matrix, type = "full", method = "ellipse", 
          cl.pos = "r", cl.cex = .85,
          tl.pos = "lt", tl.col = "black", 
          tl.cex = 1.1, tl.srt = 45, number.digits = 3,
          addCoef.col = "#7e7c7c", 
          col = c("black", "lightgray"), 
          mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/figures/04_figure2-blackgray.pptx", 
+graph2ppt(file = "./outputs/figures/manuscript_figures/04_figure2-blackgray.pptx", 
           width = 10, height = 6, append = TRUE)
 
 # =======================================================================
