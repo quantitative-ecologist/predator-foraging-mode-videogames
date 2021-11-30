@@ -256,10 +256,10 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "2.3.1",
+      "Version": "3.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3e3f28efcadfda442cd18651fbcbbecf"
+      "Hash": "66a3834e54593c89d8beefb312347e58"
     },
     "clipr": {
       "Package": "clipr",
@@ -333,10 +333,10 @@
     },
     "cpp11": {
       "Package": "cpp11",
-      "Version": "0.2.6",
+      "Version": "0.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f08909ebdad90b19d8d3930da4220564"
+      "Hash": "fa53ce256cd280f468c080a58ea5ba8c"
     },
     "crayon": {
       "Package": "crayon",
@@ -386,6 +386,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "28763d08fadd0b733e3cee9dab4e12fe"
+    },
+    "devEMF": {
+      "Package": "devEMF",
+      "Version": "4.0-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6d64bee9dcf472c0ecdf01f841dee4f6"
     },
     "digest": {
       "Package": "digest",
@@ -438,10 +445,10 @@
     },
     "ellipsis": {
       "Package": "ellipsis",
-      "Version": "0.3.1",
+      "Version": "0.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "fd2844b3a43ae2d27e70ece2df1b4e2a"
+      "Hash": "bb0eec2fe32e88d9e2836c2f73ea2077"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -449,6 +456,18 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
+    },
+    "export": {
+      "Package": "export",
+      "Version": "0.3.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "export",
+      "RemoteUsername": "tomwenseleers",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "1afc8e214dfc10c2e9f53dd1cd4042b7023117d5",
+      "Hash": "d2fe5455c2bf5bd16a3ddb3bd284f238"
     },
     "factoextra": {
       "Package": "factoextra",
@@ -767,10 +786,10 @@
     },
     "knitr": {
       "Package": "knitr",
-      "Version": "1.31",
+      "Version": "1.36",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c3994c036d19fc22c5e2a209c8298bfb"
+      "Hash": "46344b93f8854714cdf476433a59ed10"
     },
     "labeling": {
       "Package": "labeling",
@@ -1019,10 +1038,10 @@
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.5.1",
+      "Version": "1.6.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "24622aa4a0d3de3463c34513edca99b2"
+      "Hash": "60200b6aa32314ac457d3efbb5ccbd98"
     },
     "pkgbuild": {
       "Package": "pkgbuild",
@@ -1171,6 +1190,13 @@
       "Repository": "CRAN",
       "Hash": "bb5996d0bd962d214a11140d77589917"
     },
+    "rgl": {
+      "Package": "rgl",
+      "Version": "0.108.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f64f09322c08801bb67928325188c38c"
+    },
     "rio": {
       "Package": "rio",
       "Version": "0.5.26",
@@ -1180,10 +1206,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.10",
+      "Version": "0.4.12",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "599df23c40a4fce9c7b4764f28c37857"
+      "Hash": "0879f5388fe6e4d56d7ef0b7ccb031e5"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
@@ -1247,6 +1273,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bb099886deffecd6f9b298b7d4492943"
+    },
+    "rvg": {
+      "Package": "rvg",
+      "Version": "0.2.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a823d1d2fd9dcb8eb648d85ad68be046"
     },
     "sass": {
       "Package": "sass",
@@ -1317,6 +1350,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "dfd843ee98246cf932823acf613b05dd"
+    },
+    "stargazer": {
+      "Package": "stargazer",
+      "Version": "5.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "708c566390f55f011bd475b53cc808d7"
     },
     "statmod": {
       "Package": "statmod",
@@ -1418,10 +1458,10 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.3.6",
+      "Version": "0.3.8",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5cf1957f93076c19fdc81d01409d240b"
+      "Hash": "ecf749a1b39ea72bd9b51b76292261f1"
     },
     "viridis": {
       "Package": "viridis",

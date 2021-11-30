@@ -16,13 +16,18 @@
 # 1. Load libraries, and export dataset
 # =======================================================================
 
-# Import libraries
+
+# Import libraries ------------------------------------------------------
+
 library(data.table)
 library(brms)
 library(corrplot)
 library(export)
+library(RColorBrewer)
 
-# Load data
+
+# Import libraries ------------------------------------------------------
+
 model <- readRDS("./outputs/models/03A_multivariate-model2.rds")
 icc_tab <- readRDS("./outputs/R_objects/03A_icc-table2.rds")
 
@@ -34,24 +39,36 @@ icc_tab <- readRDS("./outputs/R_objects/03A_icc-table2.rds")
 
 
 # =======================================================================
-# 2. Prepare the tables
+# 2. Prepare a correlation table
 # =======================================================================
 
-# Extract correlation samples
-correlations <- data.table(posterior_samples(model)[,c(25:42, 51:56)])
 
-# Create table with mean icc and credibility intervals
+# Extract correlation samples -------------------------------------------
+
+correlations <- data.table(
+      as_draws_df(model, 
+                  variable = c("^cor_", "^rescor_"),
+                  regex = TRUE))
+
+
+
+# Create table with mean icc and credibility intervals ------------------
+
 lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
 upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
 
-cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char", "space~guard_char", 
-                                "speed~hook_char", "space~hook_char", "guard~hook_char",
-                                "speed~space_map", "speed~guard_map", "space~guard_map", 
-                                "speed~hook_map", "space~hook_map", "guard~hook_map",
-                                "speed~space_id", "speed~guard_id", "space~guard_id", 
-                                "speed~hook_id", "space~hook_id", "guard~hook_id",
-                                "speed~space_res", "speed~guard_res", "space~guard_res", 
-                                "speed~hook_res", "space~hook_res", "guard~hook_res"),
+cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char",
+                                "space~guard_char", "speed~hook_char", 
+                                "space~hook_char", "guard~hook_char",
+                                "speed~space_map", "speed~guard_map",
+                                "space~guard_map", "speed~hook_map",
+                                "space~hook_map", "guard~hook_map",
+                                "speed~space_id", "speed~guard_id",
+                                "space~guard_id", "speed~hook_id",
+                                "space~hook_id", "guard~hook_id",
+                                "speed~space_res", "speed~guard_res",
+                                "space~guard_res", "speed~hook_res",
+                                "space~hook_res", "guard~hook_res"),
                       mean = as.numeric(correlations[, lapply(.SD, mean),
                                                   .SDcols = c(1:24)]),
                       lower = as.numeric(correlations[, lapply(.SD, lower_interval),
@@ -59,15 +76,26 @@ cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char", "space~g
                       upper = as.numeric(correlations[, lapply(.SD, upper_interval),
                                                   .SDcols = c(1:24)])
                        )
+
 cor_tab[, ranef_variable := c(rep("character", 6),
                               rep("map", 6),
                               rep("id", 6),
                               rep("resid", 6))]
 
+# =======================================================================
+# =======================================================================
 
-# ---------------------------------------------------
-# ID and residual correlation matrix
-# ---------------------------------------------------
+
+
+
+
+# =======================================================================
+# 3. Organise the correlation data into matrices
+# =======================================================================
+
+
+# ID and residual correlation matrix ------------------------------------
+
 id_cor <- cor_tab[ranef_variable %in% c("id", "resid"), .(group, mean)]
 
 # ICC values are on the diagonals
@@ -101,14 +129,16 @@ time <- c(
 
 
 id_cor_matrix <- cbind(speed, space, ambush, time)
-rownames(id_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-colnames(id_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-# ---------------------------------------------------
+
+rownames(id_cor_matrix) <- c("speed", "space",
+                              "prey guarding", "time 1st cap.")
+colnames(id_cor_matrix) <- c("speed", "space",
+                              "prey guarding", "time 1st cap.")
 
 
-# ---------------------------------------------------
-# Maps correlation matrix
-# ---------------------------------------------------
+
+# Maps correlation matrix -----------------------------------------------
+
 map_cor <- cor_tab[ranef_variable %in% "map", .(group, mean)]
 
 # ICC values are on the diagonals
@@ -142,14 +172,16 @@ time <- c(
 
 
 map_cor_matrix <- cbind(speed, space, ambush, time)
-rownames(map_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-colnames(map_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-# ---------------------------------------------------
+
+rownames(map_cor_matrix) <- c("speed", "space",
+                              "prey guarding", "time 1st cap.")
+colnames(map_cor_matrix) <- c("speed", "space",
+                              "prey guarding", "time 1st cap.")
 
 
-# ---------------------------------------------------
-# Avatars correlation matrix
-# ---------------------------------------------------
+
+# Avatars correlation matrix --------------------------------------------
+
 char_cor <- cor_tab[ranef_variable %in% "character", .(group, mean)]
 
 # ICC values are on the diagonals
@@ -183,77 +215,69 @@ time <- c(
 
 
 char_cor_matrix <- cbind(speed, space, ambush, time)
-rownames(char_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-colnames(char_cor_matrix) <- c("speed", "space", "time ambush", "time 1st cap.")
-# ---------------------------------------------------
-# =======================================================================
-# =======================================================================
 
-
-
-
+rownames(char_cor_matrix) <- c("speed", "space",
+                               "prey guarding", "time 1st cap.")
+colnames(char_cor_matrix) <- c("speed", "space",
+                               "prey guarding", "time 1st cap.")
 
 # =======================================================================
-# 3. Create different correlation plots and save in figure 2
 # =======================================================================
 
-# --------------------------------------------------
-# Version with colors
-# --------------------------------------------------
+
+
+
+
+# =======================================================================
+# 4. Save the plots as a figure
+# =======================================================================
+
+
+# Version with colors --------------------------------------------------
+
 corrplot(id_cor_matrix, type = "full", method = "ellipse", 
-                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+                        cl.pos = "r", cl.cex = .85,
+                        tl.pos = "lt", tl.col = "black", 
                         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
                         addCoef.col = "black", 
-                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
+                        col = brewer.pal(n = 10, name = "RdBu"), 
                         mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/04_figure2.pptx", 
+graph2ppt(file = "./outputs/figures/04_figure2-color.pptx", 
           width = 10, height = 6)
 
 corrplot(map_cor_matrix, type = "lower", method = "ellipse", 
-                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+                        cl.pos = "r", cl.cex = .85,
+                        tl.pos = "lt", tl.col = "black", 
                         tl.cex = 1.1, tl.srt = 45, number.digits = 3,
                         addCoef.col = "black", 
-                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
+                        col = brewer.pal(n = 10, name = "RdBu"), 
                         mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/04_figure2.pptx", 
+graph2ppt(file = "./outputs/figures/04_figure2-color.pptx", 
           width = 10, height = 6, append = TRUE)
 
-corrplot(char_cor_matrix, type = "lower", method = "ellipse", 
-                        cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
-                        tl.cex = 1.1, tl.srt = 45, number.digits = 3,
-                        addCoef.col = "black", 
-                        col = RColorBrewer::brewer.pal(n = 10, name = "RdBu"), 
-                        mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/04_figure2.pptx", 
-          width = 10, height = 6, append = TRUE)
-# --------------------------------------------------
-# --------------------------------------------------
 
 
+# Black and gray version ------------------------------------------------
 
-# --------------------------------------------------
-# Black and gray version
-# --------------------------------------------------
 corrplot(id_cor_matrix, type = "full", method = "ellipse", 
-         cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+         cl.pos = "r", cl.cex = .85,
+         tl.pos = "lt", tl.col = "black", 
          tl.cex = 1.1, tl.srt = 45, number.digits = 3,
          addCoef.col = "#7e7c7c", 
          col = c("black", "lightgray"), 
          mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/04_figure2.pptx", 
+graph2ppt(file = "./outputs/figures/04_figure2-blackgray.pptx", 
           width = 10, height = 6, append = TRUE)
 
-corrplot(map_cor_matrix, type = "full", method = "ellipse", 
-         cl.pos = "r", cl.cex = .85, tl.pos = "lt", tl.col = "black", 
+corrplot(map_cor_matrix, type = "lower", method = "ellipse", 
+         cl.pos = "r", cl.cex = .85,
+         tl.pos = "lt", tl.col = "black", 
          tl.cex = 1.1, tl.srt = 45, number.digits = 3,
          addCoef.col = "#7e7c7c", 
          col = c("black", "lightgray"), 
          mar = c(0,0,0,0))
-graph2ppt(file = "./outputs/04_figure2.pptx", 
+graph2ppt(file = "./outputs/figures/04_figure2-blackgray.pptx", 
           width = 10, height = 6, append = TRUE)
-
-# --------------------------------------------------
-# --------------------------------------------------
 
 # =======================================================================
 # =======================================================================
