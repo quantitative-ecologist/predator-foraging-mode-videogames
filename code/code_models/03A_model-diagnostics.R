@@ -145,32 +145,84 @@ ggexport(stat_fig,
          filename = "./outputs/model_diagnostics/03A_diagnostic3.png",
          width = 3000, height = 2500, res = 300) # more 
 
-# Residual vs covariate plots
-#speed1 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
-#                           resp = "Zsqrtspeed",
-#                         type = 'error_scatter_avg_vs_x', nsamples = 100)
-#speed2 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
-#                           resp = "Zsqrtspacecoveredrate", 
-#                         type = 'error_scatter_avg_vs_x', nsamples = 100)
-#speed3 <- brms::pp_check(mv_model, x = 'Zsqrtsurv_speed', 
-#                           resp = "Zsqrtproxmidguard",
-#                         type = 'error_scatter_avg_vs_x', nsamples = 100)
-#speed4 <-  brms::pp_check(mv_model, x = 'Zsqrtsurv_speed',
-#                            resp = "Zsqrthookstarttime",
-#                         type = 'error_scatter_avg_vs_x', nsamples = 100)
-#
-#space1 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
-#                           resp = "Zsqrtspeed",
-#                           type = 'error_scatter_avg_vs_x', nsamples = 100)
-#space2 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
-#                           resp = "Zsqrtspacecoveredrate", 
-#                           type = 'error_scatter_avg_vs_x', nsamples = 100)
-#space3 <- brms::pp_check(mv_model, x = 'Zsurv_speed',
-#                           resp = "Zsqrtproxmidguard",
-#                           type = 'error_scatter_avg_vs_x', nsamples = 100)
-#space4 <- brms::pp_check(mv_model, x = 'Zsurv_space_covered_rate',
-#                           resp = "Zsqrthookstarttime",
-#                           type = 'error_scatter_avg_vs_x', nsamples = 100)
+
+
+# Residual vs covariate plots -------------------------------------------
+
+# Prey speed
+speed1 <- brms::pp_check(model,
+                         x = "Zprey_avg_speed", 
+                         resp = "Zspeed",
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+space1 <- brms::pp_check(model,
+                         x = "Zprey_avg_speed",
+                         resp = "Zspacecoveredrate", 
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+guard1 <- brms::pp_check(model,
+                         x = "Zprey_avg_speed", 
+                         resp = "ZproxmidPreyGuarding",
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+hook1 <-  brms::pp_check(model,
+                         x = "Zprey_avg_speed",
+                         resp = "Zhookstarttime",
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+# Arrange a figure
+resid_1 <- ggarrange(speed1,
+                     space1,
+                     guard1,
+                     hook1,
+                     ncol = 2, nrow = 2)
+
+# Export the figure
+ggexport(resid_1,
+         filename = "./outputs/model_diagnostics/03A_diagnostic4.png",
+         width = 3000, height = 2500, res = 300) # more 
+
+# Prey space covered
+speed2 <- brms::pp_check(model,
+                         x = "Zprey_avg_space_covered_rate",
+                         resp = "Zspeed",
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+space2 <- brms::pp_check(model,
+                         x = "Zprey_avg_space_covered_rate",
+                         resp = "Zspacecoveredrate", 
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+guard2 <- brms::pp_check(model,
+                         x = "Zprey_avg_space_covered_rate",
+                         resp = "ZproxmidPreyGuarding",
+                         type = "error_scatter_avg_vs_x",
+                         ndraws = 100)
+
+hook2 <- brms::pp_check(model,
+                        x = "Zprey_avg_space_covered_rate",
+                        resp = "Zhookstarttime",
+                        type = "error_scatter_avg_vs_x",
+                        ndraws = 100)
+
+# Arrange a figure
+resid_2 <- ggarrange(speed2,
+                     space2,
+                     guard2,
+                     hook2,
+                     ncol = 2, nrow = 2)
+
+# Export the figure
+ggexport(resid_2,
+         filename = "./outputs/model_diagnostics/03A_diagnostic5.png",
+         width = 3000, height = 2500, res = 300) # more 
+
 
 # =======================================================================
 # =======================================================================
