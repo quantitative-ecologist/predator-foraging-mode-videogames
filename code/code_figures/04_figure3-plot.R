@@ -10,7 +10,7 @@
 
 
 # Check if I change the ranef value if its different (^2 for ranfed sd)
-
+# PLOT IS NOT WORKING ANYMOREEEEEEE
 
 # =======================================================================
 # 1. Load libraries, datasets, and models
