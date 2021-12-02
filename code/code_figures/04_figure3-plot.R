@@ -123,6 +123,90 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 
 
+
+
+
+test <- fitted(base_model, 
+               scale = "response",
+               ndraws = 100)
+
+
+test <- data.table(
+                as_draws_df(base_model,
+                            variable = c("^sd_"),
+                            regex = TRUE,
+                            ndraws = 100))
+
+variables(base_model)
+
+
+# 1. essayer avec fitted draws tidy
+# 2. essayer avec plot_model
+# 3. essayer avec speed_y directement (marche pas)
+# 4. essayer ma méthode mais extraire les variances 100 draws
+
+
+
+library(sjPlot)
+plot_model(base_model, type = "pred", terms = "Zspeed")
+
+speed_y<-cbind(speed_y, speed = seq(min(data$Zspeed),
+                           max(data$Zspeed),
+                           length.out = 100))
+
+
+speed_y <- data.table(speed_y)
+
+# Plot for predator speed
+ggplot(speed_y) +
+  geom_line(aes(x = speed, y = plogis(Estimate)),
+            size = 1.5,
+            color = "darkgray") +
+  geom_line(aes(x = speed, y = plogis(Q2.5)),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(data = speed_y,
+            aes(x = speed, y = plogis(Q97.5)),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  #geom_ribbon(data = speed_newdat,
+  #            aes(x = speed,
+  #                ymin = speed_tlo.Estimate,
+  #                ymax = speed_thi.Estimate),
+  #            alpha = 0.2,
+  #            fill = "darkgray") +
+  #scale_y_continuous(breaks = seq(0, 1, .25),
+  #                   limits = c(0, 1)) +
+  #scale_x_continuous(breaks = seq(-8, 4, 4),
+  #                   limits = c(-8, 4.8),
+  #                   labels = scaleFUN) +
+  xlab("\nSpeed") +
+  ylab("") +
+  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # =======================================================================
 # 3. Fixed effects plots for the base model
 # =======================================================================
