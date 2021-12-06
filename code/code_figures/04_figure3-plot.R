@@ -10,7 +10,7 @@
 
 
 # Check if I change the ranef value if its different (^2 for ranfed sd)
-# PLOT IS NOT WORKING ANYMOREEEEEEE
+# PLOT IS working but need to do it from the posterior samples
 
 # =======================================================================
 # 1. Load libraries, datasets, and models
@@ -69,6 +69,17 @@ data$obs <- 1:nrow(data)
 base_model <- readRDS("./outputs/models/03B_hunting_success_base-model1.rds")
 quadratic_model <- readRDS("./outputs/models/03C_hunting_success_quadratic-model1.rds")
 
+print(object.size(base_model), units = "GB")
+
+
+
+# Load predictions ------------------------------------------------------
+
+draws1 <- readRDS("./outputs/R_objects/draws_base-model1.rds")
+draws2 <- readRDS("./outputs/R_objects/draws_base-model2.rds")
+draws3 <- readRDS("./outputs/R_objects/draws_base-model3.rds")
+draws4 <- readRDS("./outputs/R_objects/draws_base-model4.rds")
+
 # =======================================================================
 # =======================================================================
 
@@ -125,66 +136,19 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 
 
-
-test <- fitted(base_model, 
-               scale = "response",
-               ndraws = 100)
-
-
-test <- data.table(
-                as_draws_df(base_model,
-                            variable = c("^sd_"),
-                            regex = TRUE,
-                            ndraws = 100))
-
-variables(base_model)
-
-
-# 1. essayer avec fitted draws tidy
-# 2. essayer avec plot_model
-# 3. essayer avec speed_y directement (marche pas)
-# 4. essayer ma méthode mais extraire les variances 100 draws
-
-
-
-library(sjPlot)
-plot_model(base_model, type = "pred", terms = "Zspeed")
-
-speed_y<-cbind(speed_y, speed = seq(min(data$Zspeed),
-                           max(data$Zspeed),
-                           length.out = 100))
-
-
-speed_y <- data.table(speed_y)
-
-# Plot for predator speed
-ggplot(speed_y) +
-  geom_line(aes(x = speed, y = plogis(Estimate)),
-            size = 1.5,
-            color = "darkgray") +
-  geom_line(aes(x = speed, y = plogis(Q2.5)),
-            linetype = "dashed",
-            size = 1,
-            color = "black") +
-  geom_line(data = speed_y,
-            aes(x = speed, y = plogis(Q97.5)),
-            linetype = "dashed",
-            size = 1, 
-            color = "black") +
-  #geom_ribbon(data = speed_newdat,
-  #            aes(x = speed,
-  #                ymin = speed_tlo.Estimate,
-  #                ymax = speed_thi.Estimate),
-  #            alpha = 0.2,
-  #            fill = "darkgray") +
-  #scale_y_continuous(breaks = seq(0, 1, .25),
-  #                   limits = c(0, 1)) +
-  #scale_x_continuous(breaks = seq(-8, 4, 4),
-  #                   limits = c(-8, 4.8),
-  #                   labels = scaleFUN) +
-  xlab("\nSpeed") +
-  ylab("") +
-  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+# ===============================================================
+# Fixed effects table for main effects variance
+fe_speed <- tibble(Zspeed = seq(min(data$Zspeed), 
+                               max(data$Zspeed),
+                               length.out = 100), 
+                  Zspace_covered_rate = mean(data$Zspace_covered_rate),             
+                  Zprox_mid_guard = mean(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+                  Zhook_start_time = mean(data$Zhook_start_time, na.rm = TRUE)) %>%
+  add_linpred_draws(base_model,
+                   re_formula = NA, 
+                   value = "predicted_values",
+                   ndraws = 100,
+                   seed = 123)
 
 
 
@@ -193,16 +157,20 @@ ggplot(speed_y) +
 
 
 
+draws1 <- data.table(draws1)
+draws1<-draws1[, -c(2:4)]
+draws1 <- cbind(new_dat1, draws1)
 
 
+mm <- model.matrix(~ Zspeed +
+                     Zspace_covered_rate +
+                     Zprox_mid_PreyGuarding +
+                     Zhook_start_time +
+                     Zgame_duration, draws1)
 
+predvar <- diag(mm %*% vcov(base_model) %*% t(mm))
 
-
-
-
-
-
-
+# ===============================================================
 
 
 
@@ -215,15 +183,13 @@ ggplot(speed_y) +
 # Predator average movement speed
 # -----------------------------------
 # Create new data
-speed_dat <- data.table(speed      = seq(min(data$Zspeed),
-                                         max(data$Zspeed),
-                                         length.out = 100),
-                        space      = mean(data$Zspace_covered_rate),
-                        guard      = mean(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
-                        hook       = mean(data$Zhook_start_time, na.rm = TRUE),
-                        duration   = mean(data$Zgame_duration))
-                      #  surv_speed = mean(data$Zsurv_speed),
-                      #  surv_space = mean(data$Zsurv_space_covered_rate))
+speed_dat <- data.table(speed    = seq(min(data$Zspeed),
+                                       max(data$Zspeed),
+                                       length.out = 100),
+                        space    = mean(data$Zspace_covered_rate),
+                        guard    = mean(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+                        hook     = mean(data$Zhook_start_time, na.rm = TRUE),
+                        duration = mean(data$Zgame_duration))
 # Model matrix
 speed_mm <- model.matrix(~ speed +
                            space +
@@ -240,15 +206,12 @@ speed_y <- speed_mm%*%fixef(base_model)
 speed_pvar <- diag(speed_mm %*% tcrossprod(vcov(base_model), speed_mm))
 speed_tvar <- speed_pvar + 
               VarCorr(base_model)$obs$sd[1]^2 + 
-              VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+              VarCorr(base_model)$player_id$sd[1]^2 + 
               VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 speed_newdat <- data.table(
   speed = speed_dat$speed,
-  space = speed_dat$space,
-  guard = speed_dat$guard,
-  hook = speed_dat$hook,
 #  surv_speed = speed_dat$surv_speed,
 #  surv_space = speed_dat$surv_space,
   speed_y = plogis(speed_y),
@@ -260,11 +223,6 @@ speed_newdat <- data.table(
 
 # Plot for predator speed
 speed <- ggplot(speed_newdat) +
-  #geom_point(data = data,
-  #             aes(x = Zspeed, y = prop_captures),
-  #             shape = 16, 
-  #             alpha = 0.1, 
-  #             color = "black") +
   geom_line(aes(x = speed, y = speed_y.Estimate),
             size = 1.5,
             color = "darkgray") +
@@ -283,11 +241,11 @@ speed <- ggplot(speed_newdat) +
                   ymax = speed_thi.Estimate),
               alpha = 0.2,
               fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(-8, 4, 4),
-                     limits = c(-8, 4.8),
-                     labels = scaleFUN) +
+  #scale_y_continuous(breaks = seq(0, 1, .25),
+  #                   limits = c(0, 1)) +
+  #scale_x_continuous(breaks = seq(-8, 4, 4),
+  #                   limits = c(-8, 4.8),
+  #                   labels = scaleFUN) +
   xlab("\nSpeed") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
@@ -298,19 +256,18 @@ speed <- ggplot(speed_newdat) +
 # Predator rate of space covered
 # -----------------------------------
 # Create new data
-space_dat <- data.table(speed      = mean(data$Zspeed),
-                        space      = seq(min(data$Zspace_covered_rate), 
-                                         5,
-                                         length.out = 100),           
-                        guard      = mean(data$Zprox_mid_guard), 
-                        hook       = mean(data$Zhook_start_time))            
-                        #surv_speed = mean(data$Zsurv_speed),            
-                        #surv_space = mean(data$Zsurv_space_covered_rate))
+space_dat <- data.table(speed    = mean(data$Zspeed),
+                        space    = seq(min(data$Zspace_covered_rate), 5,
+                                       length.out = 100),           
+                        guard    = mean(data$Zprox_mid_PreyGuarding, na.rm = TRUE), 
+                        hook     = mean(data$Zhook_start_time, na.rm = TRUE),
+                        duration = mean(data$Zgame_duration))
 # Model matrix
 space_mm <- model.matrix(~ speed + 
                            space + 
                            guard + 
-                           hook,
+                           hook +
+                           duration,
                            #surv_speed + 
                            #surv_space, 
                          space_dat)
@@ -321,18 +278,15 @@ space_y <- space_mm%*%fixef(base_model)
 space_pvar <- diag(space_mm %*% tcrossprod(vcov(base_model), space_mm))
 space_tvar <- space_pvar + 
   VarCorr(base_model)$obs$sd[1]^2 + 
-  VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(base_model)$player_id$sd[1]^2 + 
   VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 space_newdat <- data.table(
-  speed = space_dat$speed,
   space = space_dat$space,
-  guard = space_dat$guard,
-  hook = space_dat$hook,
 #  surv_speed = space_dat$surv_speed,
 #  surv_space = space_dat$surv_space,
-  space_y = plogis(space_y),
+  space_y   = plogis(space_y),
   space_plo = plogis(space_y - 1.96 * sqrt(space_pvar)),
   space_phi = plogis(space_y + 1.96 * sqrt(space_pvar)),
   space_tlo = plogis(space_y - 1.96 * sqrt(space_tvar)),
@@ -341,11 +295,6 @@ space_newdat <- data.table(
 
 # Plot for predator space
 space <- ggplot(space_newdat) +
-  #  geom_point(data = data[Zspace_covered_rate <= 5],
-  #               aes(x = Zspace_covered_rate, y = prop_captures),
-  #               shape = 16, 
-  #               alpha = 0.1, 
-  #               color = "black") +
   geom_line(aes(x = space, y = space_y.Estimate),
             size = 1.5,
             color = "darkgray") +
@@ -364,9 +313,9 @@ space <- ggplot(space_newdat) +
                   ymax = space_thi.Estimate),
               alpha = 0.2,
               fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  scale_x_continuous(labels = scaleFUN) +
+  #scale_y_continuous(breaks = seq(0, 1, .25),
+  #                   limits = c(0, 1)) +
+  #scale_x_continuous(labels = scaleFUN) +
   xlab("\nSpace") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
@@ -377,19 +326,21 @@ space <- ggplot(space_newdat) +
 # Predator proportion of time spent guarding
 # -----------------------------------
 # Create new data
-guard_dat <- data.table(speed      = mean(data$Zspeed),             
-                        space      = mean(data$Zspace_covered_rate),
-                        guard      = seq(min(data$Zprox_mid_guard), 
-                                         7,
-                                         length.out = 100),
-                        hook       = mean(data$Zhook_start_time))
+guard_dat <- data.table(speed    = mean(data$Zspeed),             
+                        space    = mean(data$Zspace_covered_rate),
+                        guard    = seq(min(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+                                       max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+                                       length.out = 100),
+                        hook     = mean(data$Zhook_start_time, na.rm = TRUE),
+                        duration = mean(data$Zgame_duration))
                         #surv_speed = mean(data$Zsurv_speed),
                         #surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 guard_mm <- model.matrix(~ speed +
                            space +
                            guard +
-                           hook,
+                           hook +
+                           duration,
                           # surv_speed +
                           # surv_space, 
                            guard_dat)
@@ -400,18 +351,15 @@ guard_y <- guard_mm%*%fixef(base_model)
 guard_pvar <- diag(guard_mm %*% tcrossprod(vcov(base_model), guard_mm))
 guard_tvar <- guard_pvar + 
   VarCorr(base_model)$obs$sd[1]^2 + 
-  VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(base_model)$player_id$sd[1]^2 + 
   VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 guard_newdat <- data.table(
-  speed = guard_dat$speed,
-  space = guard_dat$space,
   guard = guard_dat$guard,
-  hook = guard_dat$hook,
 #  surv_speed = guard_dat$surv_speed,
 #  surv_space = guard_dat$surv_space,
-  guard_y = plogis(guard_y),
+  guard_y   = plogis(guard_y),
   guard_plo = plogis(guard_y - 1.96 * sqrt(guard_pvar)),
   guard_phi = plogis(guard_y + 1.96 * sqrt(guard_pvar)),
   guard_tlo = plogis(guard_y - 1.96 * sqrt(guard_tvar)),
@@ -420,11 +368,6 @@ guard_newdat <- data.table(
 
 # Plot for predator guard
 guard <- ggplot(guard_newdat) +
-  #   geom_point(data = data[Zprox_mid_guard <= 7],
-  #              aes(x = Zprox_mid_guard, y = prop_captures),
-  #              shape = 16, 
-  #              alpha = 0.1, 
-  #              color = "black") +
   geom_line(aes(x = guard, y = guard_y.Estimate),
             size = 1.5,
             color = "darkgray") +
@@ -443,10 +386,10 @@ guard <- ggplot(guard_newdat) +
                   ymax = guard_thi.Estimate),
               alpha = 0.2,
               fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(0, 7.5, 2.5),
-                     limits = c(-1.2, 7.5)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25),
+  #                   limits = c(0, 1)) +
+  #scale_x_continuous(breaks = seq(0, 7.5, 2.5),
+  #                   limits = c(-1.2, 7.5)) +
   xlab("\nAmbush time") +
   ylab("") +
   custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
@@ -457,19 +400,21 @@ guard <- ggplot(guard_newdat) +
 # Predator time before 1st capture
 # -----------------------------------
 # Create new data
-hook_dat <- data.table(speed      = mean(data$Zspeed),             
-                       space      = mean(data$Zspace_covered_rate),
-                       guard      = mean(data$Zprox_mid_guard),
-                       hook       = seq(min(data$Zhook_start_time),
-                                        max(data$Zhook_start_time),
-                                        length.out = 100))
+hook_dat <- data.table(speed    = mean(data$Zspeed),             
+                       space    = mean(data$Zspace_covered_rate),
+                       guard    = mean(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+                       hook     = seq(min(data$Zhook_start_time, na.rm = TRUE),
+                                      max(data$Zhook_start_time, na.rm = TRUE),
+                                      length.out = 100),
+                       duration = mean(data$Zgame_duration))
                       # surv_speed = mean(data$Zsurv_speed),
                       # surv_space = mean(data$Zsurv_space_covered_rate))
 # Model matrix
 hook_mm <- model.matrix(~ speed +
                           space +
                           guard +
-                          hook,
+                          hook + 
+                          duration,
                          # surv_speed +
                          # surv_space, 
                         hook_dat)
@@ -480,14 +425,11 @@ hook_y <- hook_mm%*%fixef(base_model)
 hook_pvar <- diag(hook_mm %*% tcrossprod(vcov(base_model), hook_mm))
 hook_tvar <- hook_pvar + 
   VarCorr(base_model)$obs$sd[1]^2 + 
-  VarCorr(base_model)$mirrors_id$sd[1]^2 + 
+  VarCorr(base_model)$player_id$sd[1]^2 + 
   VarCorr(base_model)$map_name$sd[1]^2
 
 # Generate table
 hook_newdat <- data.table(
-  speed = hook_dat$speed,
-  space = hook_dat$space,
-  guard = hook_dat$guard,
   hook = hook_dat$hook,
 #  surv_speed = hook_dat$surv_speed,
 #  surv_space = hook_dat$surv_space,
@@ -518,10 +460,10 @@ hook <- ggplot(hook_newdat) +
                   ymax = hook_thi.Estimate),
               alpha = 0.2,
               fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
-                     limits = c(-1.5, 4.5)) +
+  #scale_y_continuous(breaks = seq(0, 1, .25),
+  #                   limits = c(0, 1)) +
+  #scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
+  #                   limits = c(-1.5, 4.5)) +
   xlab(expression(
     paste("Time for ", 1^st, "capture", sep = ""))) +
   ylab("") +
