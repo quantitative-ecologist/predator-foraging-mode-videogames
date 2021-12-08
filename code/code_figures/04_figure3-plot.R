@@ -194,17 +194,17 @@ speed <- ggplot(speed_tab) +
   geom_line(aes(x = Zspeed, y = estimate__/4),
             size = 1.5,
             color = "darkgray") +
-  geom_line(aes(x = Zspeed, y = lower__),
+  geom_line(aes(x = Zspeed, y = lower__/4),
             linetype = "dashed",
             size = 1,
             color = "black") +
-  geom_line(aes(x = Zspeed, y = upper__),
+  geom_line(aes(x = Zspeed, y = upper__/4),
             linetype = "dashed",
             size = 1, 
             color = "black") +
   geom_ribbon(aes(x = Zspeed,
-                  ymin = lower_pred_int,
-                  ymax = upper_pred_int),
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
               alpha = 0.2,
               fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
@@ -214,7 +214,8 @@ speed <- ggplot(speed_tab) +
   #                   labels = scaleFUN) +
   xlab("\nSpeed") +
   ylab("") +
-  custom_theme + theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+  custom_theme +
+  theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 
 
 
@@ -224,17 +225,17 @@ space <- ggplot(space_tab) +
   geom_line(aes(x = Zspace_covered_rate, y = estimate__/4),
             size = 1.5,
             color = "darkgray") +
-  geom_line(aes(x = Zspace_covered_rate, y = lower__),
+  geom_line(aes(x = Zspace_covered_rate, y = lower__/4),
             linetype = "dashed",
             size = 1,
             color = "black") +
-  geom_line(aes(x = Zspace_covered_rate, y = upper__),
+  geom_line(aes(x = Zspace_covered_rate, y = upper__/4),
             linetype = "dashed",
             size = 1, 
             color = "black") +
   geom_ribbon(aes(x = Zspace_covered_rate,
-                  ymin = lower_pred_int,
-                  ymax = upper_pred_int),
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
               alpha = 0.2,
               fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
@@ -253,17 +254,17 @@ guard <- ggplot(guard_tab) +
   geom_line(aes(x = guard, y = estimate__/4),
             size = 1.5,
             color = "darkgray") +
-  geom_line(aes(x = Zprox_mid_PreyGuarding, y = lower__),
+  geom_line(aes(x = Zprox_mid_PreyGuarding, y = lower__/4),
             linetype = "dashed",
             size = 1,
             color = "black") +
-  geom_line(aes(x = Zprox_mid_PreyGuarding, y = upper__),
+  geom_line(aes(x = Zprox_mid_PreyGuarding, y = upper__/4),
             linetype = "dashed",
             size = 1, 
             color = "black") +
   geom_ribbon(aes(x = Zprox_mid_PreyGuarding, 
-                  ymin = lower_pred_int,
-                  ymax = upper_pred_int),
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
               alpha = 0.2,
               fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
@@ -283,17 +284,17 @@ hook <- ggplot(hook_tab) +
   geom_line(aes(x = Zhook_start_time, y = estimate__/4),
             size = 1.5,
             color = "darkgray") +
-  geom_line(aes(x = Zhook_start_time, y = lower__),
+  geom_line(aes(x = Zhook_start_time, y = lower__/4),
             linetype = "dashed",
             size = 1,
             color = "black") +
-  geom_line(aes(x = Zhook_start_time, y = upper__),
+  geom_line(aes(x = Zhook_start_time, y = upper__/4),
             linetype = "dashed",
             size = 1, 
             color = "black") +
   geom_ribbon(aes(x = Zhook_start_time, 
-                  ymin = lower_pred_int,
-                  ymax = upper_pred_int),
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
               alpha = 0.2,
               fill = "darkgray") +
   scale_y_continuous(breaks = seq(0, 1, .25),
@@ -314,7 +315,7 @@ hook <- ggplot(hook_tab) +
 
 
 # =======================================================================
-# 4. Fixed effects plots for the quadratic model
+# 5. Fixed effects plots for the quadratic model
 # =======================================================================
 
 
