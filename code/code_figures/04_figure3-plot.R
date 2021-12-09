@@ -98,28 +98,28 @@ hook_tab1  <- readRDS("./outputs/R_objects/base-model_hook-re.rds")
 # Extract the tables from the objects -----------------------------------
 
 speed_tab <- speed_tab$Zspeed
-space_tab <- speed_tab$Zspace_covered_rate
-guard_tab <- speed_tab$Zprox_mid_PreyGuarding
-hook_tab  <- speed_tab$Zhook_start_time
+space_tab <- space_tab$Zspace_covered_rate
+guard_tab <- guard_tab$Zprox_mid_PreyGuarding
+hook_tab  <- hook_tab$Zhook_start_time
 
 
 
 # Bind the two tables ---------------------------------------------------
 
 # Here, I extract the prediction intervals from the second set of tables
-speed_tab <- cbind(speed_tab$Zspeed, 
+speed_tab <- cbind(speed_tab, 
                    upper_pred_int = speed_tab1$Zspeed[, "upper__"],
                    lower_pred_int = speed_tab1$Zspeed[, "lower__"])
 
-space_tab <- cbind(space_tab$Zspace_covered_rate, 
+space_tab <- cbind(space_tab, 
                    upper_pred_int = space_tab1$Zspace_covered_rate[, "upper__"],
                    lower_pred_int = space_tab1$Zspace_covered_rate[, "lower__"])
 
-guard_tab <- cbind(guard_tab$Zprox_mid_PreyGuarding, 
+guard_tab <- cbind(guard_tab, 
                    upper_pred_int = guard_tab1$Zprox_mid_PreyGuarding[, "upper__"],
                    lower_pred_int = guard_tab1$Zprox_mid_PreyGuarding[, "lower__"])
 
-hook_tab <- cbind(hook_tab$Zhook_start_time, 
+hook_tab <- cbind(hook_tab, 
                   upper_pred_int = hook_tab1$Zhook_start_time[, "upper__"],
                   lower_pred_int = hook_tab1$Zhook_start_time[, "lower__"])
 
@@ -251,7 +251,7 @@ space <- ggplot(space_tab) +
 # Plot for predator guard -----------------------------------------------
 
 guard <- ggplot(guard_tab) +
-  geom_line(aes(x = guard, y = estimate__/4),
+  geom_line(aes(x = Zprox_mid_PreyGuarding, y = estimate__/4),
             size = 1.5,
             color = "darkgray") +
   geom_line(aes(x = Zprox_mid_PreyGuarding, y = lower__/4),

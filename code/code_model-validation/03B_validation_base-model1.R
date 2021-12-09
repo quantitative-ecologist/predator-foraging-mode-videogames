@@ -22,7 +22,7 @@ library(brms)
 
 # Load the model --------------------------------------------------------
 
-base_model <- readRDS("./outputs/models/03B_hunting_success_base-model1.rds")
+base_model <- readRDS("03B_hunting_success_base-model1.rds")
 
 # =======================================================================
 # =======================================================================
@@ -37,7 +37,9 @@ base_model <- readRDS("./outputs/models/03B_hunting_success_base-model1.rds")
 
 # Load the future package to parallelize the folds
 library(future)
-plan(multiprocess)
+plan(multicore)
+
+options(future.globals.maxSize = 3000)
 
 # Function for the stratified K-fold cross-validation
 # We use player_id as the grouping factor that will be stratified.
