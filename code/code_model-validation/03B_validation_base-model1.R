@@ -39,7 +39,7 @@ base_model <- readRDS("03B_hunting_success_base-model1.rds")
 library(future)
 plan(multicore)
 
-options(future.globals.maxSize = 3000)
+options(future.globals.maxSize = 4000000)
 
 # Function for the stratified K-fold cross-validation
 # We use player_id as the grouping factor that will be stratified.
