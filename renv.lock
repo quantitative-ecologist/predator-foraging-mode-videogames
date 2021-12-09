@@ -170,13 +170,6 @@
       "Repository": "CRAN",
       "Hash": "0a8b771b1b255fc55f271ae49e671afc"
     },
-    "bayestestR": {
-      "Package": "bayestestR",
-      "Version": "0.11.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a1ac15e988cbeea3524f1f371ad13964"
-    },
     "blob": {
       "Package": "blob",
       "Version": "1.2.2",
@@ -373,13 +366,6 @@
       "Repository": "CRAN",
       "Hash": "d1b8b1a821ee564a3515fa6c6d5c52dc"
     },
-    "datawizard": {
-      "Package": "datawizard",
-      "Version": "0.2.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "8edf85932d64cb9c08db13ab73670cc9"
-    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "2.1.1",
@@ -450,13 +436,6 @@
       "Repository": "CRAN",
       "Hash": "716869fffc16e282c118f8894e082a7d"
     },
-    "effectsize": {
-      "Package": "effectsize",
-      "Version": "0.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d574e2bb0dbe570ccf30eafdcabdf0f2"
-    },
     "ellipse": {
       "Package": "ellipse",
       "Version": "0.4.2",
@@ -470,20 +449,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bb0eec2fe32e88d9e2836c2f73ea2077"
-    },
-    "emmeans": {
-      "Package": "emmeans",
-      "Version": "1.7.1-1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "865dc378df671fc5ffff4a2563d6ab4c"
-    },
-    "estimability": {
-      "Package": "estimability",
-      "Version": "1.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "05901bd61be60fd3bfc5b7d7c3517d1d"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -623,13 +588,6 @@
       "Repository": "CRAN",
       "Hash": "5d6f67b947e0962cf93208f139acd475"
     },
-    "ggeffects": {
-      "Package": "ggeffects",
-      "Version": "1.1.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "c5c7376ceca707bebc485955b7e07ffc"
-    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.3.5",
@@ -723,10 +681,10 @@
     },
     "haven": {
       "Package": "haven",
-      "Version": "2.3.1",
+      "Version": "2.4.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "221d0ad75dfa03ebf17b1a4cc5c31dfc"
+      "Hash": "10bec8a8264f3eb59531e8c4c0303f96"
     },
     "here": {
       "Package": "here",
@@ -797,13 +755,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "1deaf1de3eac7e1d3377954b3a283652"
-    },
-    "insight": {
-      "Package": "insight",
-      "Version": "0.14.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "8ad4c36bd2c415bd2803f5e0e785e993"
     },
     "isoband": {
       "Package": "isoband",
@@ -1078,26 +1029,12 @@
       "Repository": "CRAN",
       "Hash": "5300c9fc71841550bdca64d39e82af0e"
     },
-    "parameters": {
-      "Package": "parameters",
-      "Version": "0.15.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ca7066d8c743f6c41bb2fcdb5ebb53bf"
-    },
     "pbkrtest": {
       "Package": "pbkrtest",
       "Version": "0.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b304ff5955f37b48bd30518faf582929"
-    },
-    "performance": {
-      "Package": "performance",
-      "Version": "0.8.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "e83826fc69fe190eb5ef62012259541a"
     },
     "pillar": {
       "Package": "pillar",
@@ -1399,34 +1336,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "30f0ebc41feba25691073626ff5e2cf4"
-    },
-    "sjPlot": {
-      "Package": "sjPlot",
-      "Version": "2.8.10",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a1c3b806dea3a10345d5fb584344c78a"
-    },
-    "sjlabelled": {
-      "Package": "sjlabelled",
-      "Version": "1.1.8",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "60437c5938a8d6abb1ac3b530bab024e"
-    },
-    "sjmisc": {
-      "Package": "sjmisc",
-      "Version": "2.8.7",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "05eecd4e6038e22549da2cbb9d7a3e91"
-    },
-    "sjstats": {
-      "Package": "sjstats",
-      "Version": "0.18.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "30c55099bbe117030d8649b4ba8fc01b"
     },
     "sourcetools": {
       "Package": "sourcetools",
