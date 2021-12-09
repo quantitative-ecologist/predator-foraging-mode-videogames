@@ -1,6 +1,6 @@
 # =======================================================================
 
-#                       Base model 1 diagnostics                        #
+#                       Base models diagnostics                         #
 
 # =======================================================================
 
@@ -19,7 +19,6 @@ library(data.table)
 library(brms)
 library(bayesplot)
 library(ggpubr)
-#library(broom.helpers)
 
 
 
@@ -69,7 +68,7 @@ dens_overlay <- brms::pp_check(model,
                                 ndraws = 100)
 
 # Export the figure
-ggexport(dens_fig,
+ggexport(dens_overlay,
          filename = "./outputs/model_diagnostics/03B_diagnostic1.png",
          width = 3000, height = 2500, res = 300)
 
@@ -86,10 +85,10 @@ ggexport(error,
 
 
 # Parameter value around posterior distribution
-stat1 <- brms::pp_check(model,
-                        type = 'stat',
-                        stat = 'mean',
-                        ndraws = 100)
+stat <- brms::pp_check(model,
+                       type = 'stat',
+                       stat = 'mean',
+                       ndraws = 100)
 
 # Export the figure
 ggexport(stat,
