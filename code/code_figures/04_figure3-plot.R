@@ -360,7 +360,10 @@ quad_hook <- ggplot(quad_tab[x_variable == "hook"]) +
 # =======================================================================
 # 5. Create the figure with 6 panels
 # =======================================================================
-# Create the 3 paneled figure
+
+
+# Create the 3 paneled figure -------------------------------------------
+
 panel_plot <- ggarrange(speed,
                         space,
                         guard,
@@ -379,15 +382,23 @@ panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
                                                rot = 90,
                                                size = 15,
-                                               hjust = -1.00, vjust = 0.5)) #-1.23 with police size = 14
+                                               #-1.23 with police size = 14
+                                               hjust = -1.00,
+                                               vjust = 0.5))
 # lower y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
                                                rot = 90,
                                                size = 15,
-                                               hjust = 1.7, vjust = 2.1))
+                                               hjust = 1.7,
+                                               vjust = 2.1))
+
+
+
+# Export the figure -----------------------------------------------------
 
 ggexport(panel_plot, filename = "./outputs/04_figure3.png",
-         width = 4500, height = 2500, res = 300) # more res = bigger plot zoom
+         width = 4500, height = 2500, res = 300)
+
 # =======================================================================
 # =======================================================================

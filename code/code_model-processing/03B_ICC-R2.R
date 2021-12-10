@@ -46,8 +46,8 @@ model2 <- readRDS("./outputs/models/03B_hunting_success_base-model2.rds")
 
 # maybe I can extract the fitted values from the conditional effects
 
-mm1 <- model_get_model_matrix(base_model1)
-mm2 <- model_get_model_matrix(base_model2)
+mm1 <- model_get_model_matrix(model1)
+mm2 <- model_get_model_matrix(model2)
 
 
 
@@ -55,53 +55,153 @@ mm2 <- model_get_model_matrix(base_model2)
 
 # 1. Fixed effects variance
 # Compute variance in fitted values (Fixed effects variance)
-VarF1 <- var(as.vector(mm1%*%fixef(base_model1)))
-VarF2 <- var(as.vector(mm2%*%fixef(base_model2)))
+fitted_tab1 <- data.table(mm1%*%fixef(model1))
+fitted_tab2 <- data.table(mm2%*%fixef(model2))
+
+var_fixef1 <- var(fitted_tab1$Estimate)
+var_fixef2 <- var(fitted_tab2$Estimate)
+
 
 # 2. Distribution-specific variance
 # For a binomial model with OLRE
-VarDS <- pi^2/3
+var_DS <- pi^2/3
 
 # For beta binomial model
 # (phi from the distribution)
 #VarDS1 <- summary(base_model)$spec_pars[1]
 
+
 # 3. Random effects variance
-VarR1 <- VarCorr(base_model1)$mirrors_id$sd[1]^2 + 
-         VarCorr(base_model1)$map_name$sd[1]^2
+# Extract the random effect standard deviations
+ranef1 <- data.table(
+            as_draws_df(model1,
+                        variable = c("^sd_"),
+                        regex = TRUE))
 
-VarR2 <- VarCorr(base_model2)$mirrors_id$sd[1]^2 + 
-         VarCorr(base_model2)$map_name$sd[1]^2
+ranef2 <- data.table(
+            as_draws_df(model2,
+                        variable = c("^sd_"),
+                        regex = TRUE))
 
-VarSE1 <- VarCorr(base_model1)$obs$sd[1]^2
-VarSE2 <- VarCorr(base_model2)$obs$sd[1]^2
+# Standard deviations to variances
+ranef1[, c("map_var", "obs_var", "player_var") := 
+        lapply(.SD, function(x) {x^2}),
+          .SDcols = c(1:3)][, c(4:6) := NULL]
+
+ranef2[, c("map_var", "obs_var", "player_var") := 
+        lapply(.SD, function(x) {x^2}),
+          .SDcols = c(1:3)][, c(4:6) := NULL]
+
+# Variance in maps and players
+var_ranef1 <- mean(ranef1$player_var) + mean(ranef1$map_var)
+var_ranef2 <- mean(ranef2$player_var) + mean(ranef2$map_var)
+
+# Observation-level variance
+var_SE1 <- mean(ranef1$obs_var)
+var_SE2 <- mean(ranef2$obs_var)
+
 
 # 4. Total variance
-# --------------------------
 # binomial model with OLRE
-VarT1 <- VarF1 + VarR1 + VarSE1 + VarDS
-VarT2 <- VarF2 + VarR2 + VarSE2 + VarDS
+var_T1 <- var_fixef1 + var_ranef1 + var_SE1 + var_DS
+var_T2 <- var_fixef2 + var_ranef2 + var_SE2 + var_DS
 
 # beta-binomial model
 #VarT1 <- VarF1 + VarR1 + VarDS1
 
+
 # 5. Compute R-squared values
-# --------------------------
 # Marginal R2
-R2_M1 <- VarF1 /
-         VarT1
-R2_M2 <- VarF2 /
-         VarT2
+R2_marginal1 <- var_fixef1 /
+                var_T1
+R2_marginal2 <- var_fixef2 /
+                var_T2
 
-# Conditional R2 (OLRE is excluded in the numerator to only account for random effects)
-R2_C1 <- (VarF1 + VarR1) / # Fixed effect variance + random effect variance
-          VarT1                   # Total variance
-R2_C2 <- (VarF2 + VarR2) /
-          VarT2
+# Conditional R2
+# (OLRE is excluded in the numerator to only account for random effects)
+ # Fixed effect variance + random effect variance / total variance
+R2_conditional1 <- (var_fixef1 + var_ranef1) /
+                    var_T1
+R2_conditional2 <- (var_fixef2 + var_ranef2) /
+                    var_T2
 
 # =======================================================================
 # =======================================================================
 
+
+
+
+
+# =======================================================================
+# 3. Compute ICCs and their 95% credibility intervals
+# =======================================================================
+
+
+# Compute total variance ------------------------------------------------            
+ran_var[, var_tot := rowSums(ran_var[, 4:7])]
+ran_var2[, var_tot := rowSums(ran_var2[, 4:7])]
+
+
+# Calculate ICCs
+ran_var[, c("icc_id", "icc_map", "icc_obs") := 
+          lapply(.SD, function(x) x / var_tot),
+            .SDcols = c(4:6)]
+
+ran_var2[, c("icc_id", "icc_map", "icc_obs") := 
+          lapply(.SD, function(x) x / var_tot),
+            .SDcols = c(4:6)]
+
+
+# Create table with mean icc and credibility interval
+icc_tab <- data.table(group = c("id", "map", "obs"),
+                      mean = as.numeric(ran_var[, lapply(.SD, mean),
+                                                  .SDcols = c(9:11)]),
+                      rbind(coda::HPDinterval(as.mcmc(ran_var[,9]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,10]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var[,11]), 0.95)
+                            )
+                       )
+
+icc_tab2 <- data.table(group = c("id", "map", "obs"),
+                      mean = as.numeric(ran_var2[, lapply(.SD, mean),
+                                                  .SDcols = c(9:11)]),
+                      rbind(coda::HPDinterval(as.mcmc(ran_var2[,9]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var2[,10]), 0.95),
+                            coda::HPDinterval(as.mcmc(ran_var2[,11]), 0.95)
+                            )
+                       )
+
+# =======================================================================
+# =======================================================================
+
+
+
+
+
+# =======================================================================
+# 4. Save values in table
+# =======================================================================
+
+r2_tab <- as.data.table(cbind(R2_M1, R2_C1, R2_M2, R2_C2))
+
+# Round values for icc table
+round_val <- function (x) {round(x, digits = 3)}
+icc_tab[, c("mean", "lower", "upper") :=
+                lapply(.SD, round_val), 
+                .SDcols = c(2:4)][, model := "model1"]
+
+icc_tab2[, c("mean", "lower", "upper") :=
+                lapply(.SD, round_val), 
+                .SDcols = c(2:4)][, model := "model2"]
+
+# Bind both tables
+icc_table <- rbind(icc_tab, icc_tab2)
+
+capture.output(r2_tab, file = "./outputs/03B_r2-table.txt")
+capture.output(icc_table, file = "./outputs/03B_icc-table.txt")
+
+# =======================================================================
+# =======================================================================
 
 
 
