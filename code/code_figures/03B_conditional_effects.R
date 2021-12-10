@@ -112,25 +112,62 @@ hook_plot2 <- conditional_effects(base_model,
 
 
 # =======================================================================
-# 3. Save the outputs
+# 3. Prepare the sample tables
 # =======================================================================
 
 
-# 1st set of tables -----------------------------------------------------
+# Extract the tables from the objects -----------------------------------
 
-saveRDS(speed_plot1, file = "base-model_speed-fe.rds")
-saveRDS(space_plot1, file = "base-model_space-fe.rds")
-saveRDS(guard_plot1, file = "base-model_guard-fe.rds")
-saveRDS(hook_plot1, file = "base-model_hook-fe.rds")
+speed_tab <- speed_plot1$Zspeed
+space_tab <- space_plot1$Zspace_covered_rate
+guard_tab <- guard_plot1$Zprox_mid_PreyGuarding
+hook_tab  <- hook_plot1$Zhook_start_time
 
 
 
-# 2nd set of tables -----------------------------------------------------
+# Bind the two tables ---------------------------------------------------
 
-saveRDS(speed_plot2, file = "base-model_speed-re.rds")
-saveRDS(space_plot2, file = "base-model_space-re.rds")
-saveRDS(guard_plot2, file = "base-model_guard-re.rds")
-saveRDS(hook_plot2, file = "base-model_hook-re.rds")
+# Here, I extract the prediction intervals from the second set of tables
+speed_tab <- as.data.table(cbind(speed_tab, 
+                   upper_pred_int = speed_plot2$Zspeed[, "upper__"],
+                   lower_pred_int = speed_plot2$Zspeed[, "lower__"]))
+
+space_tab <- as.data.table(cbind(space_tab, 
+                   upper_pred_int = space_plot2$Zspace_covered_rate[, "upper__"],
+                   lower_pred_int = space_plot2$Zspace_covered_rate[, "lower__"]))
+
+guard_tab <- as.data.table(cbind(guard_tab, 
+                   upper_pred_int = guard_plot2$Zprox_mid_PreyGuarding[, "upper__"],
+                   lower_pred_int = guard_plot2$Zprox_mid_PreyGuarding[, "lower__"]))
+
+hook_tab <- as.data.table(cbind(hook_tab, 
+                  upper_pred_int = hook_plot2$Zhook_start_time[, "upper__"],
+                  lower_pred_int = hook_plot2$Zhook_start_time[, "lower__"]))
+
+
+
+# Bind everything together to have 1 table ------------------------------
+
+speed_tab[, x_variable := "speed"]
+space_tab[, x_variable := "space"]
+guard_tab[, x_variable := "guard"]
+hook_tab [, x_variable := "hook"]
+
+full_table <- rbind(speed_tab, space_tab, guard_tab, hook_tab)
+
+# =======================================================================
+# =======================================================================
+
+
+
+
+
+# =======================================================================
+# 4. Save the outputs
+# =======================================================================
+
+saveRDS(full_table,
+        file = "./outputs/R_objects/base-model_draws-table.rds")
 
 # =======================================================================
 # =======================================================================
