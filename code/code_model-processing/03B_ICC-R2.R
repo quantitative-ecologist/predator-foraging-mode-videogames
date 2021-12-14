@@ -66,10 +66,6 @@ var_fixef2 <- var(fitted_tab2$Estimate)
 # For a binomial model with OLRE
 var_DS <- pi^2/3
 
-# For beta binomial model
-# (phi from the distribution)
-#VarDS1 <- summary(base_model)$spec_pars[1]
-
 
 # 3. Random effects variance
 # Extract the random effect standard deviations
@@ -92,38 +88,30 @@ ranef2[, c("map_var", "obs_var", "player_var") :=
         lapply(.SD, function(x) {x^2}),
           .SDcols = c(1:3)][, c(4:6) := NULL]
 
-# Variance in maps and players
-var_ranef1 <- mean(ranef1$player_var) + mean(ranef1$map_var)
-var_ranef2 <- mean(ranef2$player_var) + mean(ranef2$map_var)
-
-# Observation-level variance
-var_SE1 <- mean(ranef1$obs_var)
-var_SE2 <- mean(ranef2$obs_var)
 
 
-# 4. Total variance
-# binomial model with OLRE
-var_T1 <- var_fixef1 + var_ranef1 + var_SE1 + var_DS
-var_T2 <- var_fixef2 + var_ranef2 + var_SE2 + var_DS
+# Compute a table to add all variance components ------------------------
 
-# beta-binomial model
-#VarT1 <- VarF1 + VarR1 + VarDS1
+# Add fixef and ds var and calculate total variance
+var_tab1 <- ranef1[, ":=" (fixef_var = var_fixef1, ds_var = var_DS)][
+  , var_tot := rowSums(ranef1[, 4:8])][
+    , c(1:3) := NULL]
+
+var_tab2 <- ranef2[, ":=" (fixef_var = var_fixef2, ds_var = var_DS)][
+  , var_tot := rowSums(ranef2[, 4:8])][
+    , c(1:3) := NULL]
 
 
-# 5. Compute R-squared values
-# Marginal R2
-R2_marginal1 <- var_fixef1 /
-                var_T1
-R2_marginal2 <- var_fixef2 /
-                var_T2
 
-# Conditional R2
-# (OLRE is excluded in the numerator to only account for random effects)
- # Fixed effect variance + random effect variance / total variance
-R2_conditional1 <- (var_fixef1 + var_ranef1) /
-                    var_T1
-R2_conditional2 <- (var_fixef2 + var_ranef2) /
-                    var_T2
+# Compute the R-squares -------------------------------------------------
+
+var_tab1[, ":=" (r2_marginal = fixef_var / var_tot,
+                 r2_conditional = (fixef_var + map_var + player_var) /
+                                   var_tot)]
+
+var_tab2[, ":=" (r2_marginal = fixef_var / var_tot,
+                 r2_conditional = (fixef_var + map_var + player_var) / 
+                                   var_tot)]
 
 # =======================================================================
 # =======================================================================
@@ -137,37 +125,33 @@ R2_conditional2 <- (var_fixef2 + var_ranef2) /
 # =======================================================================
 
 
-# Compute total variance ------------------------------------------------            
-ran_var[, var_tot := rowSums(ran_var[, 4:7])]
-ran_var2[, var_tot := rowSums(ran_var2[, 4:7])]
+# Calculate ICCs --------------------------------------------------------
 
-
-# Calculate ICCs
-ran_var[, c("icc_id", "icc_map", "icc_obs") := 
+ranef1[, c("icc_map", "icc_obs", "icc_player") := 
           lapply(.SD, function(x) x / var_tot),
-            .SDcols = c(4:6)]
+            .SDcols = c(1:3)]
 
-ran_var2[, c("icc_id", "icc_map", "icc_obs") := 
+ranef2[, c("icc_map", "icc_obs", "icc_player") := 
           lapply(.SD, function(x) x / var_tot),
-            .SDcols = c(4:6)]
+            .SDcols = c(1:3)]
 
 
 # Create table with mean icc and credibility interval
-icc_tab <- data.table(group = c("id", "map", "obs"),
-                      mean = as.numeric(ran_var[, lapply(.SD, mean),
+icc_tab <- data.table(group = c("map", "obs", "player"),
+                      mean = as.numeric(ranef1[, lapply(.SD, mean),
                                                   .SDcols = c(9:11)]),
-                      rbind(coda::HPDinterval(as.mcmc(ran_var[,9]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,10]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var[,11]), 0.95)
+                      rbind(coda::HPDinterval(as.mcmc(ranef1[, 9]), 0.95),
+                            coda::HPDinterval(as.mcmc(ranef1[, 10]), 0.95),
+                            coda::HPDinterval(as.mcmc(ranef1[, 11]), 0.95)
                             )
                        )
 
-icc_tab2 <- data.table(group = c("id", "map", "obs"),
-                      mean = as.numeric(ran_var2[, lapply(.SD, mean),
+icc_tab2 <- data.table(group = c("map", "obs", "player"),
+                      mean = as.numeric(ranef2[, lapply(.SD, mean),
                                                   .SDcols = c(9:11)]),
-                      rbind(coda::HPDinterval(as.mcmc(ran_var2[,9]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var2[,10]), 0.95),
-                            coda::HPDinterval(as.mcmc(ran_var2[,11]), 0.95)
+                      rbind(coda::HPDinterval(as.mcmc(ranef2[, 9]), 0.95),
+                            coda::HPDinterval(as.mcmc(ranef2[, 10]), 0.95),
+                            coda::HPDinterval(as.mcmc(ranef2[, 11]), 0.95)
                             )
                        )
 
@@ -182,10 +166,41 @@ icc_tab2 <- data.table(group = c("id", "map", "obs"),
 # 4. Save values in table
 # =======================================================================
 
-r2_tab <- as.data.table(cbind(R2_M1, R2_C1, R2_M2, R2_C2))
 
-# Round values for icc table
+# R-square table --------------------------------------------------------
+
+ci_marginal1    <- coda::HPDinterval(as.mcmc(var_tab1[, r2_marginal]), 0.95)
+ci_conditional1 <- coda::HPDinterval(as.mcmc(var_tab1[, r2_conditional]), 0.95)
+ci_marginal2    <- coda::HPDinterval(as.mcmc(var_tab2[, r2_marginal]), 0.95)
+ci_conditional2 <- coda::HPDinterval(as.mcmc(var_tab2[, r2_conditional]), 0.95)
+
+r2_tab <- data.table(model = cbind(c("model1", "model1", "model2", "model2")),
+                     r2_type = cbind(c("r2_marginal",
+                                       "r2_conditional",
+                                       "r2_marginal",
+                                       "r2_conditional")),
+                     value = rbind(mean(var_tab1[, r2_marginal]),
+                                   mean(var_tab1[, r2_conditional]),
+                                   mean(var_tab2[, r2_marginal]),
+                                   mean(var_tab2[, r2_conditional])),
+                     rbind(ci_marginal1,
+                           ci_conditional1,
+                           ci_marginal2,
+                           ci_conditional2))
+
+setnames(r2_tab, old = c("model.V1", "r2_type.V1", "value.V1"),
+                 new = c("model", "r2_type", "value"))
+
+
+
+# Round values ----------------------------------------------------------
+
 round_val <- function (x) {round(x, digits = 3)}
+
+r2_tab[, c("value", "lower", "upper") :=
+                lapply(.SD, round_val), 
+                .SDcols = c(3:5)]
+
 icc_tab[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
                 .SDcols = c(2:4)][, model := "model1"]
@@ -197,8 +212,8 @@ icc_tab2[, c("mean", "lower", "upper") :=
 # Bind both tables
 icc_table <- rbind(icc_tab, icc_tab2)
 
-capture.output(r2_tab, file = "./outputs/03B_r2-table.txt")
-capture.output(icc_table, file = "./outputs/03B_icc-table.txt")
+capture.output(r2_tab, file = "./outputs/model_diagnostics/03B_r2-table.txt")
+capture.output(icc_table, file = "./outputs/model_diagnostics/03B_icc-table.txt")
 
 # =======================================================================
 # =======================================================================
