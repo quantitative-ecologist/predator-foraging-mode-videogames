@@ -209,11 +209,17 @@ icc_tab2[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
                 .SDcols = c(2:4)][, model := "model2"]
 
-# Bind both tables
+# Bind the two icc tables
 icc_table <- rbind(icc_tab, icc_tab2)
 
-capture.output(r2_tab, file = "./outputs/model_diagnostics/03B_r2-table.txt")
-capture.output(icc_table, file = "./outputs/model_diagnostics/03B_icc-table.txt")
+
+
+# Save the outputs ------------------------------------------------------
+
+capture.output(r2_tab,
+               file = "./outputs/model_diagnostics/03B_r2-table.txt")
+capture.output(icc_table,
+               file = "./outputs/model_diagnostics/03B_icc-table.txt")
 
 # =======================================================================
 # =======================================================================
