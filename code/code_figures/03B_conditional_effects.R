@@ -167,7 +167,7 @@ full_table <- rbind(speed_tab, space_tab, guard_tab, hook_tab)
 # =======================================================================
 
 saveRDS(full_table,
-        file = "./outputs/R_objects/base-model_draws-table.rds")
+        file = "base-model_draws-table.rds")
 
 # =======================================================================
 # =======================================================================
