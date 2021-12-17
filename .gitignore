@@ -14,8 +14,9 @@ manuscript/*.log
 manuscript/*.aux
 manuscript/*.out
 
-# ignore docx version
+# ignore manuscript folders for review
 manuscript/word
+manuscript/tracked_changes
 
 # Files prior to first review Behavioural Ecology
 code/before-review-BehavEcol
