@@ -397,7 +397,7 @@ panel_plot <- annotate_figure(panel_plot,
 
 # Export the figure -----------------------------------------------------
 
-ggexport(panel_plot, filename = "./outputs/04_figure3.png",
+ggexport(panel_plot, filename = "./outputs/figures/manuscript_figures/04_figure3.png",
          width = 4500, height = 2500, res = 300)
 
 # =======================================================================
