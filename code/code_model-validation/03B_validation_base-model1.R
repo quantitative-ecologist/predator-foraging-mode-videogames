@@ -58,10 +58,10 @@ base_model <- readRDS("03B_hunting_success_base-model1.rds")
 #                   chains = 1)
 
 
-cv_object <-loo(base_model,
-                chains = 1,
-                cores = 40,
-                moment_match = TRUE)
+cv_object <-loo_subsample(base_model,
+                          chains = 1,
+                          cores = 40,
+                          moment_match = TRUE)
 
 saveRDS(cv_object, file = "loo-base_model1.rds")
 
