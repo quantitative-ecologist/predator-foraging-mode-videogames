@@ -33,31 +33,31 @@ library(parallel)
 
 
 
-# import dataset --------------------------------------------------------
+# import dataset ---------------------------------------------------------
 
 # Folder path Compute Canada
 folder <- file.path("/home", "maxime11", "projects", "def-monti", 
                     "maxime11", "phd_project", "data")
 
 data <- fread(file.path(folder, "merged-data2021.csv"),
-              select = c("player_id", "cumul_xp_total",
-                         "total_xp",
-                         "match_id", "character_name",
-                         "map_name", "game_duration", 
+              select = c("player_id", "match_id", 
+                         "character_name", "map_name",
+                         "cumul_xp_total", "total_xp", 
+                         "game_duration", 
                          "speed", "space_covered_rate",
-                         "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "prox_mid_PreyGuarding", "hook_start_time",
+                         "prey_avg_speed", "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # When working locally
 #data <- fread("./data/merged-data2021.csv",
-#              select = c("player_id", "cumul_xp_total",
-#                         "total_xp",
-#                         "match_id", "character_name",
-#                         "map_name", "game_duration",
+#              select = c("player_id", "match_id", 
+#                         "character_name", "map_name",
+#                         "cumul_xp_total", "total_xp", 
+#                         "game_duration", 
 #                         "speed", "space_covered_rate",
-#                         "prox_mid_PreyGuarding",
-#                         "hook_start_time"),
+#                         "prox_mid_PreyGuarding", "hook_start_time",
+#                         "prey_avg_speed", "prey_avg_space_covered_rate"),
 #                         stringsAsFactors = TRUE)
 
 # =======================================================================
@@ -100,17 +100,17 @@ data_novice <- data[cumul_xp_total <= 53]
 
 
 
-
 # =======================================================================
 # 3. Prepare variables for the model
 # =======================================================================
 
 
-# Transform -------------------------------------------------------------
+# Transform --------------------------------------------------------------
 
-data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
-                    hook_start_time = log(hook_start_time + 1),
-                    game_duration = sqrt(game_duration))]
+# Transform the data even though it is not perfect
+data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
+             hook_start_time = log(hook_start_time + 1),
+             game_duration = sqrt(game_duration))]
 
 
 
@@ -119,15 +119,15 @@ data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data_novice[, c("Zgame_duration", "Zspeed",
-                "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-                "Zhook_start_time") :=
-              lapply(.SD, standardize), 
-              .SDcols = c(7:11)]
+data[, c("Zgame_duration", "Zspeed",
+         "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
+         "Zhook_start_time", "Zprey_avg_speed", 
+         "Zprey_avg_space_covered_rate") :=
+                lapply(.SD, standardize), 
+                .SDcols = c(5:11)]
 
 # =======================================================================
 # =======================================================================
-
 
 
 
