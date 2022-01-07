@@ -150,12 +150,7 @@ priors <- c(
   # priors on fixed effects
   set_prior("normal(0, 2)", 
             class = "b",
-            coef = "Zprey_avg_speed",
-            resp = c("Zspeed", "Zspacecoveredrate", 
-                     "ZproxmidPreyGuarding", "Zhookstarttime")),
-  set_prior("normal(0, 2)", 
-            class = "b",
-            coef = "Zprey_avg_space_covered_rate",
+            coef = c("Zprey_avg_speed", "Zprey_avg_space_covered_rate"),
             resp = c("Zspeed", "Zspacecoveredrate", 
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)",
@@ -198,9 +193,9 @@ mv_model <- brm(speed_form +
                 guard_form +   
                 hook_form +
                 set_rescor(TRUE),
-                warmup = 3000, 
-                iter = 11000,
-                thin = 32,
+                warmup = 500, 
+                iter = 2500,
+                thin = 8,
                 chains = 4, 
                 inits = "0",
                 threads = threading(10),
@@ -208,7 +203,7 @@ mv_model <- brm(speed_form +
                 seed = 123,
                 prior = priors,
                 control = list(adapt_delta = 0.95),
-                save_pars = save_pars(all = TRUE),
+                #save_pars = save_pars(all = TRUE),
                 sample_prior = TRUE,
                 data = data)
 
