@@ -74,28 +74,41 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
 
 # Check the quantiles of experience -------------------------------------
 
-quantile(data[, total_xp])
+players <- unique(data[,.(player_id, total_xp)])
+
+quantile(players[, total_xp])
 #  0%  25%  50%  75% 100% 
-#   1   53  135  280 1059
+#   1    2    8   31 1059
+
+length(players[total_xp <= 31, player_id])
+# 1788
+
+length(players[total_xp > 31, player_id])
+# 590
+
+# Proportion on player base
+nrow(players[total_xp <= 31]) / nrow(players) # 75%
+nrow(players[total_xp > 31]) / nrow(players) # 25%
 
 
 
-# Check proportion of players by xp -------------------------------------
+# Check proportion on total dataset -------------------------------------
 
-nrow(data[cumul_xp_total <= 53]) / nrow(data)
-# 0.5150233
+nrow(data[cumul_xp_total <= 31]) / nrow(data)
+# 0.3842849
 
-nrow(data[cumul_xp_total > 53]) / nrow(data)
-# 0.4849767
+nrow(data[cumul_xp_total > 31]) / nrow(data)
+# 0.6157151
 
 
 
 # Seperate the data -----------------------------------------------------
 
-data_novice <- data[cumul_xp_total <= 53]
+data_novice <- data[cumul_xp_total <= 31]
 
 # =======================================================================
 # =======================================================================
+
 
 
 
@@ -124,7 +137,7 @@ data[, c("Zgame_duration", "Zspeed",
          "Zhook_start_time", "Zprey_avg_speed", 
          "Zprey_avg_space_covered_rate") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(5:11)]
+                .SDcols = c(7:13)]
 
 # =======================================================================
 # =======================================================================
@@ -141,20 +154,24 @@ data[, c("Zgame_duration", "Zspeed",
 
 # Each model will fit a seperate var-cov matrix for each random effect
 speed_form <- bf(Zspeed ~
-                  1 +
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 space_form <- bf(Zspace_covered_rate ~
-                  1 +
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
                   (1 |c| player_id)) +
                   gaussian()
 
 guard_form <- bf(Zprox_mid_PreyGuarding ~
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -162,6 +179,8 @@ guard_form <- bf(Zprox_mid_PreyGuarding ~
                   gaussian()
 
 hook_form <- bf(Zhook_start_time ~
+                  Zprey_avg_speed +
+                  Zprey_avg_space_covered_rate +
                   Zgame_duration +
                   (1 |a| map_name) +
                   (1 |b| character_name) +
@@ -174,6 +193,12 @@ hook_form <- bf(Zhook_start_time ~
 
 priors <- c(
   # priors on fixed effects
+  set_prior("normal(0, 2)",
+            class = "b",
+            coef = c("Zprey_avg_speed", 
+                     "prey_avg_space_covered_rate"),
+            resp = c("Zspeed", "Zspacecoveredrate",
+                     "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)",
             class = "b",
             coef = "Zgame_duration",
@@ -214,9 +239,9 @@ mv_model_novice <- brm(speed_form +
                        guard_form +   
                        hook_form +
                        set_rescor(TRUE),
-                       warmup = 3000, 
-                       iter = 11000,
-                       thin = 32,
+                       warmup = 500, 
+                       iter = 2500,
+                       thin = 8,
                        chains = 4, 
                        inits = "0",
                        threads = threading(10),
@@ -224,7 +249,7 @@ mv_model_novice <- brm(speed_form +
                        seed = 123,
                        prior = priors,
                        control = list(adapt_delta = 0.95),
-                       save_pars = save_pars(all = TRUE),
+                     #  save_pars = save_pars(all = TRUE),
                        sample_prior = TRUE,
                        data = data_novice)
 
