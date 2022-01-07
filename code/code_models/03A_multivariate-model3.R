@@ -121,7 +121,7 @@ data_novice <- data[cumul_xp_total <= 31]
 # Transform --------------------------------------------------------------
 
 # Transform the data even though it is not perfect
-data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
+data_novice[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
              hook_start_time = log(hook_start_time + 1),
              game_duration = sqrt(game_duration))]
 
@@ -132,7 +132,7 @@ data[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Zgame_duration", "Zspeed",
+data_novice[, c("Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
          "Zhook_start_time", "Zprey_avg_speed", 
          "Zprey_avg_space_covered_rate") :=
@@ -196,7 +196,7 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b",
             coef = c("Zprey_avg_speed", 
-                     "prey_avg_space_covered_rate"),
+                     "Zprey_avg_space_covered_rate"),
             resp = c("Zspeed", "Zspacecoveredrate",
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)",

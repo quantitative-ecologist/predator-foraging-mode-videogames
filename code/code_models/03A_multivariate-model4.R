@@ -40,13 +40,13 @@ folder <- file.path("/home", "maxime11", "projects", "def-monti",
                     "maxime11", "phd_project", "data")
 
 data <- fread(file.path(folder, "merged-data2021.csv"),
-              select = c("player_id", "cumul_xp_total",
-                         "total_xp",
-                         "match_id", "character_name",
-                         "map_name", "game_duration", 
+              select = c("player_id", "match_id", 
+                         "character_name", "map_name",
+                         "cumul_xp_total", "total_xp", 
+                         "game_duration", 
                          "speed", "space_covered_rate",
-                         "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "prox_mid_PreyGuarding", "hook_start_time",
+                         "prey_avg_speed", "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # When working locally
@@ -131,7 +131,7 @@ data_experienced[, ":=" (prox_mid_PreyGuarding = log(prox_mid_PreyGuarding + 1),
 standardize <- function (x) {(x - mean(x, na.rm = TRUE)) / 
                               sd(x, na.rm = TRUE)}
 
-data[, c("Zgame_duration", "Zspeed",
+data_experienced[, c("Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
          "Zhook_start_time", "Zprey_avg_speed", 
          "Zprey_avg_space_covered_rate") :=
@@ -196,7 +196,7 @@ priors <- c(
   set_prior("normal(0, 2)",
             class = "b",
             coef = c("Zprey_avg_speed", 
-                     "prey_avg_space_covered_rate"),
+                     "Zprey_avg_space_covered_rate"),
             resp = c("Zspeed", "Zspacecoveredrate",
                      "ZproxmidPreyGuarding", "Zhookstarttime")),
   set_prior("normal(0, 2)",
