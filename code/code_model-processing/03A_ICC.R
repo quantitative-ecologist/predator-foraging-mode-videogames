@@ -27,6 +27,11 @@ model2 <- readRDS("./outputs/models/03A_multivariate-model2.rds")
 model3 <- readRDS("./outputs/models/03A_multivariate-model-novice.rds")
 model4 <- readRDS("./outputs/models/03A_multivariate-model-experienced.rds")
 
+# Check the size of objects
+print(object.size(model1), units = "MB")
+print(object.size(model2), units = "MB")
+print(object.size(model3), units = "MB")
+print(object.size(model4), units = "MB")
 
 # =======================================================================
 # =======================================================================
@@ -56,6 +61,7 @@ ran_var3 <- data.table(
                 as_draws_df(model3,
                             variable = c("^sd_", "sigma_"),
                             regex = TRUE))
+
 ran_var4 <- data.table(
                 as_draws_df(model4,
                             variable = c("^sd_", "sigma_"),
@@ -222,12 +228,12 @@ upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
 
 icc_tab1 <- data.table(group = c("speedicc_id", "spaceicc_id",
                                  "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map",
-                                "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char",
-                                "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid",
-                                "guardicc_resid", "hookicc_resid"),
+                                 "speedicc_map", "spaceicc_map",
+                                 "guardicc_map", "hookicc_map",
+                                 "speedicc_char", "spaceicc_char",
+                                 "guardicc_char", "hookicc_char",
+                                 "speedicc_resid", "spaceicc_resid",
+                                 "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var1[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var1[, lapply(.SD, lower_interval),
@@ -238,12 +244,12 @@ icc_tab1 <- data.table(group = c("speedicc_id", "spaceicc_id",
 
 icc_tab2 <- data.table(group = c("speedicc_id", "spaceicc_id",
                                  "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map",
-                                "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char",
-                                "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid",
-                                "guardicc_resid", "hookicc_resid"),
+                                 "speedicc_map", "spaceicc_map",
+                                 "guardicc_map", "hookicc_map",
+                                 "speedicc_char", "spaceicc_char",
+                                 "guardicc_char", "hookicc_char",
+                                 "speedicc_resid", "spaceicc_resid",
+                                 "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var2[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var2[, lapply(.SD, lower_interval),
@@ -254,12 +260,12 @@ icc_tab2 <- data.table(group = c("speedicc_id", "spaceicc_id",
 
 icc_tab3 <- data.table(group = c("speedicc_id", "spaceicc_id",
                                  "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map",
-                                "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char",
-                                "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid",
-                                "guardicc_resid", "hookicc_resid"),
+                                 "speedicc_map", "spaceicc_map",
+                                 "guardicc_map", "hookicc_map",
+                                 "speedicc_char", "spaceicc_char",
+                                 "guardicc_char", "hookicc_char",
+                                 "speedicc_resid", "spaceicc_resid",
+                                 "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var3[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var3[, lapply(.SD, lower_interval),
@@ -270,12 +276,12 @@ icc_tab3 <- data.table(group = c("speedicc_id", "spaceicc_id",
 
 icc_tab4 <- data.table(group = c("speedicc_id", "spaceicc_id",
                                  "guardicc_id", "hookicc_id",
-                                "speedicc_map", "spaceicc_map",
-                                "guardicc_map", "hookicc_map",
-                                "speedicc_char", "spaceicc_char",
-                                "guardicc_char", "hookicc_char",
-                                "speedicc_resid", "spaceicc_resid",
-                                "guardicc_resid", "hookicc_resid"),
+                                 "speedicc_map", "spaceicc_map",
+                                 "guardicc_map", "hookicc_map",
+                                 "speedicc_char", "spaceicc_char",
+                                 "guardicc_char", "hookicc_char",
+                                 "speedicc_resid", "spaceicc_resid",
+                                 "guardicc_resid", "hookicc_resid"),
                        mean = as.numeric(ran_var4[, lapply(.SD, mean),
                                                    .SDcols = c(21:36)]),
                        lower = as.numeric(ran_var4[, lapply(.SD, lower_interval),

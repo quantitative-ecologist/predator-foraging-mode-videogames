@@ -26,7 +26,7 @@ library(export)
 library(RColorBrewer)
 
 
-# Import libraries ------------------------------------------------------
+# Import model objects --------------------------------------------------
 
 model <- readRDS("./outputs/models/03A_multivariate-model2.rds")
 icc_tab <- readRDS("./outputs/R_objects/03A_icc-table2.rds")
