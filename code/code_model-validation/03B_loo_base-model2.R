@@ -1,6 +1,6 @@
 # ==========================================================================
 
-#              PSIS-LOO for the base hunting success model 1               #
+#              PSIS-LOO for the base hunting success model 2               #
 
 # ==========================================================================
 
@@ -155,10 +155,10 @@ base_model <- brm(formula = model_formula,
 # 5. Perform PSIS-leave-one-out cross-validation
 # =======================================================================
 
-loo1 <- loo(base_model,
-            moment_match = TRUE)
+loo <- loo(base_model,
+           moment_match = TRUE)
 
-saveRDS(loo1, file = "03B_loo_base-model2.rds")
+saveRDS(loo, file = "03B_loo_base-model2.rds")
 
 # =======================================================================
 # =======================================================================

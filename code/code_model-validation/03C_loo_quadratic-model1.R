@@ -1,6 +1,6 @@
 # ==========================================================================
 
-#              PSIS-LOO for the base hunting success model 1               #
+#              PSIS-LOO for the base hunting success model 3               #
 
 # ==========================================================================
 
@@ -38,7 +38,9 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          "game_duration", "speed",
                          "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time",
+                         "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # Add observation-level random effect
@@ -71,9 +73,10 @@ standardize <- function (x) {(x - mean(x, na.rm = TRUE)) /
 
 data[, c("Zgame_duration", "Zspeed",
          "Zspace_covered_rate", "Zprox_mid_PreyGuarding",
-         "Zhook_start_time") :=
+         "Zhook_start_time", "Zprey_avg_speed",
+         "Zprey_avg_space_covered_rate") :=
                 lapply(.SD, standardize), 
-                .SDcols = c(5:9)]
+                .SDcols = c(5:11)]
 
 # ==========================================================================
 # ==========================================================================
@@ -100,16 +103,29 @@ priors <- c(
 
 
 
-# linear model formula -----------------------------------------------------
+# Quadratic model formula --------------------------------------------------
 
 model_formula <- brmsformula(hunting_success | trials(4) ~
-                                        Zspeed +
-                                        Zspace_covered_rate +
-                                        Zprox_mid_PreyGuarding +
-                                        Zhook_start_time +
-                                        Zgame_duration +
-                                        (1 | map_name) +
-                                        (1 | player_id))
+                               # Quadratic terms
+                               I(Zspeed^2) +
+                               I(Zspace_covered_rate^2) +
+                               I(Zprox_mid_PreyGuarding^2) +
+                               I(Zhook_start_time^2) +
+                               # Linear terms
+                               Zspeed +
+                               Zspace_covered_rate +
+                               Zprox_mid_PreyGuarding +
+                               Zhook_start_time +
+                               Zgame_duration +
+                               # Predator trait covariances
+                               Zspeed : Zspace_covered_rate +
+                               Zspeed : Zprox_mid_PreyGuarding +
+                               Zspeed : Zhook_start_time +
+                               Zspace_covered_rate : Zprox_mid_PreyGuarding +
+                               Zspace_covered_rate : Zhook_start_time +
+                               Zprox_mid_PreyGuarding : Zhook_start_time +
+                               (1 | map_name) +
+                               (1 | player_id))
 
 # ==========================================================================
 # ==========================================================================
@@ -125,18 +141,18 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 
 # Model specifications -----------------------------------------------------
 
-base_model <- brm(formula = model_formula,
-                  family = binomial(link = "logit"),
-                  warmup = 500, 
-                  iter = 2500,
-                  thin = 8,
-                  chains = 4, 
-                  inits = "0", 
-                  seed = 123,
-                  prior = priors,
-                  save_pars = save_pars(all = TRUE), 
-                  control = list(adapt_delta = 0.95),
-                  data = data)
+quadratic_model <- brm(formula = model_formula,
+                       family = binomial(link = "logit"),
+                       warmup = 500, 
+                       iter = 2500,
+                       thin = 8,
+                       chains = 4, 
+                       inits = "0", 
+                       seed = 123,
+                       prior = priors,
+                       save_pars = save_pars(all = TRUE), 
+                       control = list(adapt_delta = 0.95),
+                       data = data)
 
 # ==========================================================================
 # ==========================================================================
@@ -149,10 +165,10 @@ base_model <- brm(formula = model_formula,
 # 5. Perform PSIS-leave-one-out cross-validation
 # =======================================================================
 
-loo <- loo(base_model,
-           moment_match = TRUE)
+loo <- loo(quadratic_model,
+            moment_match = TRUE)
 
-saveRDS(loo, file = "03B_loo_base-model1.rds")
+saveRDS(loo, file = "03C_loo_quadratic-model1.rds")
 
 # =======================================================================
 # =======================================================================
