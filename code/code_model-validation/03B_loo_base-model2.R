@@ -1,17 +1,9 @@
 # ==========================================================================
 
-#                  Quadratic hunting success analysis                      #
+#              PSIS-LOO for the base hunting success model 1               #
 
 # ==========================================================================
 
-# Code to run the quadratic hunting success analysis
-# This script was run on Calcul Canada's Cedar supercomputer
-
-# This model quantifies the quadratic relationship between hunting behaviour 
-# and hunting success. It also evaluates the correlated effect of predator 
-# and prey traits on hunting success.
-
-# Hunting success = number of prey captured.
 
 # Detect number of cores
 options(mc.cores = parallel::detectCores())
@@ -30,7 +22,6 @@ options(mc.cores = parallel::detectCores())
 
 library(data.table)
 library(brms)
-#library(cmdstanr)
 
 
 
@@ -53,7 +44,7 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          stringsAsFactors = TRUE)
 
 # Add observation-level random effect
-data$obs <- 1:nrow(data)
+#data$obs <- 1:nrow(data)
 
 # ==========================================================================
 # ==========================================================================
@@ -61,8 +52,9 @@ data$obs <- 1:nrow(data)
 
 
 
+
 # ==========================================================================
-# 2. Prepare the variables for the model
+# 2. Prepare variables for the model
 # ==========================================================================
 
 
@@ -111,17 +103,9 @@ priors <- c(
 
 
 
-# Quadratic model formula --------------------------------------------------
+# linear model formula -----------------------------------------------------
 
 model_formula <- brmsformula(hunting_success | trials(4) ~
-                                        # Quadratic terms
-                                        I(Zspeed^2) +
-                                        I(Zspace_covered_rate^2) +
-                                        I(Zprox_mid_PreyGuarding^2) +
-                                        I(Zhook_start_time^2) +
-                                        I(Zprey_avg_speed^2) +
-                                        I(Zprey_avg_space_covered_rate^2) +
-                                        # Linear terms
                                         Zspeed +
                                         Zspace_covered_rate +
                                         Zprox_mid_PreyGuarding +
@@ -129,20 +113,6 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
                                         Zprey_avg_speed +
                                         Zprey_avg_space_covered_rate +
                                         Zgame_duration +
-                                        # Predator trait covariances
-                                        Zspeed : Zspace_covered_rate +
-                                        Zspeed : Zprox_mid_PreyGuarding +
-                                        Zspeed : Zhook_start_time +
-                                        Zspace_covered_rate : Zprox_mid_PreyGuarding +
-                                        Zspace_covered_rate : Zhook_start_time +
-                                        Zprox_mid_PreyGuarding : Zhook_start_time +
-                                        # Predator-prey trait covariances
-                                        Zspeed : Zprey_avg_speed +
-                                        Zspeed : Zprey_avg_space_covered_rate +
-                                        Zspace_covered_rate : Zprey_avg_speed +
-                                        Zspace_covered_rate : Zprey_avg_space_covered_rate +
-                                        Zprox_mid_PreyGuarding : Zprey_avg_speed +
-                                        Zprox_mid_PreyGuarding : Zprey_avg_space_covered_rate +
                                         (1 | map_name) +
                                         (1 | player_id) +
                                         (1 | obs))
@@ -161,27 +131,34 @@ model_formula <- brmsformula(hunting_success | trials(4) ~
 
 # Model specifications -----------------------------------------------------
 
-quadratic_model <- brm(formula = model_formula,
-                       family = binomial(link = "logit"),
-                       warmup = 500, 
-                       iter = 2500,
-                       thin = 8,
-                       chains = 4,
-                       inits = "0",
-                       #threads = threading(10),
-                       #backend = "cmdstanr",
-                       seed = 123,
-                       prior = priors,
-                       control = list(adapt_delta = 0.95),
-                       #save_pars = save_pars(all = TRUE),
-                       sample_prior = TRUE,
-                       data = data)
-
-
-
-# Save the model object ----------------------------------------------------
-
-saveRDS(quadratic_model, file = "03C_hunting_success_quadratic-model2.rds")
+base_model <- brm(formula = model_formula,
+                  family = binomial(link = "logit"),
+                  warmup = 500, 
+                  iter = 2500,
+                  thin = 8,
+                  chains = 4, 
+                  inits = "0", 
+                  seed = 123,
+                  prior = priors,
+                  save_pars = save_pars(all = TRUE), 
+                  control = list(adapt_delta = 0.95),
+                  data = data)
 
 # ==========================================================================
 # ==========================================================================
+
+
+
+
+
+# =======================================================================
+# 5. Perform PSIS-leave-one-out cross-validation
+# =======================================================================
+
+loo1 <- loo(base_model,
+            moment_match = TRUE)
+
+saveRDS(loo1, file = "03B_loo_base-model2.rds")
+
+# =======================================================================
+# =======================================================================
