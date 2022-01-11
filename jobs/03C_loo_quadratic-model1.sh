@@ -13,4 +13,4 @@ module load r-bundle-bioconductor/3.14
 module load r/4.1.2
 
 #export R_LIBS=~/.local/R/$EBVERSIONR/
-Rscript --no-save --no-restore 03B_loo_quadratic-model1.R
+Rscript --no-save --no-restore 03C_loo_quadratic-model1.R
