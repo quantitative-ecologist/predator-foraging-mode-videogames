@@ -46,6 +46,8 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
 # Add observation-level random effect
 #data$obs <- 1:nrow(data)
 
+data <- na.omit(data)
+
 # ==========================================================================
 # ==========================================================================
 

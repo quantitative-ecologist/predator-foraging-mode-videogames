@@ -38,11 +38,15 @@ data <- fread(file.path(folder, "merged-data2021.csv"),
                          "game_duration", "speed",
                          "space_covered_rate",
                          "prox_mid_PreyGuarding",
-                         "hook_start_time"),
+                         "hook_start_time",
+                         "prey_avg_speed",
+                         "prey_avg_space_covered_rate"),
                          stringsAsFactors = TRUE)
 
 # Add observation-level random effect
 #data$obs <- 1:nrow(data)
+
+data <- na.omit(data)
 
 # ==========================================================================
 # ==========================================================================
