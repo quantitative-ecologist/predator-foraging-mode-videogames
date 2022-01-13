@@ -1,7 +1,0 @@
-    group  mean lower upper  model
-1:    map 0.001 0.001 0.002 model1
-2:    obs 0.148 0.144 0.152 model1
-3: player 0.055 0.050 0.061 model1
-4:    map 0.012 0.006 0.018 model2
-5:    obs 0.100 0.097 0.104 model2
-6: player 0.049 0.045 0.054 model2

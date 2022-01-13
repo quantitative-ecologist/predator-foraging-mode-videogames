@@ -1,6 +1,6 @@
 # =======================================================================
 
-#                   ICCs and R2 for the base models                     #
+#                 ICCs and R2 for the quadratic models                  #
 
 # =======================================================================
 
@@ -23,8 +23,8 @@ library(broom.helpers)
 
 # Load models -----------------------------------------------------------
 
-model1 <- readRDS("./outputs/models/03B_hunting_success_base-model1.rds")
-model2 <- readRDS("./outputs/models/03B_hunting_success_base-model2.rds")
+model1 <- readRDS("./outputs/models/03C_hunting_success_quadratic-model1.rds")
+model2 <- readRDS("./outputs/models/03C_hunting_success_quadratic-model2.rds")
 
 
 # =======================================================================
@@ -178,8 +178,10 @@ ci_marginal2    <- coda::HPDinterval(as.mcmc(var_tab2[, r2_marginal]),
 ci_conditional2 <- coda::HPDinterval(as.mcmc(var_tab2[, r2_conditional]),
                                      0.95)
 
-r2_tab <- data.table(model = cbind(c("base model1", "base model1",
-                                     "base model2", "base model2")),
+r2_tab <- data.table(model = cbind(c("quadratic model1",
+                                     "quadratic model1",
+                                     "quadratic model2",
+                                     "quadratic model2")),
                      r2_type = cbind(c("r2_marginal",
                                        "r2_conditional",
                                        "r2_marginal",
@@ -208,11 +210,11 @@ r2_tab[, c("value", "lower", "upper") :=
 
 icc_tab[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
-                .SDcols = c(2:4)][, model := "base model1"]
+                .SDcols = c(2:4)][, model := "quadratic model1"]
 
 icc_tab2[, c("mean", "lower", "upper") :=
                 lapply(.SD, round_val), 
-                .SDcols = c(2:4)][, model := "base model2"]
+                .SDcols = c(2:4)][, model := "quadratic model2"]
 
 # Bind the two icc tables
 icc_table <- rbind(icc_tab, icc_tab2)
@@ -221,8 +223,8 @@ icc_table <- rbind(icc_tab, icc_tab2)
 
 # Save the outputs ------------------------------------------------------
 
-saveRDS(r2_tab, file = "./outputs/R_objects/03B_r2-table.rds")
-saveRDS(icc_table, file = "./outputs/R_objects/03B_icc-table.rds")
+saveRDS(r2_tab, file = "./outputs/R_objects/03C_r2-table.rds")
+saveRDS(icc_table, file = "./outputs/R_objects/03C_icc-table.rds")
 
 # =======================================================================
 # =======================================================================
