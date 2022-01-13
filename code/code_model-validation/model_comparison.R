@@ -55,8 +55,8 @@ setnames(loo_table, "rn", "model")
 
 # Change the model names for proper names
 loo_table[1, 1 := "quadratic model2"]
-loo_table[2, 1 := "quadratic model1"]
-loo_table[3, 1 := "base model2"]
+loo_table[2, 1 := "base model2"]
+loo_table[3, 1 := "quadratic model1"]
 loo_table[4, 1 := "base model1"]
 
 # Keep the columns of interest
