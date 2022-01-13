@@ -62,6 +62,11 @@ loo_table[4, 1 := "base model1"]
 # Keep the columns of interest
 loo_table[, c(6:9) := NULL]
 
+# Round the values to 2 digits
+loo_table[, c(2:5) :=
+            lapply(.SD, function (x) {round(x, digits = 2)}),
+            .SDcols = c(2:5)]
+
 # =======================================================================
 # =======================================================================
 
