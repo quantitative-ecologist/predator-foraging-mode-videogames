@@ -228,7 +228,7 @@ After removing prey behavior as linear fixed effects (model 2), the percentage o
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table S2:} ICC estimates of the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
+\caption*{\textbf{Table S2:} Posterior means of the ICC estimates for the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
 \includegraphics[width = \linewidth]{tableS2.png}
 \end{figure}
 
