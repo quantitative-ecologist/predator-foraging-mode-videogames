@@ -28,7 +28,7 @@ library(data.table)
 
 # Import the model ------------------------------------------------------
 
-quad_model <- readRDS("03C_hunting_success_quadratic-model1.rds")
+quad_model <- readRDS("03C_hunting_success_quadratic-model2.rds")
 
 # =======================================================================
 # =======================================================================
@@ -72,7 +72,19 @@ hook_plot1 <- conditional_effects(quad_model,
                                    robust = FALSE,
                                    samples = 1000)
 
+preyspeed_plot1 <- conditional_effects(quad_model, 
+                                       effects = "Zprey_avg_speed",
+                                       method = "fitted",
+                                       re_formula = NA,
+                                       robust = FALSE,
+                                       samples = 1000)
 
+preyspace_plot1 <- conditional_effects(quad_model, 
+                                       effects = "Zprey_avg_space_covered_rate",
+                                       method = "fitted",
+                                       re_formula = NA,
+                                       robust = FALSE,
+                                       samples = 1000)
 
 # Run the sampling including the random effects -------------------------
 
@@ -104,6 +116,20 @@ hook_plot2 <- conditional_effects(quad_model,
                                   robust = FALSE,
                                   samples = 1000)
 
+preyspeed_plot2 <- conditional_effects(quad_model, 
+                                       effects = "Zprey_avg_speed",
+                                       method = "fitted",
+                                       re_formula = NULL,
+                                       robust = FALSE,
+                                       samples = 1000)
+
+preyspace_plot2 <- conditional_effects(quad_model, 
+                                       effects = "Zprey_avg_space_covered_rate",
+                                       method = "fitted",
+                                       re_formula = NULL,
+                                       robust = FALSE,
+                                       samples = 1000)
+
 # =======================================================================
 # =======================================================================
 
@@ -122,7 +148,8 @@ speed_tab <- speed_plot1$Zspeed
 space_tab <- space_plot1$Zspace_covered_rate
 guard_tab <- guard_plot1$Zprox_mid_PreyGuarding
 hook_tab  <- hook_plot1$Zhook_start_time
-
+preyspeed_tab <- preyspeed_plot1$Zprey_avg_speed
+preyspace_tab <- preyspace_plot1$Zprey_avg_space_covered_rate
 
 
 # Bind the two tables ---------------------------------------------------
@@ -144,6 +171,13 @@ hook_tab <- as.data.table(cbind(hook_tab,
                   upper_pred_int = hook_plot2$Zhook_start_time[, "upper__"],
                   lower_pred_int = hook_plot2$Zhook_start_time[, "lower__"]))
 
+preyspeed_tab <- as.data.table(cbind(preyspeed_tab, 
+                   upper_pred_int = preyspeed_plot2$Zprey_avg_speed[, "upper__"],
+                   lower_pred_int = preyspeed_plot2$Zprey_avg_speed[, "lower__"]))
+
+preyspace_tab <- as.data.table(cbind(preyspace_tab, 
+                   upper_pred_int = preyspace_plot2$Zprey_avg_space_covered_rate[, "upper__"],
+                   lower_pred_int = preyspace_plot2$Zprey_avg_space_covered_rate[, "lower__"]))
 
 
 # Bind everything together to have 1 table ------------------------------
@@ -152,8 +186,12 @@ speed_tab[, x_variable := "speed"]
 space_tab[, x_variable := "space"]
 guard_tab[, x_variable := "guard"]
 hook_tab [, x_variable := "hook"]
+preyspeed_tab[, x_variable := "prey_speed"]
+preyspace_tab[, x_variable := "prey_space"]
 
-full_table <- rbind(speed_tab, space_tab, guard_tab, hook_tab)
+full_table <- rbind(speed_tab, space_tab,
+                    guard_tab, hook_tab,
+                    preyspeed_tab, preyspace_tab)
 
 # =======================================================================
 # =======================================================================
@@ -167,7 +205,7 @@ full_table <- rbind(speed_tab, space_tab, guard_tab, hook_tab)
 # =======================================================================
 
 saveRDS(full_table,
-        file = "quadratic-model_draws-table.rds")
+        file = "03C_draws-table.rds")
 
 # =======================================================================
 # =======================================================================

@@ -27,7 +27,6 @@ library(ggpubr)
 
 # Load predictions ------------------------------------------------------
 
-base_tab <- readRDS("./outputs/R_objects/base-model_draws-table.rds")
 quad_tab <- readRDS("./outputs/R_objects/quadratic-model_draws-table.rds")
 
 # =======================================================================
@@ -92,127 +91,127 @@ scaleFUN <- function(x) sprintf("%.1f", x)
 
 # Plot for predator speed -----------------------------------------------
 
-speed <- ggplot(base_tab[x_variable == "speed"]) +
-  geom_line(aes(x = Zspeed, y = estimate__/4),
-            size = 1.5,
-            color = "darkgray") +
-  geom_line(aes(x = Zspeed, y = lower__/4),
-            linetype = "dashed",
-            size = 1,
-            color = "black") +
-  geom_line(aes(x = Zspeed, y = upper__/4),
-            linetype = "dashed",
-            size = 1, 
-            color = "black") +
-  geom_ribbon(aes(x = Zspeed,
-                  ymin = lower_pred_int/4,
-                  ymax = upper_pred_int/4),
-              alpha = 0.2,
-              fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  #scale_x_continuous(breaks = seq(-8, 4, 4),
-  #                   limits = c(-8, 4.8),
-  #                   labels = scaleFUN) +
-  scale_x_continuous(labels = scaleFUN) +
-  xlab("\nSpeed") +
-  ylab("") +
-  custom_theme +
-  theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+#speed <- ggplot(base_tab[x_variable == "speed"]) +
+#  geom_line(aes(x = Zspeed, y = estimate__/4),
+#            size = 1.5,
+#            color = "darkgray") +
+#  geom_line(aes(x = Zspeed, y = lower__/4),
+#            linetype = "dashed",
+#            size = 1,
+#            color = "black") +
+#  geom_line(aes(x = Zspeed, y = upper__/4),
+#            linetype = "dashed",
+#            size = 1, 
+#            color = "black") +
+#  geom_ribbon(aes(x = Zspeed,
+#                  ymin = lower_pred_int/4,
+#                  ymax = upper_pred_int/4),
+#              alpha = 0.2,
+#              fill = "darkgray") +
+#  scale_y_continuous(breaks = seq(0, 1, .25),
+#                     limits = c(0, 1)) +
+#  #scale_x_continuous(breaks = seq(-8, 4, 4),
+#  #                   limits = c(-8, 4.8),
+#  #                   labels = scaleFUN) +
+#  scale_x_continuous(labels = scaleFUN) +
+#  xlab("\nSpeed") +
+#  ylab("") +
+#  custom_theme +
+#  theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
 
 
 
 # Plot for predator space -----------------------------------------------
 
-space <- ggplot(base_tab[x_variable == "space"]) +
-  geom_line(aes(x = Zspace_covered_rate, y = estimate__/4),
-            size = 1.5,
-            color = "darkgray") +
-  geom_line(aes(x = Zspace_covered_rate, y = lower__/4),
-            linetype = "dashed",
-            size = 1,
-            color = "black") +
-  geom_line(aes(x = Zspace_covered_rate, y = upper__/4),
-            linetype = "dashed",
-            size = 1, 
-            color = "black") +
-  geom_ribbon(aes(x = Zspace_covered_rate,
-                  ymin = lower_pred_int/4,
-                  ymax = upper_pred_int/4),
-              alpha = 0.2,
-              fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  scale_x_continuous(labels = scaleFUN) +
-  xlab("\nSpace") +
-  ylab("") +
-  custom_theme +
-  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+#space <- ggplot(base_tab[x_variable == "space"]) +
+#  geom_line(aes(x = Zspace_covered_rate, y = estimate__/4),
+#            size = 1.5,
+#            color = "darkgray") +
+#  geom_line(aes(x = Zspace_covered_rate, y = lower__/4),
+#            linetype = "dashed",
+#            size = 1,
+#            color = "black") +
+#  geom_line(aes(x = Zspace_covered_rate, y = upper__/4),
+#            linetype = "dashed",
+#            size = 1, 
+#            color = "black") +
+#  geom_ribbon(aes(x = Zspace_covered_rate,
+#                  ymin = lower_pred_int/4,
+#                  ymax = upper_pred_int/4),
+#              alpha = 0.2,
+#              fill = "darkgray") +
+#  scale_y_continuous(breaks = seq(0, 1, .25),
+#                     limits = c(0, 1)) +
+#  scale_x_continuous(labels = scaleFUN) +
+#  xlab("\nSpace") +
+#  ylab("") +
+#  custom_theme +
+#  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))#
 
 
 
 # Plot for predator guard -----------------------------------------------
 
-guard <- ggplot(base_tab[x_variable == "guard"]) +
-  geom_line(aes(x = Zprox_mid_PreyGuarding, y = estimate__/4),
-            size = 1.5,
-            color = "darkgray") +
-  geom_line(aes(x = Zprox_mid_PreyGuarding, y = lower__/4),
-            linetype = "dashed",
-            size = 1,
-            color = "black") +
-  geom_line(aes(x = Zprox_mid_PreyGuarding, y = upper__/4),
-            linetype = "dashed",
-            size = 1, 
-            color = "black") +
-  geom_ribbon(aes(x = Zprox_mid_PreyGuarding, 
-                  ymin = lower_pred_int/4,
-                  ymax = upper_pred_int/4),
-              alpha = 0.2,
-              fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  #scale_x_continuous(breaks = seq(0, 7.5, 2.5),
-  #                   limits = c(-1.2, 7.5)) +
-  scale_x_continuous(labels = scaleFUN) +
-  xlab("\nAmbush time") +
-  ylab("") +
-  custom_theme +
-  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+#guard <- ggplot(base_tab[x_variable == "guard"]) +
+#  geom_line(aes(x = Zprox_mid_PreyGuarding, y = estimate__/4),
+#            size = 1.5,
+#            color = "darkgray") +
+#  geom_line(aes(x = Zprox_mid_PreyGuarding, y = lower__/4),
+#            linetype = "dashed",
+#            size = 1,
+#            color = "black") +
+#  geom_line(aes(x = Zprox_mid_PreyGuarding, y = upper__/4),
+#            linetype = "dashed",
+#            size = 1, 
+#            color = "black") +
+#  geom_ribbon(aes(x = Zprox_mid_PreyGuarding, 
+#                  ymin = lower_pred_int/4,
+#                  ymax = upper_pred_int/4),
+#              alpha = 0.2,
+#              fill = "darkgray") +
+#  scale_y_continuous(breaks = seq(0, 1, .25),
+#                     limits = c(0, 1)) +
+#  #scale_x_continuous(breaks = seq(0, 7.5, 2.5),
+#  #                   limits = c(-1.2, 7.5)) +
+#  scale_x_continuous(labels = scaleFUN) +
+#  xlab("\nAmbush time") +
+#  ylab("") +
+#  custom_theme +
+#  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 
 
 
 # Plot for the time before 1st capture ----------------------------------
 
-hook <- ggplot(base_tab[x_variable == "hook"]) +
-  geom_line(aes(x = Zhook_start_time, y = estimate__/4),
-            size = 1.5,
-            color = "darkgray") +
-  geom_line(aes(x = Zhook_start_time, y = lower__/4),
-            linetype = "dashed",
-            size = 1,
-            color = "black") +
-  geom_line(aes(x = Zhook_start_time, y = upper__/4),
-            linetype = "dashed",
-            size = 1, 
-            color = "black") +
-  geom_ribbon(aes(x = Zhook_start_time, 
-                  ymin = lower_pred_int/4,
-                  ymax = upper_pred_int/4),
-              alpha = 0.2,
-              fill = "darkgray") +
-  scale_y_continuous(breaks = seq(0, 1, .25),
-                     limits = c(0, 1)) +
-  #scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
-  #                   limits = c(-1.5, 4.5)) +
-  scale_x_continuous(labels = scaleFUN) +
-  xlab(expression(paste("Time for ",
-                        1^st, 
-                        "capture", 
-                        sep = ""))) +
-  ylab("") +
-  custom_theme +
-  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+#hook <- ggplot(base_tab[x_variable == "hook"]) +
+#  geom_line(aes(x = Zhook_start_time, y = estimate__/4),
+#            size = 1.5,
+#            color = "darkgray") +
+#  geom_line(aes(x = Zhook_start_time, y = lower__/4),
+#            linetype = "dashed",
+#            size = 1,
+#            color = "black") +
+#  geom_line(aes(x = Zhook_start_time, y = upper__/4),
+#            linetype = "dashed",
+#            size = 1, 
+#            color = "black") +
+#  geom_ribbon(aes(x = Zhook_start_time, 
+#                  ymin = lower_pred_int/4,
+#                  ymax = upper_pred_int/4),
+#              alpha = 0.2,
+#              fill = "darkgray") +
+#  scale_y_continuous(breaks = seq(0, 1, .25),
+#                     limits = c(0, 1)) +
+#  #scale_x_continuous(breaks = seq(-1.5, 3, 1.5),
+#  #                   limits = c(-1.5, 4.5)) +
+#  scale_x_continuous(labels = scaleFUN) +
+#  xlab(expression(paste("Time for ",
+#                        1^st, 
+#                        "capture", 
+#                        sep = ""))) +
+#  ylab("") +
+#  custom_theme +
+#  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 
 # =======================================================================
 # =======================================================================
@@ -350,6 +349,67 @@ quad_hook <- ggplot(quad_tab[x_variable == "hook"]) +
   custom_theme +
   theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
 
+
+
+# Plot for prey speed^2 -------------------------------------------------
+
+quad_speed1 <- ggplot(quad_tab[x_variable == "prey_speed"]) +
+  geom_line(aes(x = Zspeed, y = estimate__/4),
+            size = 1.5,
+            color = "darkgray") +
+  geom_line(aes(x = Zprey_avg_speed, y = lower__/4),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(aes(x = Zprey_avg_speed, y = upper__/4),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(aes(x = Zprey_avg_speed,
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
+              alpha = 0.2,
+              fill = "darkgray") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  #scale_x_continuous(breaks = seq(-8, 4, 4),
+  #                   limits = c(-8, 4.8), 
+  #                   labels = scaleFUN) +
+  scale_x_continuous(labels = scaleFUN) +
+  xlab("\nPrey speed") +
+  ylab("") +
+  custom_theme +
+  theme(plot.margin = unit(c(2, 1.2, 2, 2), "lines"))
+
+
+
+# Plot for predator space^2 ---------------------------------------------
+
+quad_space2 <- ggplot(quad_tab[x_variable == "prey_space"]) +
+  geom_line(aes(x = Zprey_avg_space_covered_rate, y = estimate__/4),
+            size = 1.5,
+            color = "darkgray") +
+  geom_line(aes(x = Zprey_avg_space_covered_rate, y = lower__/4),
+            linetype = "dashed",
+            size = 1,
+            color = "black") +
+  geom_line(aes(x = Zprey_avg_space_covered_rate, y = upper__/4),
+            linetype = "dashed",
+            size = 1, 
+            color = "black") +
+  geom_ribbon(aes(x = Zprey_avg_space_covered_rate,
+                  ymin = lower_pred_int/4,
+                  ymax = upper_pred_int/4),
+              alpha = 0.2,
+              fill = "darkgray") +
+  scale_y_continuous(breaks = seq(0, 1, .25),
+                     limits = c(0, 1)) +
+  scale_x_continuous(labels = scaleFUN) +
+  xlab("\nPrey space") +
+  ylab("") +
+  custom_theme +
+  theme(plot.margin = unit(c(2, 1.2, 2, 0.5), "lines"))
+
 # =======================================================================
 # =======================================================================
 
@@ -364,19 +424,30 @@ quad_hook <- ggplot(quad_tab[x_variable == "hook"]) +
 
 # Create the 3 paneled figure -------------------------------------------
 
-panel_plot <- ggarrange(speed,
-                        space,
-                        guard,
-                        hook,
-                        quad_speed,
+#panel_plot <- ggarrange(quad_speed,
+#                        quad_space,
+#                        quad_guard,
+#                        quad_hook,
+#                        quad_speed1,
+#                        quad_speed2,
+#                        ncol = 4, nrow = 2,
+#                        widths = c(2.8, 2.5, 2.5, 2.5),
+#                        heights = c(2.8, 2.8, 2.8, 2.8),
+#                        labels = c("(A)", "(B)", "(C)", "(D)",
+#                                   "(E)", "(F)", "(G)", "(H)"))
+
+panel_plot <- ggarrange(quad_speed,
                         quad_space,
                         quad_guard,
                         quad_hook,
-                        ncol = 4, nrow = 2,
-                        widths = c(2.8, 2.5, 2.5, 2.5),
-                        heights = c(2.8, 2.8, 2.8, 2.8),
-                        labels = c("(A)", "(B)", "(C)", "(D)",
-                                   "(E)", "(F)", "(G)", "(H)"))
+                        quad_speed1,
+                        quad_speed2,
+                        ncol = 3, nrow = 2,
+                        widths = c(2.8, 2.5, 2.5),
+                        heights = c(2.8, 2.8, 2.8),
+                        labels = c("(A)", "(B)", "(C)",
+                                   "(D)", "(E)", "(F)"))
+
 # Upper y label
 panel_plot <- annotate_figure(panel_plot,
                               left = text_grob("Hunting success", 
