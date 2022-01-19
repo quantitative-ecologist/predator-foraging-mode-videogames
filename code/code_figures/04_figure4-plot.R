@@ -116,22 +116,20 @@ z1 <- outer(speed,
             )
 
 # Plot
-plot1 <- plot_ly(
-       x = ~prey_speed, 
-       y = ~speed, 
-       z = ~z1,
-       type = "contour",
-       coloraxis = "coloraxis",
-       autocontour = F,
-       contours = list(start = 0,
-                       end = 1,
-                       size = 0.1)
-         ) %>%
+plot1 <- plot_ly(x = ~prey_speed, 
+                 y = ~speed, 
+                 z = ~z1,
+                 type = "contour",
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+         
          layout(xaxis = list(title = "Prey speed"),
                 yaxis = list(nticks = 5,
                              tickvals = c(-4, -2, 0, 2, 4),
-                             title = "Predator speed")
-         )
+                             title = "Predator speed"))
 
 
 
@@ -154,23 +152,26 @@ z2 = outer(speed,
                                        (fixef(model)[7] * y^2) + 
                                        (fixef(model)[13] * y) + 
                                        (x * y * fixef(model)[22]))
-                                 }
+                 }
             )
 
-# Plot, specify axis paremeters using scene
+# Plot
 plot2 <- plot_ly(x = ~prey_space, 
                  y = ~speed, 
                  z = ~z2,
                  type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1)) %>%
-layout(xaxis = list(title = "Prey space"),
-       yaxis = list(nticks = 5,
-                    tickvals = c(-4, -2, 0, 2, 4),
-                    title = "Predator speed"))
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+
+          layout(xaxis = list(nticks = 6,
+                             tickvals = c(-3, -2, -1, 0, 1, 2),
+                             title = "Prey space"),
+                 yaxis = list(nticks = 5,
+                              tickvals = c(-4, -2, 0, 2, 4),
+                              title = "Predator speed"))
 
 
 
@@ -193,23 +194,27 @@ z3 = outer(space,
                                        (fixef(model)[6] * y^2) + 
                                        (fixef(model)[12] * y) + 
                                        (x * y * fixef(model)[23]))
-                                 })
+                 }
+           )
 
 
-# Plot, specify axis paremeters using scene
+# Plot
 plot3 <- plot_ly(x = ~prey_speed, 
                  y = ~space, 
                  z = ~z3,
                  type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1)) %>%
-layout(xaxis = list(title = "Prey speed"),
-       yaxis = list(nticks = 5,
-                    tickvals = c(-2, 0, 2, 4, 6),
-                    title = "Predator space"))
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+
+         layout(xaxis = list(nticks = 5,
+                             tickvals = c(-6, -4, -2, 0, 2),
+                             title = "Prey speed"),
+                yaxis = list(nticks = 5,
+                             tickvals = c(-2, 0, 2, 4, 6),
+                             title = "Predator space"))
 
 
 
@@ -232,23 +237,26 @@ z4 = outer(space,
                                        (fixef(model)[7] * y^2) + 
                                        (fixef(model)[13] * y) + 
                                        (x * y * fixef(model)[24]))
-                                 }
+                 }
             )
 
-# Plot, specify axis paremeters using scene
+# Plot
 plot4 <- plot_ly(x = ~prey_space, 
                  y = ~space, 
                  z = ~z4,
                  type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1)) %>%
-layout(xaxis = list(title = "Prey space"),
-       yaxis = list(nticks = 5,
-                    tickvals = c(-4, -2, 0, 2, 4),
-                    title = "Predator space"))
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+         
+         layout(xaxis = list(nticks = 6,
+                             tickvals = c(-3, -2, -1, 0, 1, 2),
+                             title = "Prey space"),
+                yaxis = list(nticks = 5,
+                             tickvals = c(-2, 0, 2, 4, 6),
+                             title = "Predator space"))
 
 
 
@@ -277,19 +285,26 @@ z5 <- outer(guard,
                                          (fixef(model)[6] * y^2) + 
                                          (fixef(model)[12] * y) + 
                                          (x * y * fixef(model)[25]))
-                                   }
+                  }
              )
 
-# Plot, specify axis paremeters using scene
+# Plot
 plot5 <- plot_ly(x = ~prey_speed, 
                  y = ~guard, 
                  z = ~z5,
                  type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1))
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+         
+         layout(xaxis = list(nticks = 5,
+                             tickvals = c(-6, -4, -2, 0, 2),
+                             title = "Prey speed"),
+                yaxis = list(nticks = 5,
+                             tickvals = c(-1, 0, 1, 2, 3),
+                             title = "Predator guard"))
 
 
 
@@ -314,19 +329,26 @@ z6 = outer(guard,
                                         (fixef(model)[7] * y^2) + 
                                         (fixef(model)[13] * y) + 
                                         (x * y * fixef(model)[26]))
-                                  }
+                 }
             )
 
-# Plot, specify axis paremeters using scene
+# Plot
 plot6 <- plot_ly(x = ~prey_space, 
                  y = ~guard, 
                  z = ~z6,
                  type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1))
+                 coloraxis = "coloraxis",
+                 autocontour = F,
+                 contours = list(start = 0,
+                                 end = 1,
+                                 size = 0.1)) %>%
+         
+         layout(xaxis = list(nticks = 6,
+                             tickvals = c(-3, -2, -1, 0, 1, 2),
+                             title = "Prey space"),
+                yaxis = list(nticks = 5,
+                             tickvals = c(-1, 0, 1, 2, 3),
+                             title = "Predator guard"))
 
 # =========================================================================
 # =========================================================================
@@ -341,40 +363,12 @@ plot6 <- plot_ly(x = ~prey_space,
 
 fig <- subplot(plot1, plot2, plot3,
                plot4, plot5, plot6,
-               nrows = 2) %>% 
+               nrows = 2,
+               titleY = TRUE,
+               titleX = TRUE,
+               margin = 0.05, which_layout = "merge") %>%
+
        layout(coloraxis = list(colorscale = 'Viridis'))
-
-
-
-plot_ly(x = ~prey_space, 
-                 y = ~guard, 
-                 z = ~z6,
-                 type = "contour",
-          coloraxis = "coloraxis",
-          autocontour = F,
-          contours = list(start = 0,
-                          end = 1,
-                          size = 0.1)) %>%
-layout(yaxis = list(nticks = 5,
-                   # tickvals = c(-1, -0, 1, 2, 3),
-                    title = "Predator guard"))
-
-ax_y1 <- list(
-    tickfont = tickfont, # tick par.
-    ticks = "outside",
-    tickangle = 3,
-    nticks = 5,
-    tickvals = c(-3, -1, 0, 1, 3),
-    title = "Predator speed", # titles par.
-    titlefont = titlefont,
-    backgroundcolor = "white", # cube par.
-    gridcolor = "darkgray",
-    gridwidth = 3,
-    showbackground = TRUE,
-    zerolinecolor = "darkgray", # lines at 0
-    linecolor = "black", # black axis line
-    linewidth = 4
-  )
 
 
 # =========================================================================
