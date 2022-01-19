@@ -1,158 +1,198 @@
-##########################################################
+# ========================================================================
 
-#               Code to produce Table I                  #
+#                       Code to produce Table I                          #
 
-##########################################################
-
-
+# ========================================================================
 
 
 
-# ========================================================
-# Load librairies and import table
-# ========================================================
-# Load libraries
+
+
+# ========================================================================
+# 1. Load librairies and the model
+# ========================================================================
+
+
+# Load libraries ---------------------------------------------------------
+
 library(data.table)
 library(flextable)
 library(officer)
 library(dplyr)
-
-# Load the coefficient table
-table <- readRDS(here::here("outputs", "05_hunting_success_coef-table.rds"))
-
-# ========================================================
-# ========================================================
+library(brms)
 
 
 
+# Load the model ---------------------------------------------------------
+
+model <- readRDS(here::here("outputs", "models",
+                            "03C_hunting_success_quadratic-model2.rds"))
+
+# Create a table of fixed effects
+table <- data.table(fixef(model), keep.rownames = TRUE)
+setnames(table, "rn", "coefficient")
+table[, Est.Error := NULL]
 
 
-# ========================================================
-# Prepare the table
-# ========================================================
+# ========================================================================
+# ========================================================================
 
-# Round values to 2 digits
+
+
+
+
+# ========================================================================
+# 2. Prepare the table
+# ========================================================================
+
+
+# Round values to 2 digits -----------------------------------------------
+
 table[, c("Estimate", "Q2.5", "Q97.5") := 
-        lapply(.SD, function (x) format(round(x, digits = 2), nsmall = 2)),
+        lapply(.SD, function (x) format(round(x, digits = 2), 
+                                        nsmall = 2)),
       .SDcols = c(2:4)]
 
-# Compute the CI column
+
+
+# Compute the CI column --------------------------------------------------
+
 table[, "CI" := apply(cbind(Q2.5, Q97.5),
                       1, function(x) paste(sort(x), collapse = ", "))]
 
 table[, "CI2" := paste("(", table$CI, sep = "")]
 table[, "CI3" := paste(table$CI2, ")", sep = "")]
-table[, c(3, 4, 6, 7) := NULL]
+table[, c(3, 4, 5, 6) := NULL]
 setnames(table, "CI3", "CI")
 
-# Compute the estimate column
+
+
+# Compute the estimate column --------------------------------------------
+
 table[, Estimate := paste(table$Estimate, CI, sep = " ")][, CI := NULL]
 
-# Reorder columns
-setcolorder(table, neworder = c(3, 1, 2))
 
-# Change coefficient names
+
+# Change coefficient names -----------------------------------------------
+
+# delete the game duration values
+table <- table[coefficient != "Zgame_duration", ]
+
 coefficient1 <- list(
   "intercept",
   "travel speed",
   "space covered",
-  "ambush time",
+  "time guarding",
   "time 1st capture",
   "prey travel speed",
   "prey space covered",
   "travel speed",
   "space covered",
-  "ambush time",
+  "time guarding",
   "time 1st capture",
-  "travel speed:space covered",
-  "travel speed:ambush time",
-  "travel speed:time 1st capture",
-  "space covered:ambush time",
-  "space covered:time 1st capture",
-  "ambush time:time 1st capture",
   "prey travel speed",
   "prey space covered",
+  "travel speed:space covered",
+  "travel speed:time guarding",
+  "travel speed:time 1st capture",
+  "space covered:time guarding",
+  "space covered:time 1st capture",
+  "time guarding:time 1st capture",
   "travel speed:prey travel speed",
   "travel speed:prey space covered",
   "space covered:prey travel speed",
   "space covered:prey space covered",
-  "ambush time:prey travel speed",
-  "ambush time:prey space covered",
-  "time 1st capture:prey travel speed",
-  "time 1st capture:prey space covered"
+  "time guarding:prey travel speed",
+  "time guarding:prey space covered"
 )
 
 table[, coefficient := coefficient1]
 
-# ========================================================
-# ========================================================
+# ========================================================================
+# ========================================================================
 
 
 
 
 
-# ========================================================
-#               Reshape the table
-# ========================================================
+# ========================================================================
+# 3. Reshape the table
+# ========================================================================
+
+
+# Compute the coefficient names ------------------------------------------
 
 # Trait names
-newtab <- table[2:7, 2]
+newtab <- table[2:7, 1]
 
 # Predator trait interactions names
-newtab <- rbind(newtab, table[12:17, 2])
+newtab <- rbind(newtab, table[14:19, 1])
 
 # Pred-Prey interactions names
-newtab <- rbind(newtab, table[20:27, 2])
+newtab <- rbind(newtab, table[20:25, 1])
 
-# linear estimates
-estimate1 <- c(table[2,3], table[3,3],
-               table[4,3], table[5,3],
-               table[6,3], table[7,3],
-               rep("-", 14))
+
+
+# Compute the coefficient estimates --------------------------------------
+
+# Linear estimates
+estimate1 <- c(table[8, 2], table[9, 2],
+               table[10, 2], table[11, 2],
+               table[12, 2], table[13, 2],
+               rep("-", 12))
 
 # Quadratic estimates
-estimate2 <- c(table[8,3], table[9,3],
-               table[10,3], table[11,3],
-               table[18,3], table[19,3],
-               rep("-", 14))
+estimate2 <- c(table[2, 2], table[3, 2],
+               table[4, 2], table[5, 2],
+               table[6, 2], table[7, 2],
+               rep("-", 12))
 
 # Predator trait interactions estimates
 estimate3 <- c(rep("-", 6), 
-               table[12,3], table[13,3],
-               table[14,3], table[15,3],
-               table[16,3], table[17,3],
-               rep("-", 8))
+               table[14, 2], table[15, 2],
+               table[16, 2], table[17, 2],
+               table[18, 2], table[19, 2],
+               rep("-", 6))
 
 # Pred-prey interactions estimates 
 estimate4 <- c(rep("-", 12), 
-               table[20,3], table[21,3],
-               table[22,3], table[23,3],
-               table[24,3], table[25,3],
-               table[26,3], table[27,3])
+               table[20, 2], table[21, 2],
+               table[22, 2], table[23, 2],
+               table[24, 2], table[25, 2])
+
+
+
+# Bind everything together -----------------------------------------------
 
 # Bind estimates
-newtab <- cbind(newtab, estimate1 = estimate1,
+newtab <- cbind(newtab,
+                estimate1 = estimate1,
                 estimate2 = estimate2,
                 estimate3 = estimate3,
                 estimate4 = estimate4)
 
-# ========================================================
-# ========================================================
+# ========================================================================
+# ========================================================================
 
 
 
 
 
-# ========================================================
-# Compute the table using flextable
-# ========================================================
+# ========================================================================
+# 4. Compute the table using flextable
+# ========================================================================
 
 # Custom header
 my_header1 <- data.frame(
-  col_keys = c("coefficient", "estimate1",
-               "estimate2", "estimate3", "estimate4"),
-  line1 = c("Predictor", "Linear (95% CI)",
-            "Quadratic (95% CI)", "Predator trait interactions (95% CI)",
+  col_keys = c("coefficient",
+               "estimate1",
+               "estimate2",
+               "estimate3",
+               "estimate4"),
+  line1 = c("Predictor",
+            "Linear (95% CI)",
+            "Quadratic (95% CI)",
+            "Predator trait interactions (95% CI)",
             "Predator-prey trait interactions (95% CI)"),
   stringsAsFactors = FALSE
 )
@@ -169,7 +209,7 @@ my_theme <- function(x, ...) {
 }
 
 # Create the table
-table1 <-newtab %>%
+table1 <- newtab %>%
   select(coefficient, estimate1, estimate2,
          estimate3, estimate4) %>%
   flextable(col_keys = my_header1$col_keys) %>%
