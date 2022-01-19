@@ -225,7 +225,7 @@ table1 <- newtab %>%
   height(height = .25) %>%
   hrule(rule = "exact")
 
-save_as_image(table1, "./manuscript/table1.png")
+save_as_image(table1, "./manuscript/table1.png", webshot = "webshot2")
 
 # ========================================================
 # ========================================================
