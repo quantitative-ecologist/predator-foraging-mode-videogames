@@ -28,7 +28,7 @@ library(data.table)
 library(brms)
 library(plotly)
 library(htmlwidgets)
-
+library(export)
 
 
 # Import the data ----------------------------------------------------------
@@ -45,7 +45,7 @@ data <- fread("./data/merged-data2021.csv",
 # Create a variable for the y axis
 data[, prop_captures := hunting_success/4]
 
-# Load quadratic model
+# Load quadratic model (takes couple seconds)
 model <- readRDS("./outputs/models/03C_hunting_success_quadratic-model2.rds")
 
 # ==========================================================================
@@ -361,15 +361,26 @@ plot6 <- plot_ly(x = ~prey_space,
 # Create the subplot for the figure
 # =========================================================================
 
+# margin argument not working properly
+#fig <- subplot(plot1, plot2, plot3,
+#               plot4, plot5, plot6,
+#               nrows = 2,
+#               titleY = TRUE,
+#               titleX = TRUE,
+#               margin = 0.05) %>%
+#
+#       layout(coloraxis = list(colorscale = 'Viridis'))
+
 fig <- subplot(plot1, plot2, plot3,
                plot4, plot5, plot6,
-               nrows = 2,
-               titleY = TRUE,
-               titleX = TRUE,
-               margin = 0.05, which_layout = "merge") %>%
+               nrows = 2) %>%
+               #titleY = TRUE,
+               #titleX = TRUE) %>%
 
        layout(coloraxis = list(colorscale = 'Viridis'))
 
+# rest done with capture output tool and powerpoint because
+# of the bug with plotly::subplot()
 
 # =========================================================================
 # =========================================================================
