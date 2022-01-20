@@ -1,12 +1,12 @@
 # ==========================================================================
 
-#                Contour plots of hunting success analyses                 #
+#                Surface plots of hunting success analyses                 #
 
 # ==========================================================================
 
-# Code to produce Figure 4
-# Plot interactions between predator 
-# and prey traits of the quadratic hunting success model 2
+# Code to produce Figure S2
+# Plot interactions of predator trait interactions 
+# of the quadratic hunting success model 2
 
 # All graphs are saved directly from the offline webhost into my outputs
 
@@ -88,35 +88,33 @@ data[, c("Zgame_duration", "Zspeed",
 
 
 # =========================================================================
-# 3. Contour plots for each predator-prey behavioral interactions
+# 3. Contour plots for each predator behavioral interactions
 # =========================================================================
 
 
-# Predator speed and prey speed -------------------------------------------
-
-# This interaction is not significant ***
+# Predator speed and space ------------------------------------------------
 
  # Select values for the surface
 speed <- seq(-4.3257693, max(data$Zspeed), length.out = 10)
 
-prey_speed <- seq(min(data$Zprey_avg_speed, na.rm = TRUE),
-                  max(data$Zprey_avg_speed, na.rm = TRUE),
-                  length.out = 10)
+space <- seq(min(data$Zspace_covered_rate), 
+             max(data$Zspace_covered_rate),
+             length.out = 10)
 
 # Compute the z axis values
 z1 <- outer(speed, 
-            prey_speed, 
+            space, 
             FUN = function(x, y) {plogis(fixef(model)[1] + 
                                         (fixef(model)[2] * x^2) + 
                                         (fixef(model)[8] * x) + 
-                                        (fixef(model)[6] * y^2) + 
-                                        (fixef(model)[12] * y) + 
-                                        (x * y * fixef(model)[21]))
+                                        (fixef(model)[3] * y^2) + 
+                                        (fixef(model)[9] * y) + 
+                                        (x * y * fixef(model)[15]))
                   }
             )
 
 # Plot
-plot1 <- plot_ly(x = ~prey_speed, 
+plot1 <- plot_ly(x = ~space, 
                  y = ~speed, 
                  z = ~z1,
                  type = "contour",
@@ -126,37 +124,35 @@ plot1 <- plot_ly(x = ~prey_speed,
                                  end = 1,
                                  size = 0.1)) %>%
          
-         layout(xaxis = list(title = "Prey speed"),
+         layout(xaxis = list(title = "Predator space"),
                 yaxis = list(nticks = 5,
                              tickvals = c(-4, -2, 0, 2, 4),
                              title = "Predator speed"))
 
 
 
-# Predator speed and prey space -------------------------------------------
-
-# This interaction is significant ***
+# Predator speed and guard ------------------------------------------------
 
 # Select values for the surface
 speed <- seq(-4, max(data$Zspeed), length.out = 10)
 
-prey_space <- seq(min(data$Zprey_avg_space_covered_rate, na.rm = TRUE),
-                  3,
-                  length.out = 10)
+guard <- seq(-1,
+             max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+             length.out = 10)
 
 z2 = outer(speed, 
-           prey_space,
+           guard,
            FUN = function(x, y) {plogis(fixef(model)[1] + 
                                        (fixef(model)[2] * x^2) + 
                                        (fixef(model)[8] * x) + 
-                                       (fixef(model)[7] * y^2) + 
-                                       (fixef(model)[13] * y) + 
-                                       (x * y * fixef(model)[22]))
+                                       (fixef(model)[4] * y^2) + 
+                                       (fixef(model)[10] * y) + 
+                                       (x * y * fixef(model)[16]))
                  }
             )
 
 # Plot
-plot2 <- plot_ly(x = ~prey_space, 
+plot2 <- plot_ly(x = ~guard, 
                  y = ~speed, 
                  z = ~z2,
                  type = "contour",
@@ -166,41 +162,39 @@ plot2 <- plot_ly(x = ~prey_space,
                                  end = 1,
                                  size = 0.1)) %>%
 
-          layout(xaxis = list(nticks = 6,
-                             tickvals = c(-3, -2, -1, 0, 1, 2),
-                             title = "Prey space"),
+          layout(xaxis = list(#nticks = ,
+                              #tickvals = c(),
+                              title = "Predator guard"),
                  yaxis = list(nticks = 5,
                               tickvals = c(-4, -2, 0, 2, 4),
                               title = "Predator speed"))
 
 
 
-# Predator space and prey speed -------------------------------------------
 
-# to select values for the surface
-space <- seq(min(data$Zspace_covered_rate), 
-             max(data$Zspace_covered_rate),
-             length.out = 10)
+# Predator speed and hook ------------------------------------------------
 
-prey_speed <- seq(min(data$Zprey_avg_speed, na.rm = TRUE),
-                  max(data$Zprey_avg_speed, na.rm = TRUE),
-                  length.out = 10)
+# Select values for the surface
+speed <- seq(-4, max(data$Zspeed), length.out = 10)
 
-z3 = outer(space, 
-           prey_speed,
+hook <- seq(min(data$Zhook_start_time, na.rm = TRUE),
+            max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+            length.out = 10)
+
+z3 = outer(speed, 
+           hook,
            FUN = function(x, y) {plogis(fixef(model)[1] + 
-                                       (fixef(model)[3] * x^2) + 
-                                       (fixef(model)[9] * x) + 
-                                       (fixef(model)[6] * y^2) + 
-                                       (fixef(model)[12] * y) + 
-                                       (x * y * fixef(model)[23]))
+                                       (fixef(model)[2] * x^2) + 
+                                       (fixef(model)[8] * x) + 
+                                       (fixef(model)[5] * y^2) + 
+                                       (fixef(model)[11] * y) + 
+                                       (x * y * fixef(model)[17]))
                  }
-           )
-
+            )
 
 # Plot
-plot3 <- plot_ly(x = ~prey_speed, 
-                 y = ~space, 
+plot3 <- plot_ly(x = ~hook, 
+                 y = ~speed, 
                  z = ~z3,
                  type = "contour",
                  coloraxis = "coloraxis",
@@ -209,39 +203,39 @@ plot3 <- plot_ly(x = ~prey_speed,
                                  end = 1,
                                  size = 0.1)) %>%
 
-         layout(xaxis = list(nticks = 5,
-                             tickvals = c(-6, -4, -2, 0, 2),
-                             title = "Prey speed"),
-                yaxis = list(nticks = 5,
-                             tickvals = c(-2, 0, 2, 4, 6),
-                             title = "Predator space"))
+          layout(xaxis = list(#nticks = 6,
+                              #tickvals = c(-3, -2, -1, 0, 1, 2),
+                              title = "Predator hook"),
+                 yaxis = list(nticks = 5,
+                              tickvals = c(-4, -2, 0, 2, 4),
+                              title = "Predator speed"))
 
 
 
-# Predator space and prey space -------------------------------------------
+# Predator space and guard ------------------------------------------------
 
 # to select values for the surface
 space <- seq(min(data$Zspace_covered_rate), 
              max(data$Zspace_covered_rate),
              length.out = 10)
 
-prey_space <- seq(min(data$Zprey_avg_space_covered_rate, na.rm = TRUE),
-                  3,
-                  length.out = 10)
+guard <- seq(-1,
+             max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+             length.out = 10)
 
-z4 = outer(space,
-           prey_space,
+z4 = outer(space, 
+           guard,
            FUN = function(x, y) {plogis(fixef(model)[1] + 
                                        (fixef(model)[3] * x^2) + 
                                        (fixef(model)[9] * x) + 
-                                       (fixef(model)[7] * y^2) + 
-                                       (fixef(model)[13] * y) + 
-                                       (x * y * fixef(model)[24]))
+                                       (fixef(model)[4] * y^2) + 
+                                       (fixef(model)[10] * y) + 
+                                       (x * y * fixef(model)[18]))
                  }
-            )
+           )
 
 # Plot
-plot4 <- plot_ly(x = ~prey_space, 
+plot4 <- plot_ly(x = ~guard, 
                  y = ~space, 
                  z = ~z4,
                  type = "contour",
@@ -250,47 +244,42 @@ plot4 <- plot_ly(x = ~prey_space,
                  contours = list(start = 0,
                                  end = 1,
                                  size = 0.1)) %>%
-         
-         layout(xaxis = list(nticks = 6,
-                             tickvals = c(-3, -2, -1, 0, 1, 2),
-                             title = "Prey space"),
+
+         layout(xaxis = list(#nticks = ,
+                             #tickvals = c(),
+                             title = "Predator guard"),
                 yaxis = list(nticks = 5,
                              tickvals = c(-2, 0, 2, 4, 6),
                              title = "Predator space"))
 
 
 
-# Predator guard and prey speed -------------------------------------------
+# Predator space and hook -------------------------------------------------
 
-# This interaction is significant ***
-
- # Select values for the surface
-#guard <- seq(min(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
-#             max(data$Zprox_mid_PreyGuarding, na.rm = TRUE))
-
-guard <- seq(-1,
-             max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+# to select values for the surface
+space <- seq(min(data$Zspace_covered_rate), 
+             max(data$Zspace_covered_rate),
              length.out = 10)
 
-prey_speed <- seq(min(data$Zprey_avg_speed, na.rm = TRUE),
-                  max(data$Zprey_avg_speed, na.rm = TRUE),
-                  length.out = 10)
+hook <- seq(min(data$Zhook_start_time, na.rm = TRUE),
+            max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+            length.out = 10)
 
-# Compute the z axis values
-z5 <- outer(guard, 
-            prey_speed,
-            FUN = function(x, y) {plogis(fixef(model)[1] + 
-                                         (fixef(model)[4] * x^2) + 
-                                         (fixef(model)[10] * x) + 
-                                         (fixef(model)[6] * y^2) + 
-                                         (fixef(model)[12] * y) + 
-                                         (x * y * fixef(model)[25]))
-                  }
-             )
+z5 = outer(space, 
+           hook,
+           FUN = function(x, y) {plogis(fixef(model)[1] + 
+                                       (fixef(model)[3] * x^2) + 
+                                       (fixef(model)[9] * x) + 
+                                       (fixef(model)[5] * y^2) + 
+                                       (fixef(model)[11] * y) + 
+                                       (x * y * fixef(model)[19]))
+                 }
+           )
+
 
 # Plot
-plot5 <- plot_ly(x = ~prey_speed, 
-                 y = ~guard, 
+plot5 <- plot_ly(x = ~hook, 
+                 y = ~space, 
                  z = ~z5,
                  type = "contour",
                  coloraxis = "coloraxis",
@@ -298,43 +287,42 @@ plot5 <- plot_ly(x = ~prey_speed,
                  contours = list(start = 0,
                                  end = 1,
                                  size = 0.1)) %>%
-         
-         layout(xaxis = list(nticks = 5,
-                             tickvals = c(-6, -4, -2, 0, 2),
-                             title = "Prey speed"),
+
+         layout(xaxis = list(#nticks = 5,
+                             #tickvals = c(-6, -4, -2, 0, 2),
+                             title = "Predator hook"),
                 yaxis = list(nticks = 5,
-                             tickvals = c(-1, 0, 1, 2, 3),
-                             title = "Predator guard"))
+                             tickvals = c(-2, 0, 2, 4, 6),
+                             title = "Predator space"))
 
 
 
-# Predator guard and prey space -------------------------------------------
-
-# this interaction is significant ***
+# Predator guard and hook -------------------------------------------------
 
 # to select values for the surface
 guard <- seq(-1,
              max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
              length.out = 10)
 
-prey_space <- seq(min(data$Zprey_avg_space_covered_rate, na.rm = TRUE),
-                  3,
-                  length.out = 10)
+hook <- seq(min(data$Zhook_start_time, na.rm = TRUE),
+            max(data$Zprox_mid_PreyGuarding, na.rm = TRUE),
+            length.out = 10)
 
-z6 = outer(guard,
-           prey_space,
+z6 = outer(guard, 
+           hook,
            FUN = function(x, y) {plogis(fixef(model)[1] + 
-                                        (fixef(model)[4] * x^2) + 
-                                        (fixef(model)[10] * x) + 
-                                        (fixef(model)[7] * y^2) + 
-                                        (fixef(model)[13] * y) + 
-                                        (x * y * fixef(model)[26]))
+                                       (fixef(model)[4] * x^2) + 
+                                       (fixef(model)[10] * x) + 
+                                       (fixef(model)[5] * y^2) + 
+                                       (fixef(model)[11] * y) + 
+                                       (x * y * fixef(model)[20]))
                  }
-            )
+           )
+
 
 # Plot
-plot6 <- plot_ly(x = ~prey_space, 
-                 y = ~guard, 
+plot6 <- plot_ly(x = ~guard, 
+                 y = ~hook, 
                  z = ~z6,
                  type = "contour",
                  coloraxis = "coloraxis",
@@ -342,13 +330,13 @@ plot6 <- plot_ly(x = ~prey_space,
                  contours = list(start = 0,
                                  end = 1,
                                  size = 0.1)) %>%
-         
-         layout(xaxis = list(nticks = 6,
-                             tickvals = c(-3, -2, -1, 0, 1, 2),
-                             title = "Prey space"),
-                yaxis = list(nticks = 5,
-                             tickvals = c(-1, 0, 1, 2, 3),
-                             title = "Predator guard"))
+
+         layout(xaxis = list(#nticks = ,
+                             #tickvals = c(),
+                             title = "Predator guard"),
+                yaxis = list(#nticks = 5,
+                             #tickvals = c(-2, 0, 2, 4, 6),
+                             title = "Predator hook"))
 
 # =========================================================================
 # =========================================================================
@@ -361,15 +349,6 @@ plot6 <- plot_ly(x = ~prey_space,
 # Create the subplot for the figure
 # =========================================================================
 
-# margin argument not working properly
-#fig <- subplot(plot1, plot2, plot3,
-#               plot4, plot5, plot6,
-#               nrows = 2,
-#               titleY = TRUE,
-#               titleX = TRUE,
-#               margin = 0.05) %>%
-#
-#       layout(coloraxis = list(colorscale = 'Viridis'))
 
 fig <- subplot(plot1, plot2, plot3,
                plot4, plot5, plot6,

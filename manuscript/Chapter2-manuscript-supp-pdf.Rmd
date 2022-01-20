@@ -194,7 +194,14 @@ logit (P_{hij}) &= (\beta_{0} + env_{0h} + id_{0i} + \varepsilon_{0,hij}) \\
 \end{aligned}
 \tag{S8}
 $$
+
 \newpage
+
+\begin{center}
+\hl{\emph{Controlling for player experience}}
+\end{center}
+
+Altough this was not the focus of the present paper, we conducted additional analyses to ensure that our results were robust to potential effects of player experience (see "X" in the 'Supporting information'). To do so, we applied the same model procedures on two distinct datasets based on player experience by splitting the total experience of individual players from the main dataset in quartiles. This resulted in} 75% \hl{of the players having played up to 31 matches, which represented ~5 hours of gameplay. Based on their cumulative number of matches, we then assigned novice players as those who played between 1 and 31 matches, and players with experience as those having above 31 cumulative matches played. Individuals who played above 31 matches could thus be assigned to both novice and experienced players. We split our data this way because if we separated players based on their total number of matches, we would have had matches for experienced players where they were still novice.
 
 ### Supporting Information: Results
 
