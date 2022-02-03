@@ -19,7 +19,8 @@
 
 # Activate project environment --------------------------------------------
 
-renv::activate()
+# Activates automatically with the .Rprofile file
+#renv::activate()
 
 
 
@@ -155,7 +156,7 @@ pc_results <- get_pca_var(pca_fit)
 # 4. Scree plot
 # =========================================================================
 
-get_eigenvalue(pca_fit)
+eigen <- get_eigenvalue(pca_fit)
 
 scree_plot <- fviz_eig(pca_fit, addlabels = TRUE) +
   theme(axis.line = element_line(),
@@ -265,8 +266,8 @@ biplot12 <- fviz_pca_biplot(pca_fit,
         plot.margin = margin(0.1, 0.5, 0.2, 0.3, "cm"))
 
 biplot12 <- ggpubr::ggpar(biplot12,
-                          xlab = "\nPC1 (23.5% of explained variance)",
-                          ylab = "PC2 (21.0% of explained variance)\n",
+                          xlab = "\nPC1 (20.9% of explained variance)",
+                          ylab = "PC2 (19.6% of explained variance)\n",
                           title = "",
                           font.x = c(15, "plain"),
                           font.y = c(15, "plain"))
@@ -315,6 +316,8 @@ biplot23 <- ggpubr::ggpar(biplot23,
 # 7. Calculate variables having highest loading (Table SI)
 # =========================================================================
 
+# Compute the tables ------------------------------------------------------
+
 contrib_table <- data.table(format(round(pc_results$contrib, digits = 2),
                                     nsmall = 2),
                             keep.rownames = TRUE)
@@ -322,6 +325,16 @@ contrib_table <- data.table(format(round(pc_results$contrib, digits = 2),
 corr_table <- data.table(format(round(pc_results$cor, digits = 2),
                                 nsmall = 2),
                          keep.rownames = TRUE)
+
+
+
+# Save the tables ---------------------------------------------------------
+
+saveRDS(contrib_table,
+        file = "./outputs/R_objects/02_PCA_contrib-table.rds")
+
+saveRDS(corr_table,
+        file = "./outputs/R_objects/02_PCA_corr-table.rds")
 
 # =========================================================================
 # =========================================================================

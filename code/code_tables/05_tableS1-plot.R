@@ -1,59 +1,57 @@
 
-################################################################
+# ==============================================================================
 
-#                   Code to produce Table SI                   #
+#                           Code to produce Table SI                           #
 
-################################################################
-
-
+# ==============================================================================
 
 
 
-# ========================================================
-# Load librairies and import table
-# ========================================================
 
-# Load libraries
+
+# ==============================================================================
+# 1. Load librairies and import the tables
+# ==============================================================================
+
+# Load libraries ---------------------------------------------------------------
+
 library(data.table)
 library(flextable)
 library(officer)
 library(dplyr)
 
-# Source the PCA file
-source("./R/02_PCA.R")
-
-# ========================================================
-# ========================================================
 
 
+# Import the tables ------------------------------------------------------------
 
-# ========================================================
-# Prepare the table
-# ========================================================
+contrib_tab <- readRDS("./outputs/R_objects/02_PCA_contrib-table.rds")
+corr_tab <- readRDS("./outputs/R_objects/02_PCA_corr-table.rds")
+
+
+
+# Arrange tables ---------------------------------------------------------------
 
 # Compute seperate tables based on PCs
-pc1_tab <- data.table("variable" = contrib_table$rn,
-                      "correlation_pc1" = corr_table$Dim.1,
-                      "variance_pc1" = contrib_table$Dim.1)
+pc1_tab <- data.table("variable" = contrib_tab$rn,
+                      "correlation_pc1" = corr_tab$Dim.1,
+                      "variance_pc1" = contrib_tab$Dim.1)
 
-pc2_tab <- data.table("variable" = contrib_table$rn,
-                      "correlation_pc2" = corr_table$Dim.2,
-                      "variance_pc2" = contrib_table$Dim.2)
+pc2_tab <- data.table("variable" = contrib_tab$rn,
+                      "correlation_pc2" = corr_tab$Dim.2,
+                      "variance_pc2" = contrib_tab$Dim.2)
 
-# ========================================================
-# ========================================================
+# ==============================================================================
+# ==============================================================================
 
 
 
-# ========================================================
-# # Compute the table using flextable
-# ========================================================
 
-# Unload ggplot2 and other packages that are in conflict with flextable
-detach("package:ggplot2")
-detach("package:cowplot")
-detach("package:ggpubr")
-detach("package:ggcorrplot")
+
+# ==============================================================================
+# 2. Compute the table using flextable
+# ==============================================================================
+
+# Prepare the table parameters -------------------------------------------------
 
 # Custom header
 my_header <- data.frame(
@@ -75,7 +73,10 @@ my_theme <- function(x, ...) {
   autofit(x)
 }
 
-# Create the table
+
+
+# Create the table -------------------------------------------------------------
+
 tableS1 <- cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
   select(variable, correlation_pc1, variance_pc1,
          correlation_pc2, variance_pc2) %>%
@@ -92,7 +93,9 @@ tableS1 <- cbind(pc1_tab, pc2_tab[,c(2:3)]) %>%
   height(height = .3) %>%
   hrule(rule = "exact")
 
-save_as_image(tableS1, "./manuscript/tableS1.png")
+save_as_image(tableS1, 
+              "./manuscript/tableS1.png",
+              webshot = "webshot2")
 
-# ========================================================
-# ========================================================
+# ==============================================================================
+# ==============================================================================

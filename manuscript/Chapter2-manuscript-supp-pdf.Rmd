@@ -28,13 +28,13 @@ header-includes:
 \emph{Principal component analysis}
 \end{center}
 
-We computed a principal components analysis (PCA) using packages “FactoMineR” [@Le.etal2008] and “factoextra” [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 computer OS. The "PCA()" function in “FactoMineR” uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. All variables were then standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component. The PCA was computed on a sample of 70 831 matches from 2 171 players.
+We computed a principal components analysis (PCA) using the packages 'FactoMineR' version 2.4 [@Le.etal2008] and 'factoextra' version 1.0.7 [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 Home computer OS (version 21H2, OS build 19044.1466). The 'PCA()' function in 'FactoMineR' uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. We applied a square-root transformation to all the varialbes. They were then standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component.
 
 \begin{center}
 \emph{Parametrization of the bayesian multivariate mixed-model}
 \end{center}
 
-We used a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrixes, and a gaussian prior with mean 0 and standard deviation of 5 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We ran four chains using 43 000 iterations, and sampled every 40 intervals (thinning). We used the first 3000 iterations for warmup. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, avatar, individual, and within- individual behavioural correlations using the function "posterior_samples()" in the "brms" package. We could thus compute the mean of the correlation sample values, and the HDP intervals to obtain the 95% credible intervals for each correlation. The variance-covariance matrixes were parametrized as :
+We used a half-normal prior with mean of 0 and standard-deviation of 1 for all the variance parameters, and applied a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrices. We applied a Gaussian prior with mean of 0 and standard deviation of 2 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We ran four chains using 2500 iterations, sampled every 8 intervals (thinning), and used the first 500 iterations as warmups. We visually inspected the trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. We computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, among-individual, and within-individual variance components and behavioral correlations using the function 'as_draws_df()' in the 'brms' package (for details, consult the code files on the GitHub repository : https://github.com/quantitative-ecologist/predator-foraging-mode-videogames). We could thus compute the mean of the variance and correlation sample values, and the HDP intervals to obtain their 95% credible intervals. The variance-covariance matrixes were parametrized as :
 
 \[
 \begin{bmatrix}
@@ -104,17 +104,24 @@ Cov_{\varepsilon_{0y2}\varepsilon_{0y3}} & Cov_{\varepsilon_{0y2}\varepsilon_{0y
 \tag{S4}
 \]
 
-where the diagonals represent the random effect ($k$) variance ($V_{k_{0y_n}}$) for each hunting trait ($y_n$), and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed ($y1$), the rate of space covered ($y2$), the proportion of time spent ambushing ($y3$), and the time before first capture ($y4$)).
+where the diagonals represent the random effect ($k$) variance ($V_{k_{0y_n}}$) for each hunting trait ($y_n$), and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed ($y1$), the rate of space covered ($y2$), the time spent guarding ($y3$), and the time before first capture ($y4$)).
 
-We ran two additional multivariate mixed-models after observing that the game environments did not explain a high percentage of variation in predator behavior (see the "discussion" in the main text). For the second model, we tested the hypothesis that prey might instead respond to the environment, which may then indirectly affect predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects. For the third model, we investigated if the game environment surface area explained an important portion of the observed variation in space covered when prey behaviors were kept as fixed effects (see results section below). We thus kept prey behavior in this model and included the game environment surface area as a fixed effect.
+We ran three additional multivariate mixed-models:
+  1. Different structure: Without prey behavior as fixed effects
+  2. Same structure: only on novice players
+  3. Same structure: only on experienced players 
+
+For the first model, we investigated how acounting for prey behavior in the predator behavioral variation (i.e. removing prey as a control) changed the behavioral correlations. With this, we could also consider wether it changed the environmental variance parameters. This would enable us to assess if prey responded to the game environment rather than the predator. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects.
+
+For the second and third models, we investigated if player experience changed the relationships between the predator behaviors (i.e. their correlations). To do so, we applied the same model procedure on two distinct datasets based on player experience by splitting the total experience of individual players from the main dataset in quartiles. This resulted in 75% of the players having played up to 31 matches, which represented ~5 hours of gameplay. Based on their cumulative number of matches, we then assigned novice players as those who played between 1 and 31 matches, and players with experience as those having above 31 cumulative matches played. Individuals who played above 31 matches could thus be assigned to both novice and experienced players. We split our data this way because if we separated players based on their total number of matches, we would have had matches for experienced players where they were still novice.
 
 \begin{center}
 \emph{Parametrization of the Bayesian mixed-models for hunting success}
 \end{center}
 
-We computed 4 different models to investigate the relationship between predator and prey behavior and predator hunting success. We used a Gaussian prior with mean of 0 and standard deviation of 5 for all the models' fixed effects. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We calculated the $ICC_k$ estimate for each random effect ($k$) using the function posterior_samples() in the "brms" package, by dividing each random effect variance sample value by the total variance. We could then compute the mean of the samples to obtain the $ICC$ value for each random effect, and HDP intervals to obtain their corresponding 95% credible intervals.
+We computed 4 different models to investigate the relationship between predator and prey behavior and predator hunting success. We used a half-normal prior for the variance parameters with a mean of 0 and a standard deviation of 1, and a Gaussian prior with a mean of 0 and a standard deviation of 2 for the fixed effects of all the models. We visually inspected trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the models' prediction accuracies using posterior predictive checks. We calculated the $ICC_k$ estimate for each random effect ($k$) using the function as_draws_df() in the 'brms' package by dividing each random effect variance sample value by the total variance. We used the mean of the posterior variance parameters to compute the $ICC$ values of each random effect, and used the HDP intervals to obtain their corresponding 95% credible intervals.
 
-For the first model, we aimed at investigating the relationship between hunting success and predator behaviour exclusively. For this model, we ran four chains using 103 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
+For the first model, we aimed at investigating the relationship between hunting success and predator behavior exclusively. For this model, we ran 4 chains using 2500 iterations and sampled every 8 intervals (thinning), and used the first 500 iterations for warmup. The model was parametrized as :
 $$
 \begin{aligned}
 logit (P_{hij}) &= (\beta_{0} + env_{0,h} + id_{0,i} + \varepsilon_{0,hij}) \\
@@ -128,7 +135,7 @@ $$
 
 \newpage
 
-We included prey behaviour in the second model and kept the same structure as equation S5. For this model, we ran four chains using 153 000 iterations by sampling every 100 intervals (thinning), and used the first 3000 iterations for warmup. The model was parametrized as :
+We included prey behavior in the second model and kept the same structure as equation S5. Again, we ran 4 chains using 2500 iterations and sampled every 8 intervals (thinning), and used the first 500 iterations for warmup. The model was parametrized as :
 
 $$
 \begin{aligned}
@@ -145,7 +152,7 @@ $$
 
 \newpage
 
-In the third model, we were interested in investigating nonlinear relationships between hunting success and predator behaviour exlusively. We thus added quadratic effects for each hunting trait. We also investigated how predator behaviours interact to affect huntin success. The model was run for 103 000 iterations by sampling every 100 intervals and using the first 3000 iterations as warmups. This model was computed as :
+In the third model, we were interested in investigating nonlinear relationships between hunting success and predator behavior exlusively. We thus added quadratic effects for each hunting trait. We also investigated how predator behaviors interact to affect hunting success. We used 4 chains and ran 2500 iterations by sampling every 8 intervals, and used the first 500 iterations as warmups. This model was computed as :
 
 $$
 \begin{aligned}
@@ -166,7 +173,7 @@ $$
 
 \newpage
 
-The fourth and final model included prey behaviours with their quadratic effects. We also included interactions between predator and prey behaviours to investigate how they jointly affect hunting success. The model was run for 103 000 iterations by sampling every 100 intervals and using the first 3000 iterations as warmups. The model is described as :
+The fourth and final model included prey behaviors with their quadratic effects as well as their interactions with predator behavior to investigate how they jointly affect hunting success. The model was run on 4 chains with 2500 iterations where we set the sampling at every 8 intervals. We used the first 500 iterations for warmups. The model is described as :
 
 $$
 \begin{aligned}
@@ -197,19 +204,21 @@ $$
 
 \newpage
 
-\begin{center}
-\hl{\emph{Controlling for player experience}}
-\end{center}
-
-Altough this was not the focus of the present paper, we conducted additional analyses to ensure that our results were robust to potential effects of player experience (see "X" in the 'Supporting information'). To do so, we applied the same model procedures on two distinct datasets based on player experience by splitting the total experience of individual players from the main dataset in quartiles. This resulted in} 75% \hl{of the players having played up to 31 matches, which represented ~5 hours of gameplay. Based on their cumulative number of matches, we then assigned novice players as those who played between 1 and 31 matches, and players with experience as those having above 31 cumulative matches played. Individuals who played above 31 matches could thus be assigned to both novice and experienced players. We split our data this way because if we separated players based on their total number of matches, we would have had matches for experienced players where they were still novice.
-
 ### Supporting Information: Results
 
 \begin{center}
 \emph{Principal component analysis}
 \end{center}
 
-The first principal component (PC1) explained 20% of the total variation, and the second principal component (PC2) explained 15.3% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table S1), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table S1). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+```{r include = FALSE}
+
+contrib_tab <- readRDS(here::("outputs",
+                              "R_objects",
+                              "02_PCA_contrib-table.rds"))
+
+```
+
+The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 19.6% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table S1), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table S1). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
 
 ```{r Figure 1, out.width = "80%", fig.align = "center", fig.cap = "Biplot of the principal component analysis on predator hunting variables. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
@@ -219,7 +228,7 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table S1:} Principal component loadings for all the predator behavioural traits.}
+\caption*{\textbf{Table S1:} Principal component loadings for all the predator behavioral traits.}
 \includegraphics[width = \linewidth]{tableS1.png}
 \end{figure}
 
