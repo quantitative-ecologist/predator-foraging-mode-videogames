@@ -212,15 +212,15 @@ $$
 
 ```{r include = FALSE}
 
-contrib_tab <- readRDS(here::("outputs",
-                              "R_objects",
-                              "02_PCA_contrib-table.rds"))
+contrib_tab <- readRDS(here::here("outputs",
+                                  "R_objects",
+                                  "02_PCA_contrib-table.rds"))
 
 ```
 
-The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 19.6% of the total variation (figure S1). We found that travel speed and time spent ambushing had the highest contribution (23.19% and 29.38% respectively) to the first principal component (table S1), while the rate of space covered and the time before first capture had the highest contribution (48.12% and 35.55%) to the second principal component (table S1). The time spent ambushing is negatively correlated with travel speed (figure S1), which may indicate the presence of structured tactics where individuals that are fast do not ambush, and individuals who ambush prey are slower travelers.
+The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 19.6% of the total variation (figure S1). We found that the time before the first capture, the rate of space covered, and the time spent guarding had the highest contribution (`r toString(contrib_tab[7,2])`, `r toString(contrib_tab[2,2])`, and `r toString(contrib_tab[3,2])` respectively) to the first principal component (table S1), while the travel speed had the highest contribution (`r toString(contrib_tab[1,3])`) to the second principal component (table S1).
 
-```{r Figure 1, out.width = "80%", fig.align = "center", fig.cap = "Biplot of the principal component analysis on predator hunting variables. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
+```{r Figure 1, out.width = "80%", fig.align = "center", fig.cap = "Biplot of the principal component analysis on predator hunting behaviors. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 ```
 
@@ -235,20 +235,38 @@ knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
 \newpage
 
 \begin{center}
-\emph{Intra-class correlation coefficients of predator behavior without the effect of prey and with the effect of the game environment surface area}
+\emph{Intra-class correlation coefficients of the predator behaviors without the effect of prey and for novice and experienced players}
 \end{center}
 
-After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the proportion of time spent ambushing, and the proportion of time required to capture the first prey (table S2). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was considerable variation among game environments in the rate of space covered (table S2). The surface area (model 3) of the game environment did not seem to explain a high portion of the variation in space coverage nor in any of the other measured behaviors (table S2).
+After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the time spent guarding, and the time required to capture the first prey (table S2). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was an increase in the variation among game environments for the rate of space covered (table S2). The ICCs remained mostly similar for all the random effects when comparing novice and experimented players, but among-individual differences tended to be lower for experimented players.
 
 \vspace{12pt}
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table S2:} Posterior means of the ICC estimates for the additional multivariate mixed-models. The second model excludes prey behavior, and the third model includes the game environment surface area.}
+\caption*{\textbf{Table S2:} Posterior means of the ICC estimates for the additional multivariate mixed-models. The second model excludes prey behavior, the third model is for novice players, and the fourth for experimented players.}
 \includegraphics[width = \linewidth]{tableS2.png}
 \end{figure}
 
 \newpage
+
+\begin{center}
+\emph{Selection of the best hunting success model}
+\end{center}
+
+The model with the lowest expected log predictive density was chosen as the best model for our interpretations of the relationship between behavior and hunting success.
+
+\begin{figure}
+\centering
+\caption*{\textbf{Table S3:} Summary table comparing the hunting success models based on approximate leave-one-out cross-validation}
+\includegraphics[width = \linewidth]{tableS4.png}
+\end{figure}
+
+\newpage
+
+```{r Figure 2, out.width = "80%", fig.align = "center", fig.cap = "Interacting effects of the predator behaviors on hunting success. Hunting success is represented by the color gradient. We computed the plots by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator behavior interaction terms. (A) Travel speed and the rate of space covered. (B) Travel speed and the time spent guarding prey. (C) Time before the first capture and travel speed. (D) The rate of space covered and the time spent guarding. (E) The rate of space covered and the time before the first capture. (F) The time spent guarding prey and the time before the first capture.", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "02_figureS2.png"))
+```
 
 ### Literature Cited
 
