@@ -28,7 +28,7 @@ header-includes:
 \emph{Principal component analysis}
 \end{center}
 
-We computed a principal components analysis (PCA) using the packages 'FactoMineR' version 2.4 [@Le.etal2008] and 'factoextra' version 1.0.7 [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 Home computer OS (version 21H2, OS build 19044.1466). The 'PCA()' function in 'FactoMineR' uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in duration among matches. We applied a square-root transformation to all the varialbes. They were then standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component.
+We computed a principal components analysis (PCA) using the packages 'FactoMineR' version 2.4 [@Le.etal2008] and 'factoextra' version 1.0.7 [@Kassambara.Mundt2020] in the R software version 4.0.4 (R Core Team, 2021), under a Windows 10 Home computer OS (version 21H2, OS build 19044.1466). The 'PCA()' function in 'FactoMineR' uses singular value decomposition. Before running the PCA, we divided each variable (except travel speed) by the match duration to account for differences in game time lenght among matches. We applied a square-root transformation to all the varialbes. They were then standardized to mean and unit variance (Z scores) before running the PCA. We ranked variables based on their contribution (in %) to a given principal component axis. To do so, for each variable, we used the ratio between their cos2 multiplied by 100 and the cos2 of the principal component.
 
 \begin{center}
 \emph{Parametrization of the bayesian multivariate mixed-model}
@@ -107,6 +107,7 @@ Cov_{\varepsilon_{0y2}\varepsilon_{0y3}} & Cov_{\varepsilon_{0y2}\varepsilon_{0y
 where the diagonals represent the random effect ($k$) variance ($V_{k_{0y_n}}$) for each hunting trait ($y_n$), and the lower off-diagonals the covariance between the random effect intercepts for each combination of hunting traits (travel speed ($y1$), the rate of space covered ($y2$), the time spent guarding ($y3$), and the time before first capture ($y4$)).
 
 We ran three additional multivariate mixed-models:
+
   1. Different structure: Without prey behavior as fixed effects
   2. Same structure: only on novice players
   3. Same structure: only on experienced players 
@@ -132,8 +133,6 @@ logit (P_{hij}) &= (\beta_{0} + env_{0,h} + id_{0,i} + \varepsilon_{0,hij}) \\
 \end{aligned}
 \tag{S5}
 $$
-
-\newpage
 
 We included prey behavior in the second model and kept the same structure as equation S5. Again, we ran 4 chains using 2500 iterations and sampled every 8 intervals (thinning), and used the first 500 iterations for warmup. The model was parametrized as :
 
@@ -221,7 +220,7 @@ contrib_tab <- readRDS(here::here("outputs",
 The first principal component (PC1) explained 20.9% of the total variation, and the second principal component (PC2) explained 19.6% of the total variation (figure S1). We found that the time before the first capture, the rate of space covered, and the time spent guarding had the highest contribution (`r toString(contrib_tab[7,2])`, `r toString(contrib_tab[2,2])`, and `r toString(contrib_tab[3,2])` respectively) to the first principal component (table S1), while the travel speed had the highest contribution (`r toString(contrib_tab[1,3])`) to the second principal component (table S1).
 
 ```{r Figure 1, out.width = "80%", fig.align = "center", fig.cap = "Biplot of the principal component analysis on predator hunting behaviors. We extracted correlations and the percentages of explained variance on the first and second PC axes to select variables for the subsequent analyses.", echo = FALSE}
-knitr::include_graphics(here::here("outputs", "02_figureS1.png"))
+knitr::include_graphics(here::here("outputs", "figures", "suppmat_figures", "02_figureS1.png"))
 ```
 
 \newpage
@@ -264,8 +263,8 @@ The model with the lowest expected log predictive density was chosen as the best
 
 \newpage
 
-```{r Figure 2, out.width = "80%", fig.align = "center", fig.cap = "Interacting effects of the predator behaviors on hunting success. Hunting success is represented by the color gradient. We computed the plots by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator behavior interaction terms. (A) Travel speed and the rate of space covered. (B) Travel speed and the time spent guarding prey. (C) Time before the first capture and travel speed. (D) The rate of space covered and the time spent guarding. (E) The rate of space covered and the time before the first capture. (F) The time spent guarding prey and the time before the first capture.", echo = FALSE}
-knitr::include_graphics(here::here("outputs", "02_figureS2.png"))
+```{r Figure 2, fig.cap = "Interacting effects of the predator behaviors on hunting success. Hunting success is represented by the color gradient. We computed the plots by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator behavior interaction terms. (A) Travel speed and the rate of space covered. (B) Travel speed and the time spent guarding prey. (C) Time before the first capture and travel speed. (D) The rate of space covered and the time spent guarding. (E) The rate of space covered and the time before the first capture. (F) The time spent guarding prey and the time before the first capture.", out.width = "100%", echo = FALSE}
+knitr::include_graphics(here::here("outputs", "figures", "suppmat_figures", "04_figureS2.png"))
 ```
 
 ### Literature Cited
