@@ -243,8 +243,14 @@ After removing prey behavior as linear fixed effects (model 2), the percentage o
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table S2:} Posterior means of the ICC estimates for the additional multivariate mixed-models. The second model excludes prey behavior, the third model is for novice players, and the fourth for experimented players.}
+\caption*{\textbf{Table S2:} Posterior means of the ICC estimates for the three additional multivariate mixed-models.}
 \includegraphics[width = \linewidth]{tableS2.png}
+\end{figure}
+
+\begin{figure}
+\centering
+\caption*{\textbf{Table S3:} Among-individual and within-individual behavioral correlations for the three additional multivariate mixed-models.}
+\includegraphics[width = \linewidth]{tableS3.png}
 \end{figure}
 
 \newpage
@@ -261,9 +267,7 @@ The model with the lowest expected log predictive density was chosen as the best
 \includegraphics[width = \linewidth]{tableS4.png}
 \end{figure}
 
-\newpage
-
-```{r Figure 2, fig.cap = "Interacting effects of the predator behaviors on hunting success. Hunting success is represented by the color gradient. We computed the plots by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator behavior interaction terms. (A) Travel speed and the rate of space covered. (B) Travel speed and the time spent guarding prey. (C) Time before the first capture and travel speed. (D) The rate of space covered and the time spent guarding. (E) The rate of space covered and the time before the first capture. (F) The time spent guarding prey and the time before the first capture.", out.width = "100%", echo = FALSE}
+```{r Figure S2, fig.cap = "Interacting effects of the predator behaviors on hunting success. Hunting success is represented by the color gradient. We computed the plots by predicting the mean probability of capturing four prey based on the best quadratic approximation of the predator behavior interaction terms. (A) Travel speed and the rate of space covered. (B) Travel speed and the time spent guarding prey. (C) Time before the first capture and travel speed. (D) The rate of space covered and the time spent guarding. (E) The rate of space covered and the time before the first capture. (F) The time spent guarding prey and the time before the first capture.", out.width = "100%", echo = FALSE}
 knitr::include_graphics(here::here("outputs", "figures", "suppmat_figures", "04_figureS2.png"))
 ```
 
