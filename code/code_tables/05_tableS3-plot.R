@@ -382,28 +382,45 @@ my_theme <- function(x, ...) {
 
 # Create the table ----------------------------------------------------------
 
-as_grouped_data(tab, groups = "Model") %>%
-  as_flextable(col_keys = my_header$col_keys) %>%
-  set_header_df(mapping = my_header, key = "col_keys") %>%
-  my_theme() %>%
-  #merge_v(j = "rn") %>%
-  #merge_h(part = "header") %>%
-  fontsize(size = 10, part = "all") %>%
-  font(fontname = "Times New Roman", part = "all") %>%
- # align(align = "center", part = "all", j = 1) %>%
- # align(align = "left", part = "all", j = "rn") %>%
-  align(align = "center", part = "all", j = "rn", i = 6) %>%
-  align(align = "center", part = "all", j = 2) %>%
-  align(align = "center", part = "all", j = 3) %>%
-  align(align = "center", part = "all", j = 4) %>%
-  align(align = "center", part = "all", j = 5) %>%
-  width(j = c(1:5), width = 1.2) %>%
-  height(height = .01) %>%
-  hrule(rule = "exact")
+tab <- as_grouped_data(tab,
+                       groups = "Model") %>%
+           
+           as_flextable(col_keys = my_header$col_keys) %>%
+           
+           set_header_df(mapping = my_header,
+                         key = "col_keys") %>%
+           
+           my_theme() %>%
+
+           align(align = "center",
+                 part = "body",
+                 j = "rn",
+                 i = c(1, 6, 11)) %>%
+           
+            align(align = "center",
+                  part = "all",
+                  j = c(2, 3, 4, 5)) %>%
+
+           bold(i = ~ !is.na(Model),
+                bold = TRUE) %>%
+
+           width(j = c(1:5),
+                 width = 1.2) %>%
+           height(height = .01) %>%
+           hrule(rule = "exact") %>%
+          
+           footnote(i = 1, j = 1,
+              part = "header",
+              value = as_paragraph(
+                  "* The among-individual correlations are on the lower off-diagonal and the residual within-individual correlations on the upper off-diagonal"),
+              ref_symbols = " ") %>%
+           
+           fontsize(size = 10, part = "all") %>%
+           font(fontname = "Times New Roman", part = "all")
 
 # Save the table
-save_as_image(icc_table,
-              "./manuscript/tableS2.png",
+save_as_image(table,
+              "./manuscript/tableS3.png",
               webshot = "webshot2")
 
 # ===========================================================================
