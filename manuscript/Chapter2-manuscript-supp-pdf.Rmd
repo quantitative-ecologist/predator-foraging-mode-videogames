@@ -108,7 +108,7 @@ where the diagonals represent the random effect ($k$) variance ($V_{k_{0y_n}}$) 
 
 We ran three additional multivariate mixed-models:
 
-  1. Different structure: Without prey behavior as fixed effects
+  1. Different structure: without prey behavior as fixed effects
   2. Same structure: only on novice players
   3. Same structure: only on experienced players 
 
@@ -234,7 +234,7 @@ knitr::include_graphics(here::here("outputs", "figures", "suppmat_figures", "02_
 \newpage
 
 \begin{center}
-\emph{Intra-class correlation coefficients of the predator behaviors without the effect of prey and for novice and experienced players}
+\emph{Intra-class correlation coefficients of the predator behaviors for the three additional multivariate mixed-models}
 \end{center}
 
 After removing prey behavior as linear fixed effects (model 2), the percentage of explained variance by the game environments remained almost the same compared to the first model for predator travel speed, the time spent guarding, and the time required to capture the first prey (table S2). Thus, variation in these three behaviors was not explained by differences among game environments. However, there was an increase in the variation among game environments for the rate of space covered (table S2). The ICCs remained mostly similar for all the random effects when comparing novice and experimented players, but among-individual differences tended to be lower for experimented players.
@@ -257,7 +257,7 @@ The model with the lowest expected log predictive density was chosen as the best
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table S3:} Summary table comparing the hunting success models based on approximate leave-one-out cross-validation}
+\caption*{\textbf{Table S4:} Summary table comparing the hunting success models based on approximate leave-one-out cross-validation}
 \includegraphics[width = \linewidth]{tableS4.png}
 \end{figure}
 

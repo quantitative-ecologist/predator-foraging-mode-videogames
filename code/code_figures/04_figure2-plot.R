@@ -178,49 +178,6 @@ rownames(map_cor_matrix) <- c("speed", "space",
 colnames(map_cor_matrix) <- c("speed", "space",
                               "prey guarding", "time 1st cap.")
 
-
-
-# Avatars correlation matrix --------------------------------------------
-
-char_cor <- cor_tab[ranef_variable %in% "character", .(group, mean)]
-
-# ICC values are on the diagonals
-speed <- c(
-      as.numeric(icc_tab[9,2]),
-      as.numeric(char_cor[1,2]),
-      as.numeric(char_cor[2,2]),
-      as.numeric(char_cor[4,2])
-)
-
-space <- c(
-      NA,
-      as.numeric(icc_tab[10,2]),
-      as.numeric(char_cor[3,2]),
-      as.numeric(char_cor[5,2])
-)
-
-ambush <- c(
-      NA,
-      NA,
-      as.numeric(icc_tab[11,2]),
-      as.numeric(char_cor[6,2])
-)
-
-time <- c(
-      NA,
-      NA,
-      NA,
-      as.numeric(icc_tab[12,2])
-)
-
-
-char_cor_matrix <- cbind(speed, space, ambush, time)
-
-rownames(char_cor_matrix) <- c("speed", "space",
-                               "prey guarding", "time 1st cap.")
-colnames(char_cor_matrix) <- c("speed", "space",
-                               "prey guarding", "time 1st cap.")
-
 # =======================================================================
 # =======================================================================
 
