@@ -22,6 +22,24 @@ library(dplyr)
 # Source the files
 loo_tab <- readRDS("./outputs/R_objects/loo-cv-table.rds")
 
+loo_tab[, model := gsub("base model1",
+                        "linear model pred",
+                        loo_tab$model)]
+
+loo_tab[, model := gsub("base model2",
+                        "linear model pred-prey",
+                        loo_tab$model)]
+
+loo_tab[, model := gsub("quadratic model1",
+                        "quadratic model pred",
+                        loo_tab$model)]
+
+loo_tab[, model := gsub("quadratic model2",
+                        "quadratic model pred-prey",
+                        loo_tab$model)]
+
+
+
 # ===========================================================================
 # ===========================================================================
 
@@ -42,17 +60,19 @@ my_header <- data.frame(
                "se_diff",
                "elpd_loo",
                "se_elpd_loo"),
-  line1 = c("Model",
-            "elpd difference",
-            "standard error difference",
-            "elpd loo value",
-            "standard error"),
+  line1 = c("model",
+            "elpd \ndifference",
+            "sd \ndifference",
+            "elpd loo \nvalue",
+            "elpd loo standard error"),
   stringsAsFactors = FALSE
 )
 
 # Custom theme
 my_theme <- function(x, ...) {
-  x <- colformat_double(x, big.mark = "'", decimal.mark = ",", digits = 1)
+  x <- colformat_double(x, big.mark = " ", 
+                        decimal.mark = ".",
+                        digits = 2)
   x <- set_table_properties(x, layout = "fixed")
   x <- border_remove(x)
   std_border <- fp_border(width = 1, color = "black")
@@ -75,11 +95,12 @@ loo_table <- loo_tab %>%
   fontsize(size = 10, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "all", j = 1) %>%
-  align(align = "left", part = "all", j = 2) %>%
+  align(align = "center", part = "all", j = 2) %>%
   align(align = "center", part = "all", j = 3) %>%
   align(align = "center", part = "all", j = 4) %>%
   align(align = "center", part = "all", j = 5) %>%
-  width(j = c(1:5), width = 1.5) %>%
+  width(j = c(2:5), width = 1) %>%
+  width(j = 1, width = 1.8) %>%
   height(height = .01) %>%
   hrule(rule = "exact") #%>%
  # footnote(i = 1, j = 3:4,

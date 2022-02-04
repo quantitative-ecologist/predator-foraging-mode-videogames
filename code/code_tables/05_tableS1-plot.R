@@ -64,7 +64,7 @@ my_header <- data.frame(
 
 # Custom theme
 my_theme <- function(x, ...) {
-  x <- colformat_double(x, big.mark = "'", decimal.mark = ",", digits = 1)
+  x <- colformat_double(x, big.mark = " ", decimal.mark = ".", digits = 1)
   x <- set_table_properties(x, layout = "fixed")
   x <- border_remove(x)
   std_border <- fp_border(width = 1, color = "black")
