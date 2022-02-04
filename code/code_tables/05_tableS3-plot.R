@@ -382,7 +382,7 @@ my_theme <- function(x, ...) {
 
 # Create the table ----------------------------------------------------------
 
-tab <- as_grouped_data(tab,
+table <- as_grouped_data(tab,
                        groups = "Model") %>%
            
            as_flextable(col_keys = my_header$col_keys) %>%
