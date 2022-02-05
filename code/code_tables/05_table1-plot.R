@@ -92,18 +92,18 @@ coefficient1 <- list(
   "time 1st capture",
   "prey travel speed",
   "prey space covered",
-  "travel speed:space covered",
-  "travel speed:time guarding",
-  "travel speed:time 1st capture",
-  "space covered:time guarding",
-  "space covered:time 1st capture",
-  "time guarding:time 1st capture",
-  "travel speed:prey travel speed",
-  "travel speed:prey space covered",
-  "space covered:prey travel speed",
-  "space covered:prey space covered",
-  "time guarding:prey travel speed",
-  "time guarding:prey space covered"
+  "travel speed:\nspace covered",
+  "travel speed:\ntime guarding",
+  "travel speed:\ntime 1st capture",
+  "space covered:\ntime guarding",
+  "space covered:\ntime 1st capture",
+  "time guarding:\ntime 1st capture",
+  "travel speed:\nprey travel speed",
+  "travel speed:\nprey space covered",
+  "space covered:\nprey travel speed",
+  "space covered:\nprey space covered",
+  "time guarding:\nprey travel speed",
+  "time guarding:\nprey space covered"
 )
 
 table[, coefficient := coefficient1]
@@ -218,14 +218,15 @@ table1 <- newtab %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
   align(align = "center", part = "all") %>%
-  fontsize(size = 10, part = "all") %>%
+  fontsize(size = 12, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "all", j = 1) %>% # left align first column
   width(j = c(1:5), width = 1.6) %>% # control table width
   height(height = .25) %>%
   hrule(rule = "exact")
 
-save_as_image(table1, "./manuscript/table1.png", webshot = "webshot2")
+save_as_image(table1, "./manuscript/table1.png",
+              webshot = "webshot2")
 
-# ========================================================
-# ========================================================
+# ========================================================================
+# ========================================================================
