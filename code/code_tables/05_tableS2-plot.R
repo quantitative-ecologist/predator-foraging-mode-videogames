@@ -196,9 +196,9 @@ my_header <- data.frame(
                "icc4"),
   line1 = c("Behavior",
             "Random effect",
-            "ICC (95% CI) - No prey",
-            "ICC (95% CI) - Novices",
-            "ICC (95% CI) - Experienced"),
+            "ICC (95% CI) \nNo prey",
+            "ICC (95% CI) \nNovices",
+            "ICC (95% CI) \nExperienced"),
   stringsAsFactors = FALSE
 )
 
@@ -224,7 +224,7 @@ icc_table <- icc_tab1 %>%
   my_theme() %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
-  fontsize(size = 10, part = "all") %>%
+  fontsize(size = 11, part = "all") %>%
   font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "all", j = 1) %>%
   align(align = "left", part = "all", j = 2) %>%
