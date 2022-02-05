@@ -245,28 +245,28 @@ colnames(id_cor_matrix1) <- c("speed", "space",
 
 # correlation matrix novice ---------------------------------------------
 
-speed <- c(
+speed3 <- c(
            "-",
            cor_tab3[1,2],
            cor_tab3[2,2],
            cor_tab3[4,2]
 )
 
-space <- c(
+space3 <- c(
            cor_tab3[7,2],
            "-",
            cor_tab3[3,2],
            cor_tab3[5,2]
 )
 
-guard <- c(
+guard3 <- c(
       cor_tab3[8,2],
       cor_tab3[9,2],
       "-",
       cor_tab3[6,2]
 )
 
-time <- c(
+time3 <- c(
       cor_tab3[10,2],
       cor_tab3[11,2],
       cor_tab3[12,2],
@@ -274,7 +274,7 @@ time <- c(
 )
 
 
-id_cor_matrix3 <- cbind(speed, space, guard, time)
+id_cor_matrix3 <- cbind(speed3, space3, guard3, time3)
 
 rownames(id_cor_matrix3) <- c("speed", "space",
                               "prey guarding", "time 1st cap.")
@@ -285,28 +285,28 @@ colnames(id_cor_matrix3) <- c("speed", "space",
 
 # correlation matrix experienced ----------------------------------------
 
-speed <- c(
+speed4 <- c(
            "-",
            cor_tab4[1,2],
            cor_tab4[2,2],
            cor_tab4[4,2]
 )
 
-space <- c(
+space4 <- c(
            cor_tab4[7,2],
            "-",
            cor_tab4[3,2],
            cor_tab4[5,2]
 )
 
-guard <- c(
+guard4 <- c(
       cor_tab4[8,2],
       cor_tab4[9,2],
       "-",
       cor_tab4[6,2]
 )
 
-time <- c(
+time4 <- c(
       cor_tab4[10,2],
       cor_tab4[11,2],
       cor_tab4[12,2],
@@ -314,7 +314,7 @@ time <- c(
 )
 
 
-id_cor_matrix4 <- cbind(speed, space, guard, time)
+id_cor_matrix4 <- cbind(speed4, space4, guard4, time4)
 
 rownames(id_cor_matrix4) <- c("speed", "space",
                               "prey guarding", "time 1st cap.")
@@ -333,7 +333,7 @@ tab3 <- data.table(id_cor_matrix3,
                    Model = "novice players",
                    keep.rownames = TRUE)
 
-tab4 <- data.table(id_cor_matrix3,
+tab4 <- data.table(id_cor_matrix4,
                    Model = "experienced players",
                    keep.rownames = TRUE)
 
