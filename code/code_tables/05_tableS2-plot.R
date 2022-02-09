@@ -196,7 +196,7 @@ my_header <- data.frame(
                "icc4"),
   line1 = c("Behavior",
             "Random effect",
-            "ICC (95% CI) \nNo prey",
+            "ICC (95% CI) \nWithout prey",
             "ICC (95% CI) \nNovices",
             "ICC (95% CI) \nExperienced"),
   stringsAsFactors = FALSE
