@@ -218,12 +218,17 @@ table1 <- newtab %>%
   merge_v(part = "header") %>%
   merge_h(part = "header") %>%
   align(align = "center", part = "all") %>%
-  fontsize(size = 12, part = "all") %>%
-  font(fontname = "Times New Roman", part = "all") %>%
   align(align = "left", part = "all", j = 1) %>% # left align first column
   width(j = c(1:5), width = 1.6) %>% # control table width
   height(height = .25) %>%
-  hrule(rule = "exact")
+  hrule(rule = "exact") %>%
+  footnote(i = 1, j = 1,
+                part = "header",
+                value = as_paragraph(
+                    "* The estimates are from the hunting success model with the highest elpd value (see table S4)"),
+                ref_symbols = " ") %>%
+  fontsize(size = 12, part = "all") %>%
+  font(fontname = "Times New Roman", part = "all")
 
 save_as_image(table1, "./manuscript/table1.png",
               webshot = "webshot2")

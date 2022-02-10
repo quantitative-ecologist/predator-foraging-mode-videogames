@@ -303,7 +303,7 @@ Predator behaviors also interacted to affect hunting success. Predators were mor
 
 \begin{figure}
 \centering
-\caption*{\textbf{Table 1:} Posterior means of the estimates relating predator hunting success to predator hunting behavior, prey behavior, and their interactions.}
+\caption*{\textbf{Table 1:} Posterior means and credible intervals of the estimates relating predator hunting success to predator hunting behavior, prey behavior, and their interactions.}
 \includegraphics[width = \linewidth]{table1.png}
 \end{figure}
 
