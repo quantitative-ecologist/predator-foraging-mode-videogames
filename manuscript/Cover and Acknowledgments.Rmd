@@ -14,7 +14,7 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Short title:** Predator-prey interactions in an online videogame.
+**Short title:** Predator-prey interactions in virtual worlds.
 
 \vspace{12pt}
 
@@ -22,7 +22,7 @@ Maxime Fraser Franco^1^, Francesca Santostefano^1^, Clint D. Kelly^1^, Pierre-Ol
 
 \vspace{12pt}
 
-^1^Groupe de Recherche en Écologie Comportementale et Animale (GRECA), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
+^1^Groupe de Recherche en Écologie et Évolution des Interactions Biologiques (GREEIB), Département des Sciences Biologiques, Université du Québec à Montréal, Montréal, QC, Canada
 
 \vspace{12pt}
 
@@ -46,7 +46,4 @@ We thank Behavior Interactive for generous access to their data, and members of 
 
 ### Data availability statement {.unnumbered}
 
-We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request and pending a non-disclosure agreement, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/videogame_hunting_tactics-Rscripts.
-
-Here is an anonymized link to our data for reviewing purposes that we deposited on the Open Science
-Framework: https://osf.io/wyvrt/?view_only=8449b28df2314f24958702532dc4bbee
+We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request and pending a non-disclosure agreement, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/predator-foraging-mode-videogames.
