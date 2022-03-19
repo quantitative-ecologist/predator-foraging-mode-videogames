@@ -42,8 +42,14 @@ This work was supported by a Mitacs Accelerate Grant (grant number IT12054) thro
 
 ### Acknowledgements {.unnumbered}
 
-We thank Behavior Interactive for generous access to their data, and members of the Rover Team (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, Nicholas Robitaille) in the company for inputs on the preliminary results. We would also like to thank members of the GRECA at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we thank two anonymous reviewers whose comments helped us improve this manuscript.
+We thank Behavior Interactive for generous access to their data, and members of the design team of Dead by Daylight for the great discussions and ideas. We are specifically thankful to members of the analytics department (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, and Nicholas Robitaille) for inputs on the preliminary results. We would also like to thank all members of the GREEIB at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we sincerely thank two anonymous reviewers whose comments helped us improve this manuscript.
 
 ### Data availability statement {.unnumbered}
 
-We could not openly share the data on open science/data web platforms due to ownership and privacy restrictions. However, upon request and pending a non-disclosure agreement, we will provide the data used to conduct our analyses. In addition, the project’s R scripts and results are freely available on this GitHub repository: https://github.com/quantitative-ecologist/predator-foraging-mode-videogames.
+Raw data were generated at and provided by Behaviour Interactive. Derived data supporting the findings of this study were assembled by the corresponding author (MFF). All data (raw and derived) are not publicly available due to commercial ownership and privacy restrictions. The corresponding author (MFF) will provide the derived data used in this study upon request and pending a non-disclosure agreement with Behaviour Interactive. We provide a simulated dataset that reproduces the derived data prepared by MFF along with all the code and outputs used in this article on GitHub.
+
+Analyses reported in this article can be reproduced using the data provided by Fraser Franco et al. (2022).
+
+https://github.com/quantitative-ecologist/predator-foraging-mode-videogames.
+
+
