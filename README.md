@@ -18,4 +18,4 @@ All the R scripts are enumerated. You will find the specific outputs generated f
 
 ## Reproducibility
 
-We used the [renv](https://rstudio.github.io/renv/index.html) package to contain each individual R package version within the project. Please refer to the [collaborating vignette](https://rstudio.github.io/renv/articles/collaborating.html) too see how to implemement the workflow in your personal computer if you wish to reproduce our results.
+We used the [renv](https://rstudio.github.io/renv/index.html) package to contain each individual R package version within the project. If you wish to reproduce our results, please refer to the official renv [collaborating vignette](https://rstudio.github.io/renv/articles/collaborating.html) to implemement the workflow in your personal computer.
