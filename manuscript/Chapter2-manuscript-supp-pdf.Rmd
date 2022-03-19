@@ -11,7 +11,7 @@ mainfont: Times New Roman
 bibliography: references.bib
 csl: behav-ecol.csl
 header-includes:
-   - \usepackage{lineno}\linenumbers                    # add line number for the whole document
+#   - \usepackage{lineno}\linenumbers                    # add line number for the whole document
    - \usepackage{amsmath}                               # equations
    - \usepackage{setspace}\doublespacing                # double space the document
    - \usepackage[labelfont=bf]{caption}                 # bold figure label
@@ -112,7 +112,7 @@ We ran three additional multivariate mixed-models:
   2. Same structure: only on novice players
   3. Same structure: only on experienced players 
 
-For the first model, we investigated how acounting for prey behavior in the predator behavioral variation (i.e. removing prey as a control) changed the behavioral correlations and the variance parameters for the game environments. We used this approach to test the assertion that behavioral changes in prey behavior could modulate the effect of the game environment on the predator. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects.
+For the first model, we investigated if acounting for prey behavior in the predator behavioral variation (i.e. removing prey as a control) had an effect on the variance parameters and the behavioral correlations. We used this approach to test the assertion that behavioral changes in prey behavior could modulate the tactics used by individual predators, as well as the effect of the game environments on predator behavior. We thus computed the same multivariate model, and excluded prey travel speed and rate of space covered as the linear fixed effects.
 
 For the second and third models, we investigated if the relationships between the predator behaviors (i.e. their correlations) changed with player experience. To do so, we applied the same model procedure on two distinct datasets based on player experience by splitting the total experience of individual players from the main dataset in quartiles. This resulted in 75% of the players having played up to 31 matches, which represented ~5 hours of gameplay. Based on their cumulative number of matches, we then assigned novice players as those who played between 1 and 31 matches, and players with experience as those having above 31 cumulative matches played. Individuals who played above 31 matches could thus be found in both the novice and experienced players datasets. We split our data this way because if we separated players based on their total number of matches, we would have had matches for experienced players where they were still novice.
 

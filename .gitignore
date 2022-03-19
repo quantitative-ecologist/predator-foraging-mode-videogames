@@ -20,7 +20,6 @@ manuscript/tracked_changes
 
 # Files prior to first review Behavioural Ecology
 code/before-review-BehavEcol
-jobs/jobs-before-review-BehavEcol
 
 # The data is anonymous
 data
@@ -32,6 +31,3 @@ tests
 versions
 manuscript/cover_letter
 corrections.txt
-
-# Output files before the review just for us
-outputs/outputs_before-review
