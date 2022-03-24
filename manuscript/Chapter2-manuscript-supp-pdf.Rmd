@@ -34,7 +34,7 @@ We computed a principal component analysis (PCA) using the packages 'FactoMineR'
 \emph{Parametrization of the Bayesian multivariate mixed-model}
 \end{center}
 
-We used a half-normal prior with mean of 0 and standard deviation of 1 for all the variance parameters, and applied a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrices. We applied a Gaussian prior with mean of 0 and standard deviation of 2 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We set the model to run 4 chains with 2500 iterations where samples were drawn at every 8 intervals (thinning), and to use the first 500 iterations as warmups. We visually inspected the trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. The rhat values of all the model's main parameters (intercept, slopes, interactions, variances, correlations) were lower than 1.05, while the ratio of effective samples sizes to total sample size was greater than 0.5 for all the parameters. The model computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, among-individual, and within-individual variance components and behavioral correlations using the function 'as_draws_df()' in the 'brms' package (for details, consult the code files on the GitHub repository : https://github.com/quantitative-ecologist/predator-foraging-mode-videogames). We could thus compute the mean of the variance and correlation sample values, and the HDP intervals to obtain their 95% credible intervals. The variance-covariance matrixes were parametrized as :
+We used a half-normal prior with mean of 0 and standard deviation of 1 for all the variance parameters, and applied a weakly informative LKJ prior with a shape parameter ($n$) set to 2 for the random effects variance-covariance matrices. We applied a Gaussian prior with mean of 0 and standard deviation of 2 for the fixed effects (i.e. prey travel speed $x_1$ and rate of space covered $x_2$) of all the submodels (i.e. for each response variable). We set the model to run 4 chains with 2500 iterations where samples were drawn at every 8 intervals (thinning), and to use the first 500 iterations as warmups. We visually inspected the trace plots, effective sample sizes, and residuals to assess convergence and stability. We also evaluated the model's prediction accuracy using posterior predictive checks. The rhat values of all the model's main parameters (intercept, slopes, interactions, variances, correlations) were lower than 1.05, while the ratio of effective samples sizes to total sample size was greater than 0.5 for all the parameters. The model computed a variance-covariance matrix ($\Omega_{k}$) for each random effect ($k$). We extracted the among-environment, among-individual, and within-individual variance components and behavioral correlations using the function 'as_draws_df()' in the 'brms' package (for details, consult the code files on the GitHub repository : https://github.com/quantitative-ecologist/predator-foraging-mode-videogames). We could thus compute the mean of the variance and correlation sample values, and the HDP intervals to obtain their 95% credible intervals. The variance-covariance matrices were parametrized as :
 
 \[
 \begin{bmatrix}
@@ -129,7 +129,7 @@ $$
 logit (P_{hij}) &= (\beta_{0} + env_{0,h} + id_{0,i} + \varepsilon_{0,hij}) \\
 &\text{ } + \text{ } \beta_{1,pred} \textit{speed}_{hi} \\
 &\text{ } + \text{ } \beta_{2,pred} \textit{space}_{hi} \\
-&\text{ } + \text{ } \beta_{3,pred} \textit{ambush time}_{hi} \\
+&\text{ } + \text{ } \beta_{3,pred} \textit{guarding time}_{hi} \\
 &\text{ } + \text{ } \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
 \end{aligned}
 \tag{S5}
@@ -142,7 +142,7 @@ $$
 logit (P_{hij}) &= (\beta_{0} + env_{0h} + id_{0i} + \varepsilon_{0,hij}) \\
 &\text{ } + \text{ } \beta_{1,pred} \textit{speed}_{hi} \\
 &\text{ } + \text{ } \beta_{2,pred} \textit{space}_{hi} \\
-&\text{ } + \text{ } \beta_{3,pred} \textit{ambush time}_{hi} \\
+&\text{ } + \text{ } \beta_{3,pred} \textit{guarding time}_{hi} \\
 &\text{ } + \text{ } \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \text{ } \beta_{5,prey} \textit{speed}_{hi}^{'} \\
 &\text{ } + \text{ } \beta_{6,prey} \textit{space}_{hi}^{'} \\
@@ -158,15 +158,15 @@ $$
 \begin{aligned}
 logit (P_{hij}) &= (\beta_{0} + env_{0h} + id_{0i} + \varepsilon_{0,hij}) \\
 &\text{ } + \beta_{1,pred} \textit{speed}_{hi} + \beta_{2,pred} \textit{space}_{hi} \\
-&\text{ } + \beta_{3,pred} \textit{ambush time}_{hi} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
+&\text{ } + \beta_{3,pred} \textit{guarding time}_{hi} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \frac{1}{2} \gamma_{1,pred} \textit{speed}_{hi}^{2} + \frac{1}{2} \gamma_{2,pred} \textit{space}_{hi}^{2} \\
-&\text{ } + \frac{1}{2} \gamma_{3,pred} \textit{ambush time}_{hi}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi}^{2} \\
+&\text{ } + \frac{1}{2} \gamma_{3,pred} \textit{guarding time}_{hi}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi}^{2} \\
 &\text{ } + \gamma_{1,pred}\textit{speed}_{hi} \times \textit{space}_{hi} \\
-&\text{ } + \gamma_{2,pred}\textit{speed}_{hi} \times \textit{ambush time}_{hi} \\ 
+&\text{ } + \gamma_{2,pred}\textit{speed}_{hi} \times \textit{guarding time}_{hi} \\ 
 &\text{ } + \gamma_{3,pred}\textit{speed}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
-&\text{ } + \gamma_{4,pred}\textit{space}_{hi} \times \textit{ambush time}_{hi} \\
+&\text{ } + \gamma_{4,pred}\textit{space}_{hi} \times \textit{guarding time}_{hi} \\
 &\text{ } + \gamma_{5,pred}\textit{space}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
-&\text{ } + \gamma_{6,pred}\textit{ambush time}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
+&\text{ } + \gamma_{6,pred}\textit{guarding time}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
 \end{aligned}
 \tag{S7}
 $$
@@ -179,23 +179,23 @@ $$
 \begin{aligned}
 logit (P_{hij}) &= (\beta_{0} + env_{0h} + id_{0i} + \varepsilon_{0,hij}) \\
 &\text{ } + \beta_{1,pred} \textit{speed}_{hi} + \beta_{2,pred} \textit{space}_{hi} \\
-&\text{ } + \beta_{3,pred} \textit{ambush time}_{hi} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
+&\text{ } + \beta_{3,pred} \textit{guarding time}_{hi} + \beta_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \beta_{5,prey} \textit{speed}_{hi}^{'} + \beta_{6,prey} \textit{space}_{hi}^{'} \\
 &\text{ } + \frac{1}{2} \gamma_{1,pred} \textit{speed}_{hi}^{2} + \frac{1}{2} \gamma_{2,pred} \textit{space}_{hi}^{2} \\
-&\text{ } + \frac{1}{2} \gamma_{3,pred} \textit{ambush time}_{hi}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi}^{2} \\
+&\text{ } + \frac{1}{2} \gamma_{3,pred} \textit{guarding time}_{hi}^{2} + \frac{1}{2} \gamma_{4,pred} \textit{time 1}^{st} \textit{capture}_{hi}^{2} \\
 &\text{ } + \frac{1}{2} \gamma_{5,prey} \textit{speed}_{hi}^{'2} + \frac{1}{2} \gamma_{6,prey} \textit{space}_{hi}^{'2} \\
 &\text{ } + \gamma_{1,pred}\textit{speed}_{hi} \times \textit{space}_{hi} \\
-&\text{ } + \gamma_{2,pred}\textit{speed}_{hi} \times \textit{ambush time}_{hi} \\ 
+&\text{ } + \gamma_{2,pred}\textit{speed}_{hi} \times \textit{guarding time}_{hi} \\ 
 &\text{ } + \gamma_{3,pred}\textit{speed}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
-&\text{ } + \gamma_{4,pred}\textit{space}_{hi} \times \textit{ambush time}_{hi} \\
+&\text{ } + \gamma_{4,pred}\textit{space}_{hi} \times \textit{guarding time}_{hi} \\
 &\text{ } + \gamma_{5,pred}\textit{space}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
-&\text{ } + \gamma_{6,pred}\textit{ambush time}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
+&\text{ } + \gamma_{6,pred}\textit{guarding time}_{hi} \times \textit{time 1}^{st} \textit{capture}_{hi} \\
 &\text{ } + \gamma_{7,\textit{pred prey}}\textit{speed}_{hi} \times \textit{speed}_{hi}^{'} \\
 &\text{ } + \gamma_{8,\textit{pred prey}}\textit{speed}_{hi} \times \textit{space}_{hi}^{'} \\
 &\text{ } + \gamma_{9,\textit{pred prey}}\textit{space}_{hi} \times \textit{speed}_{hi}^{'} \\
 &\text{ } + \gamma_{10,\textit{pred prey}}\textit{space}_{hi} \times \textit{space}_{hi}^{'} \\
-&\text{ } + \gamma_{11,\textit{pred prey}}\textit{ambush time}_{hi} \times \textit{speed}_{hi}^{'} \\
-&\text{ } + \gamma_{12,\textit{pred prey}}\textit{ambush time}_{hi} \times \textit{space}_{hi}^{'} \\
+&\text{ } + \gamma_{11,\textit{pred prey}}\textit{guarding time}_{hi} \times \textit{speed}_{hi}^{'} \\
+&\text{ } + \gamma_{12,\textit{pred prey}}\textit{guarding time}_{hi} \times \textit{space}_{hi}^{'} \\
 &\text{ } + \gamma_{13,\textit{pred prey}}\textit{time 1}^{st} \textit{capture}_{hi} \times \textit{speed}_{hi}^{'} \\
 &\text{ } + \gamma_{14,\textit{pred prey}}\textit{time 1}^{st} \textit{capture}_{hi} \times \textit{space}_{hi}^{'} \\
 \end{aligned}
