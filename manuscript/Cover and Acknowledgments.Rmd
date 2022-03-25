@@ -42,14 +42,9 @@ This work was supported by a Mitacs Accelerate Grant (grant number IT12054) thro
 
 ### Acknowledgements {.unnumbered}
 
-We thank Behavior Interactive for generous access to their data, and members of the design team of Dead by Daylight for the great discussions and ideas. We are specifically thankful to members of the analytics department (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, and Nicholas Robitaille) for inputs on the preliminary results. We would also like to thank all members of the GREEIB at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we sincerely thank two anonymous reviewers whose comments helped us improve this manuscript.
+We thank Behavior Interactive for generous access to their data, and members of the design team of Dead by Daylight for the great discussions and ideas. We are specifically thankful to members of the analytics department (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, and Nicholas Robitaille) for inputs on the preliminary results. We would also like to thank all members of the GREEIB at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we sincerely thank two anonymous reviewers whose comments helped us improve earlier versions of this study.
 
 ### Data availability statement {.unnumbered}
 
-Raw data were generated at and provided by Behaviour Interactive. Derived data supporting the findings of this study were assembled by the corresponding author (MFF). Due to commercial ownership and privacy restrictions, raw and supporting data can only be made available upon request to the corresponding author (MFF) and pending a non-disclosure agreement with Behaviour Interactive. We provide a simulated dataset that reproduces the derived data prepared by MFF along with all the code and outputs used in this article on GitHub.
-
-Analyses reported in this article can be reproduced using the simulated data provided by Fraser Franco et al. (2022).
-
-https://github.com/quantitative-ecologist/predator-foraging-mode-videogames.
-
+Analyses reported in this article can be reproduced using the data provided by Fraser Franco et al. (2022).
 
