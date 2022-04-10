@@ -1,5 +1,7 @@
 # Predator foraging mode in videogames
 
+https://img.shields.io/badge/<license>-<CC BY-CC 4.0>-<brightgreen>
+
 Online repository to reproduce the results presented in "Studying predator foraging mode and hunting success at the individual level with an online videogame" (in press). (A url will be added pointing to the original article)
 
 ## Description
