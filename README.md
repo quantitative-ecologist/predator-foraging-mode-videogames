@@ -2,6 +2,8 @@
 
 https://img.shields.io/badge/<license>-<CC BY-CC 4.0>-<brightgreen>
 
+https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey  
+
 Online repository to reproduce the results presented in "Studying predator foraging mode and hunting success at the individual level with an online videogame" (in press). (A url will be added pointing to the original article)
 
 ## Description
