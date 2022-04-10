@@ -10,11 +10,15 @@ All models were run on a remote computer cluster ([Cedar, Compute Canada](https:
 
 ## Coding Workflow
 
+You will find below the workflow that was employed to generate the model outputs using R. Thus, this is only for R files that compute the bayesian mixed models using the package "brms".
+
 | Generator | Operating system | Programming language | Code | Results |
 | --------- | ---------------- | -------------------- | ---- | ------------ |
 | Compute Canada / Cedar | CentOS Linux 7 | R | [code folder](./code) | [outputs folder](./outputs) |
 
 All the R scripts are enumerated. You will find the specific outputs generated from the R scripts in the [outputs folder](./outputs). Each output file has a number that correponds to the R script used to generate it.
+
+The rest of the coding workflow can be reproduced from your personal computer.
 
 **Note** : The model outputs were too large (~5Gb) for me to push them to this repository. I will gladly share the files to anyone who wishes to reproduce the results (plots and tables).
 
