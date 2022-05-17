@@ -42,7 +42,7 @@ data <- fread("./data/FraserFrancoetal2022-data.csv")
 
 # Divide variables by match duration
 data [, ":=" (prop_closet_open = closet_open / game_duration,
-              prop_hit_far_count = hit_far_count / game_duration,
+              prop_hits = hits / game_duration,
               prop_pallet_destroyed = pallet_destroyed / game_duration,
               prop_damage_generator = DamageGenerator / game_duration,
               prop_prox_mid = prox_mid_PreyGuarding / game_duration,
@@ -53,7 +53,7 @@ data [, ":=" (prop_closet_open = closet_open / game_duration,
 matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
                    prop_closet_open, prop_pallet_destroyed,
                    prop_damage_generator, prop_hook_start_time,
-                   prop_hit_far_count
+                   prop_hits
                    )]
 
 
@@ -62,7 +62,7 @@ matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
 
 # Transform the data even though it is not perfect
 matrix[, ":=" (prop_prox_mid = sqrt(prop_prox_mid),
-               prop_hit_far_count = sqrt(prop_hit_far_count),
+               prop_hits = sqrt(prop_hits),
                prop_closet_open = sqrt(prop_closet_open),
                prop_pallet_destroyed = sqrt(prop_pallet_destroyed),
                prop_damage_generator = sqrt(prop_damage_generator),
