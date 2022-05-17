@@ -33,7 +33,7 @@ library(export)
 
 # Import the data ----------------------------------------------------------
 
-data <- fread("./data/merged-data2021.csv",
+data <- fread("./data/FraserFrancoetal2022-data.csv",
               select = c("hunting_success",
                          "game_duration", "speed",
                          "space_covered_rate",

@@ -38,7 +38,7 @@ library(ggpubr)
 
 # Load the data -----------------------------------------------------------
 
-data <- fread("./data/merged-data2021.csv")
+data <- fread("./data/FraserFrancoetal2022-data.csv")
 
 # Divide variables by match duration
 data [, ":=" (prop_closet_open = closet_open / game_duration,

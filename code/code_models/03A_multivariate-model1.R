@@ -37,7 +37,7 @@ folder <- file.path("/home", "maxime11", "projects", "def-monti",
                     "maxime11", "phd_project", "data")
 
 # Import the data
-data <- fread(file.path(folder, "merged-data2021.csv"),
+data <- fread(file.path(folder, "FraserFrancoetal2022-data.csv"),
               select = c("player_id", "match_id",
                          "character_name", "map_name",
                          "game_duration", "speed",

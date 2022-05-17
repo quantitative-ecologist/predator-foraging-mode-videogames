@@ -27,7 +27,7 @@ library(lattice)
 
 
 # Import the merged dataset ---------------------------------------------
-data <- fread("./data/merged-data2021.csv",
+data <- fread("./data/FraserFrancoetal2022-data.csv",
               stringsAsFactors = TRUE)
 
 # =======================================================================
