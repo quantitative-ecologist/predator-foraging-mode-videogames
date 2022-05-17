@@ -40,6 +40,18 @@ library(ggpubr)
 
 data <- fread("./data/merged-data2021.csv")
 
+# Divide variables by match duration
+data [, ":=" (prop_closet_open = closet_open / game_duration,
+              prop_hit_far_count = hit_far_count / game_duration,
+              prop_pallet_destroyed = pallet_destroyed / game_duration,
+              prop_damage_generator = DamageGenerator / game_duration,
+              prop_prox_guard = Proxim_PreyGuarding / game_duration,
+              prop_mid_guard = Midrange_PreyGuarding / game_duration,
+              prop_hook_start_time = hook_start_time / game_duration)]
+
+# Sum prox and mid guarding
+data[, prop_prox_mid := prop_prox_guard + prop_mid_guard ]
+
 # Select the columns to be analyzed
 # Here we use the proportion data to control for game duration
 matrix <- data[, .(speed, space_covered_rate, prop_prox_mid,
