@@ -39,10 +39,10 @@ library(parallel)
 folder <- file.path("/home", "maxime11", "projects", "def-monti", 
                     "maxime11", "phd_project", "data")
 
-data <- fread(file.path(folder, "merged-data2021.csv"),
+data <- fread(file.path(folder, "FraserFrancoetal2022-data.csv"),
               select = c("player_id", "match_id",
-                         "character_name",
-                         "map_name", "game_duration",
+                         "avatar_id",
+                         "environment_id", "game_duration",
                          "speed", "space_covered_rate",
                          "prox_mid_PreyGuarding",
                          "hook_start_time", "prey_avg_speed",
