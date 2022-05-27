@@ -8,6 +8,8 @@ Online repository to reproduce the results presented in "Studying predator forag
 
 (A url/doi will be added pointing to the original article)
 
+You can click [here](https://osf.io/wyvrt/) for a link to our associated OSF repository. Please use this DOI if you wish to cite our dataset : DOI 10.17605/OSF.IO/WYVRT
+
 ## General coding workflow
 
 All the R scripts are enumerated (see the [code](./code) folder). You will find the specific outputs generated from the R scripts in the [outputs](./outputs) folder. Each output file has a number that correponds to the R script used to generate it.
@@ -30,10 +32,21 @@ Here is a table showing the workflow employed to generate the model outputs usin
 | ---------------------- | ---------------- | -------------------- | ------------------ | ------------------------ |
 | Compute Canada / Cedar | CentOS Linux 7   | R                    | [code](./code) folder | [outputs](./outputs) folder |
 
-**Note** : The model outputs were too large (~5Gb) for me to push them to this repository. I will gladly share the files to anyone who wishes to reproduce the results (processing, validation, plots, and tables).
+**Note** : The model outputs were too large (~3.69Gb) for me to push them to this repository. Please see the section below for a description on how to access the files.
 
 ## Reproducibility
 
-You can reproduce every step of the analysis in your personal computer except for step 3. Steps 4 and 5 cannot technically be reproduced because the model outputs are not in the repository (as I explained above). However, once we find a way to share the large files, you will be able to reproduce steps 4 and 5.
+### Model outputs
+
+You can reproduce every step of the analysis in your personal computer except for step 3 as it was run on a remote computer cluster (see section above). Steps 4 and 5 cannot be reproduced directly because the model outputs are not in this GitHub repository (as explained in the section above).
+
+Here is what you can do to access the files :
+
+1. Download the outputs as a folder in our [OSF repository](https://osf.io/wyvrt/) and name it "models"
+2. Include the "models" folder as a subfolder in the [outputs](./outputs) folder when you download our GitHub repository in your computer
+
+After that, you should be able to go on and reproduce steps 4 and 5.
+
+### R packages versions
 
 I used the [renv](https://rstudio.github.io/renv/index.html) package to contain each individual R package version within the project. If you wish to reproduce our results in your personal computer (excluding the model files that were run on Compute Canada), please refer to the official renv [collaborating vignette](https://rstudio.github.io/renv/articles/collaborating.html) to implemement the workflow in your personal computer.
