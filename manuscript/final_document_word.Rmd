@@ -55,9 +55,29 @@ The datasets used to test our hypotheses were provided by Behaviour Interactive 
 
 ## Data collection
 
+```{r include = FALSE}
+
+library(data.table)
+
+# Import the data
+data <- fread(here::here("data", "FraserFrancoetal2022-data.csv"),
+              select = c("player_id", "match_id",
+                         "avatar_id", "environment_id",
+                         "game_duration", "speed",
+                         "space_covered_rate",
+                         "prox_mid_PreyGuarding",
+                         "hook_start_time",
+                         "total_xp"),
+                         stringsAsFactors = TRUE)
+
+# To add r code output in the text
+# r toString(length(unique(data$player_id)))
+round(min(data$game_duration)/60, digits = 2)
+```
+
 The game developer provided us with raw datasets ranging from 20 March to 17 June 2019. Because the company records player data with automated scripts, technical issues or errors in the data compilation can occur. For instance players hacking the game or disconnecting during a match, among other reasons, can cause errors in the data compilation. We thus had to combine these datasets and apply filtering, cleaning, and verification procedures to obtain our synthetic dataset. First, we filtered for matches that were played exclusively against a group of unknown people. Second, we retained matches that lasted more than five minutes, as short matches are usually interrupted because of disconnections or inactive players, and deleted any match where the match duration was missing or equal to zero. Third, we removed matches where predator players were obviously inactive, that is, when they had average speeds of, or very close to, zero while staying within a maximum of two squares or less during the match. Fourth, based on our knowledge of the game, we deleted any matches where the observed behaviors were extreme and were most likely the result of hacking or players doing something different to how the game is intended to be played (e.g. farming for points).
 
-Our synthetic dataset consists of a population of 2 378 new anonymous players who initiated their first match between 20 March and 22 March, with a total record of 77 047 matches (average: `r toString(round(mean(data$total_matches), digits = 0))` matches per individual, range: `r toString(min(data$total_matches))` - `r toString(max(data$total_matches))` matches). The average match duration was `r toString(format(round(mean(data$game_duration)/60, digits = 2), nsmall = 0))` minutes (range: `r toString(format(round(min(data$game_duration)/60, digits = 2), nsmall = 0))` - `r toString(format(round(max(data$game_duration)/60, digits = 2), nsmall = 0))` minutes). For every match, the date (date-hour-minutes), the duration (seconds), the predator player's anonymous ID, the predator's avatar, and the game environment were recorded along with the predator and prey behaviors.
+Our synthetic dataset consists of a population of 2 378 new anonymous players who initiated their first match between 20 March and 22 March, with a total record of 77 047 matches (average: `r toString(round(mean(data$total_xp), digits = 0))` matches per individual, range: `r toString(min(data$total_xp))` - `r toString(max(data$total_xp))` matches). The average match duration was `r toString(format(round(mean(data$game_duration)/60, digits = 2), nsmall = 0))` minutes (range: `r toString(format(round(min(data$game_duration)/60, digits = 2), nsmall = 0))` - `r toString(format(round(max(data$game_duration)/60, digits = 2), nsmall = 0))` minutes). For every match, the date (date-hour-minutes), the duration (seconds), the predator player's anonymous ID, the predator's avatar, and the game environment were recorded along with the predator and prey behaviors.
 
 ## Behavioral traits
 
@@ -122,6 +142,25 @@ Following the method by @nakagawaRepeatabilityGaussianNonGaussian2010 for Gaussi
 
 ## Variation in hunting mode: Repeatability of hunting behaviour
 
+```{r include = FALSE}
+
+# Import the ICC tables
+mv_icc <- readRDS(here::here("outputs",
+                             "R_objects",
+                             "03A_icc-table2.rds"))
+
+# Round the icc values
+mv_icc[, c(2:4) := 
+         lapply(
+           .SD, function (x) {
+           format(round(x, digits = 3),
+                  nsmall = 3)
+                 }
+          ),
+         .SDcols = c(2:4)]
+
+```
+
 Contrary to our predictions, neither the average travel speed ($ICC_{env_{y1}}$ [95% CI] = `r toString(mv_icc[5,2])` [`r toString(mv_icc[5,3])`, `r toString(mv_icc[5,4])`]), nor the time spent guarding ($ICC_{env_{y3}}$ [95% CI] = `r toString(mv_icc[7,2])` [`r toString(mv_icc[7,3])`, `r toString(mv_icc[7,4])`]) differed among the game environments (Figure 2A, diagonal). We detected minimal differences among the game environments in the average rate of space covered ($ICC_{env_{y2}}$ [95% CI] = `r toString(mv_icc[6,2])` [`r toString(mv_icc[6,3])`, `r toString(mv_icc[6,4])`]) and latency before the first capture ($ICC_{env_{y4}}$ [95% CI] = `r toString(mv_icc[8,2])` [`r toString(mv_icc[8,3])`, `r toString(mv_icc[8,4])`]) (Figure 2A, diagonal).
 
 Predator avatars differed slightly in their average travel speed ($ICC_{avatar_{y1}}$ [95% CI] = `r toString(mv_icc[9,2])` [`r toString(mv_icc[9,3])`, `r toString(mv_icc[9,4])`]). We observed weak differences among avatars for the other three hunting behaviors  ($ICC_{avatar_{y2}}$ [95% CI] = `r toString(mv_icc[10,2])` [`r toString(mv_icc[10,3])`, `r toString(mv_icc[10,4])`], $ICC_{avatar_{y3}}$ [95% CI] = `r toString(mv_icc[11,2])` [`r toString(mv_icc[11,3])`, `r toString(mv_icc[11,4])`], $ICC_{avatar_{y4}}$ [95% CI] = `r toString(mv_icc[12,2])` [`r toString(mv_icc[12,3])`, `r toString(mv_icc[12,4])`]).
@@ -130,6 +169,56 @@ As predicted, we found moderate among-individual differences in the average trav
 
 ## Variation in hunting mode: Correlations between hunting behaviours
 
+```{r include = FALSE}
+
+# Load package
+library(brms)
+
+# Import the correlations
+mv_model <- readRDS(here::here("outputs",
+                               "models",
+                               "03A_multivariate-model2.rds"))
+
+# Extract correlation samples
+correlations <- data.table(
+      as_draws_df(mv_model, 
+                  variable = c("^cor_", "^rescor_"),
+                  regex = TRUE))
+
+# Create table with mean icc and credibility intervals
+lower_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[1]}
+upper_interval <- function (x) {coda::HPDinterval(as.mcmc(x), 0.95)[2]}
+
+cor_tab <- data.table(group = c("speed~space_char", "speed~guard_char",
+                                "space~guard_char", "speed~hook_char", 
+                                "space~hook_char", "guard~hook_char",
+                                "speed~space_map", "speed~guard_map",
+                                "space~guard_map", "speed~hook_map",
+                                "space~hook_map", "guard~hook_map",
+                                "speed~space_id", "speed~guard_id",
+                                "space~guard_id", "speed~hook_id",
+                                "space~hook_id", "guard~hook_id",
+                                "speed~space_res", "speed~guard_res",
+                                "space~guard_res", "speed~hook_res",
+                                "space~hook_res", "guard~hook_res"),
+                      mean = as.numeric(correlations[, lapply(.SD, mean),
+                                                  .SDcols = c(1:24)]),
+                      lower = as.numeric(correlations[, lapply(.SD, lower_interval),
+                                                  .SDcols = c(1:24)]),
+                      upper = as.numeric(correlations[, lapply(.SD, upper_interval),
+                                                  .SDcols = c(1:24)]))
+
+cor_tab[, ranef_variable := c(rep("character", 6),
+                              rep("map", 6),
+                              rep("id", 6),
+                              rep("resid", 6))]
+
+cor_tab[, c(2:4) := 
+         lapply(.SD, function (x) {format(round(x, digits = 3), nsmall = 3)}),
+         .SDcols = c(2:4)]
+
+```
+
 Environments where predators were faster were also those where they tended to spend more time guarding their prey ($r_{env_{0,y1}env_{0,y3}}$ [95% CI] = `r toString(cor_tab[8,2])` [`r toString(cor_tab[8,3])`, `r toString(cor_tab[8,4])`]) (Figure 2A, lower off-diagonal), but the relationship was not significant. We detected a similar yet stronger and significant relationship between space coverage and time spent guarding ($r_{env_{0,y2}env_{0,y3}}$ [95% CI] = `r toString(cor_tab[9,2])` [`r toString(cor_tab[9,3])`, `r toString(cor_tab[9,4])`]). Predators took on average less time to capture their first prey in environments where they covered space at a faster rate ($r_{env_{0,y2}env_{0,y4}}$ [95% CI] = `r toString(cor_tab[11,2])` [`r toString(cor_tab[11,3])`, `r toString(cor_tab[11,4])`]) and when they spent more time guarding their prey ($r_{env_{0,y3}env_{0,y4}}$ [95% CI] = `r toString(cor_tab[12,2])` [`r toString(cor_tab[12,3])`, `r toString(cor_tab[12,4])`]) (Figure 2A, lower off-diagonal). Lastly, we did not detect significant among-environment correlations between travel speed and space coverage, or between travel speed and the latency to capture the first prey ($r_{env_{0,y1}env_{0,y2}}$ [95% CI] = `r toString(cor_tab[7,2])` [`r toString(cor_tab[7,3])`, `r toString(cor_tab[7,4])`], ($r_{env_{0,y1}env_{0,y4}}$ [95% CI] = `r toString(cor_tab[10,2])` [`r toString(cor_tab[10,3])`, `r toString(cor_tab[10,4])`]) (Figure 2A, lower off-diagonal).
 
 Contrary to our expectations, individuals that traveled faster did not spend less time guarding prey ($r_{id_{0,y1}id_{0,y3}}$ [95% CI] = `r toString(cor_tab[14,2])` [`r toString(cor_tab[14,3])`, `r toString(cor_tab[14,4])`]) (Figure 2B, lower off-diagonal). Similarly, the relationship between space covered and time spent guarding was weak and non significant ($r_{id_{0,y2}id_{0,y3}}$ [95% CI] = `r toString(cor_tab[15,2])` [`r toString(cor_tab[15,3])`, `r toString(cor_tab[15,4])`]). Faster individuals covered space at a faster rate ($r_{id_{0,y1}id_{0,y2}}$ [95% CI] = `r toString(cor_tab[13,2])` [`r toString(cor_tab[13,3])`, `r toString(cor_tab[13,4])`]), and individuals who were faster or covered space at a faster rate took less time to capture their first prey ($r_{id_{0,y1}id_{0,y4}}$ [95% CI] = `r toString(cor_tab[16,2])` [`r toString(cor_tab[16,3])`, `r toString(cor_tab[16,4])`], $r_{id_{0,y2}id_{0,y4}}$ [95% CI] = `r toString(cor_tab[17,2])` [`r toString(cor_tab[17,3])`, `r toString(cor_tab[17,4])`]) (Figure 2B, lower off-diagonal). Another result opposing our predictions was that hunters that captured their first prey more quickly spent more time guarding prey ($r_{id_{0,y3}id_{0,y4}}$ [95% CI] = `r toString(cor_tab[18,2])` [`r toString(cor_tab[18,3])`, `r toString(cor_tab[18,4])`]) (Figure 2B, lower off-diagonal).
@@ -137,6 +226,22 @@ Contrary to our expectations, individuals that traveled faster did not spend les
 At the within-individual level, we detected a moderate positive correlation between travel speed and the rate of space covered ($r_{\varepsilon_{0,y1}\varepsilon_{0,y2}}$ [95% CI] = `r toString(cor_tab[19,2])` [`r toString(cor_tab[19,3])`, `r toString(cor_tab[19,4])`]) so that predators covered space at a faster rate (relative to their average) in matches where they traveled faster. Players barely spent less time guarding prey in matches where they traveled faster ($r_{\varepsilon_{0,y1}\varepsilon_{0,y3}}$ [95% CI] = `r toString(cor_tab[20,2])` [`r toString(cor_tab[20,3])`, `r toString(cor_tab[20,4])`]). However, players spent less time guarding prey in matches where they were faster at covering space in the environment ($r_{\varepsilon_{0,y2}\varepsilon_{0,y3}}$ [95% CI] = `r toString(cor_tab[21,2])` [`r toString(cor_tab[21,3])`, `r toString(cor_tab[21,4])`]) (Figure 2B, upper off-diagonal). Individuals tended to be faster at capturing their first prey in matches where they traveled faster ($r_{\varepsilon_{0,y1}\varepsilon_{0,y4}}$ [95% CI] = `r toString(cor_tab[22,2])` [`r toString(cor_tab[22,3])`, `r toString(cor_tab[22,4])`]), but not when they covered space at a faster rate ($r_{\varepsilon_{0,y2}\varepsilon_{0,y4}}$ [95% CI] = `r toString(cor_tab[23,2])` [`r toString(cor_tab[23,3])`, `r toString(cor_tab[23,4])`]) (Figure 2B upper off-diagonal). In accordance with our observations at the among-individual level, predator players captured their first prey earlier in matches where they spent more time guarding their prey ($r_{\varepsilon_{0,y3}\varepsilon_{0,y4}}$ [95% CI] = `r toString(cor_tab[24,2])` [`r toString(cor_tab[24,3])`, `r toString(cor_tab[24,4])`]) (Figure 2B upper off-diagonal).
 
 ## Effect of the predator and prey behavior on hunting success
+
+```{r include = FALSE}
+
+r2_base <- readRDS(here::here("outputs",
+                              "R_objects",
+                              "03B_r2-table.rds"))
+
+r2_quad <- readRDS(here::here("outputs",
+                              "R_objects",
+                              "03C_r2-table.rds"))
+
+icc_quad <- readRDS(here::here("outputs",
+                               "R_objects",
+                               "03C_icc-table.rds"))
+
+```
 
 The best model at predicting hunting success included a linear and quadratic effect of all the predator behaviors along with two-way interactions between predator behaviors and predator and prey behaviors (see Table S4 in the Supporting information). Predators maximized their hunting success when they traveled at population-average speed values (Figure 3A), suggesting that extreme speeds (either low or high) were at a disadvantage. Alternatively, predators were more successful when they covered space at a slower rate (Figure 3B). Spending time guarding prey was positively related to hunting success and was maximized at values above the population average (Figure 3C). The predators' hunting success decreased when they took more time to capture their first prey, implying that the more successful ones were those that secured captures earlier in a match. Predators optimized their hunting success when they encountered prey that were slower than the population average (Table 1). Matches where prey were faster at covering space in the environment were associated with significant reductions in the predators' hunting success (Table 1).
 
