@@ -22,7 +22,7 @@ manuscript/tracked_changes
 code/before-review-BehavEcol
 
 # The data is anonymous
-data
+data/assemble_data.R
 
 # Test folder just for us
 tests

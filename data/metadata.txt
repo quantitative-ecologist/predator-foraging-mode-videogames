@@ -1,0 +1,61 @@
+# ===========================================================================
+ 
+#				                Metadata for :				                #
+#           Studying predator foraging mode and hunting success             #
+#            at the individual level with an online videogame               #
+
+# ===========================================================================
+
+Source : Behaviour Interactive
+License : This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+
+
+# ------------------------------------------------------
+# File name: FraserFrancoetal2022-data.csv
+# Number of columns: 21
+# Number of rows: 77 047 (individual matches)
+# ------------------------------------------------------
+
+
+# Columns 1 to 8
+# Match information
+# -----------------------
+timestamp       (POSIXct) : the timestamp when the match was launched (yyyy:mm:dd hh:mm:ss)
+player_id       (chr)     : the ID of the predator player
+match_id        (chr)     : the ID of the match
+environment_id  (chr)     : the ID of the game environment where the match was played
+avatar_id       (chr)     : the predator avatar ID chosen by the player for the match
+hunting_success (integer) : number of prey killed by the player in the match
+sum_bloodpoints (integer) : the amount of bloodpoints scored by the player in the match
+game_duration   (num)     : the match duration (seconds)
+
+
+# Columns 9 and 10
+# Player experience
+# -----------------------
+total_xp        (integer) : The number of matches played by the player for the whole period
+cumul_xp_total  (integer) : The cumulative amount of matches played prior to a specific match
+
+
+# Columns 11 to 21
+# Player behaviors
+# -----------------------
+
+# Predator behavior
+speed              	         (num) : predator average travel speed (m/s)
+space_covered_rate           (num) : the amount of tiles visited over the match duration (tile/s)
+hook_start_time		         (num) : time elapsed before the 1st prey was captured (seconds)
+prox_mid_PreyGuarding        (num) : time spent guarding a captured prey (0-9 meters from capture site)
+DamageGenerator              (num) : the amount of times the predator damaged a generator
+n_chases		             (num) : the amount of times the predator chased a prey
+hits                         (num) : the amount of normal attacks made by the predator
+pallets_destroyed            (num) : the amount of pallets dropped by prey that the predator destroyed
+closet_open                  (num) : the amount of times the predator opened a locker
+
+# Prey behavior
+prey_avg_speed               (num) : the average travel speed of the four prey (m/s)
+prey_avg_space_covered_rate  (num) : the average amount of tiles visited of the four prey over the match duration (tile/s)
+
+# ------------------------------------------------------
+# ------------------------------------------------------
