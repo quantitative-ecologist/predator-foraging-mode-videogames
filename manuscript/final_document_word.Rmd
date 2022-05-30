@@ -1,7 +1,7 @@
 ---
 output: 
   word_document:
-    reference_docx: Chapter2-styles.docx
+    reference_docx: styles_final_document_word.docx
 bibliography: references.bib
 csl: behav-ecol.csl
 
@@ -20,9 +20,6 @@ Identifying the behavioral mechanisms underlying predator success is critical to
 # Abstract {.unnumbered}
 
 Predator-prey interactions are important drivers of community and ecosystem dynamics. With an online multiplayer videogame, we propose a novel system to explore within-population variation in predator hunting mode, and how predator-prey behavioral interactions affect predator hunting success. We empirically examined how four predator foraging behaviors covary at three hierarchical levels (among environments, among individuals, and within individuals) to assess the structure of predator hunting mode. We also investigated how prey activity affects the foraging behavior and hunting success of predators. Our study supports key findings on predator foraging mode and predator-prey interactions from behavioral ecology. We found that individual predators displayed a diversity of hunting tactics that were conditioned by prey behavior. With prey movement, individual predators specialized either as cursorial or ambush hunters along a continuum of their hunting traits, but also shifted their strategy between encounters. Both types of hunters were generally better against slower-moving prey, and they achieved similar prey captures over the sampling period. This suggests that virtual worlds supporting multiplayer online videogames can serve as legitimate systems to advance our knowledge on predator-prey interactions.
-
-\vspace{12pt}
-\vspace{12pt}
 
 **Keywords:** individual specialization, environmental variation, hunting mode, hunting tactics, predator-prey interactions, online videogames.
 
@@ -92,7 +89,7 @@ To test the locomotor crossover hypothesis, we were provided datasets that conta
 
 ## Statistical analyses: Software and computer setup
 
-We performed all statistical analyses using R (version 4.1.2, R Core Team, 2021) on a remote computer cluster (Cedar, Compute Canada, https://docs.computecanada.ca/wiki/Cedar) running on CentOS Linux 7. All models were fitted using the R package 'brms' version 2.16.3 [@burknerBrmsPackageBayesian2017]. To ensure a minimum of reproducibility and transparency, we made all the data, R code, most outputs, and the R sessions information publicly available (https://github.com/quantitative-ecologist/predator-foraging-mode-videogames).
+We performed all statistical analyses using R (version 4.1.2, R Core Team, 2021) on a remote computer cluster (Cedar, Compute Canada, https://docs.computecanada.ca/wiki/Cedar) running on CentOS Linux 7. All models were fitted using the R package 'brms' version 2.16.3 [@burknerBrmsPackageBayesian2017]. To ensure a minimum of reproducibility and transparency, we made the data, all R code, most outputs, and the R sessions information publicly available (https://github.com/quantitative-ecologist/predator-foraging-mode-videogames).
 
 ## Statistical analyses: Variation in hunting mode
 
@@ -445,9 +442,21 @@ We are among the first ecologists [but see also @CERE2021105] to use an online m
 
 Individual variation in predator (and prey) behavior is increasingly recognized as a critical factor influencing the outcome of trophic interactions [@pettorelliChapterTwoIndividual2015;@toscanoPersonalityForagingBehavior2016;@Moran.etal2017]. Our study is the first to investigate individual variation in predator foraging behavior using an online videogame. Our results corroborate patterns observed in natural systems and highlight complex relationships between predator foraging behavior, prey movement, and hunting success. Predator players specialized in diverse hunting strategies. These strategies varied among and within individuals along a continuum of correlated behaviors (foraging syndrome hypothesis), and were shaped by prey movement and predator experience. In addition, our results suggest that different predator behavioral types could coexist through the consumption of potentially vulnerable prey and in part by locomotor crossovers. Thus, investigating the effects of prey behavior on predator behavior and success at different hierarchical levels can provide a more comprehensive depiction of a predator's foraging ecology. We recommend that further studies consider these aspects when possible. To conclude, we provided support that virtual worlds can be used to identify how ecological mechanisms drive observable phenomena like individual behavioral decisions. While the potential of online multiplayer videogame data remains untapped for ecological research, we are confident that further studies employing them will provide valuable ecological insight for behavioral and community ecologists.
 
+# Supplementary data
+
+Supplementary data are available at *Behavioral Ecology* online.
+
 # Competing interests {.unnumbered}
 
 The authors declare no competing interests
+
+# Acknowledgements {.unnumbered}
+
+We thank Behavior Interactive for generous access to their data, and members of the design team of Dead by Daylight for the great discussions and ideas. We are specifically thankful to members of the analytics department (Julien Céré, Guillaume Bergerot, Jean-Baptise Le Meur, and Nicholas Robitaille) for inputs on the preliminary results. We would also like to thank all members of the GREEIB at UQAM for their insightful comments and suggestions on the whole research process. Lastly, we sincerely thank two anonymous reviewers whose comments helped us improve earlier versions of this study.
+
+# Funding {.unnumbered}
+
+This work was supported by a Mitacs Accelerate Grant (grant number IT12054) through a partnership with Behaviour Interactive and Université du Québec à Montréal.
 
 # Data availability statement {.unnumbered}
 
