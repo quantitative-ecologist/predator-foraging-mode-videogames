@@ -6,7 +6,7 @@
 
 Online repository to reproduce the results presented in :
 
-Fraser Franco, M., Santostefano, F., Kelly, Clint D., Montiglio, P.-O. (2022) Studying predator foraging mode and hunting success at the individual level with an online videogame. *Behavioral Ecology*. [https://doi.org/10.1093/beheco/arac063](https://doi.org/10.1093/beheco/arac063)
+Fraser Franco, M., Santostefano, F., Kelly, Clint D., Montiglio, P.-O. (2022) Studying predator foraging mode and hunting success at the individual level with an online videogame. *Behavioral Ecology*, *33*(5), 967-978. [https://doi.org/10.1093/beheco/arac063](https://doi.org/10.1093/beheco/arac063)
 
 You can click [here](https://osf.io/wyvrt/) for a link to our associated OSF repository. Please use this DOI if you wish to cite our dataset : https://doi.org/10.17605/OSF.IO/WYVRT
 
